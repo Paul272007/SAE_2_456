@@ -82,6 +82,7 @@ CREATE TABLE VIK_CLIENT
     CLI_VILLE VARCHAR2(64)  NULL,
     CLI_TELEPHONE VARCHAR2( 16)  NULL,
     CLI_COURRIEL VARCHAR2(32)  NULL,
+    CLI_MDP VARCHAR2(255) NULL,
     CLI_NB_POINTS_EC NUMBER(4)  NULL,
     CLI_NB_POINTS_TOT NUMBER(6)  NULL,
     CLI_DATE_CONNEC DATE  NULL,
@@ -256,39 +257,39 @@ insert into vik_type_client values ( 3 , 'junior'     , 3000   , 80 );
 insert into vik_type_client values ( 4 , 'argent'     , 10000  , 65 );
 insert into vik_type_client values ( 5 , 'or'         , 50000  , 50 );
 
-insert into vik_client values ( '0'   , ''  , ''   , 'NON INSCRIT'  , ''          , ''           , ''              , ''                         , '0'   , '0'     , ''          );
-insert into vik_client values ( '4'   , '1' , '14' , 'MARIE'        , 'Veronique' , 'Caen'       , ''              , 'v.marie@gmal.com'         , '5'   , '5'     , to_date('16/01/2023','dd/mm/yyyy') );
-insert into vik_client values ( '5'   , '2' , '14' , 'LE BOURGEOIS' , 'Bernard'   , 'Caen'       , '0033231112118' ,'nanard@orage.fr'           , '35'  , '35'    , to_date('13/12/2022','dd/mm/yyyy') );
-insert into vik_client values ( '6'   , '2' , '50' , 'SMITH'        , 'Tom'       , 'Cherbourg'  , ''              , 'tom.smith43@free.uk'      , '46'  , '46'    , to_date('15/03/2023','dd/mm/yyyy') );
-insert into vik_client values ( '7'   , '2' , '14' , 'MARIE'        , 'Josiane'   , 'Ifs'        , '0033621112112' , 'j.marie@frie.fr'          , '25'  , '35'    , to_date('13/01/2023','dd/mm/yyyy') );
-insert into vik_client values ( '8'   , '2' , '14' , 'DURAND'       , 'Paul'      , 'Ifs'        , '0033231202020' , 'paul.durand@wanadoo.fr'   , '38'  , '58'    , to_date('28/03/2023','dd/mm/yyyy') );
-insert into vik_client values ( '9'   , '2' , '61' , 'POULEQ'       , 'Patrick'   , 'Flers'      , '0033612202021' , ''                         , '106' , '306'   , to_date('16/03/2023','dd/mm/yyyy') );
-insert into vik_client values ( '10'  , '3' , '61' , 'NEIGE'        , 'Blanche'   , 'Flers'      , '0033612202022' , ''                         , '9'   , '3410'  , to_date('10/03/2023','dd/mm/yyyy') );
-insert into vik_client values ( '11'  , '3' , '61' , 'ESCARRE'      , 'Stéphane'  , 'Flers'      , ''              , 'sescarre@wanadogou.ke'    , '95'  , '3795'  , to_date('09/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '13'  , '1' , '50' , 'SUPORMOI'     , 'Sylvie'    , 'Cherbourg'  , ''              , ''                         , '8'   , '8'     , to_date('14/08/2022','dd/mm/yyyy') );
-insert into vik_client values ( '16'  , '2' , '14' , 'LITON'        , 'Samir'     , 'Ifs'        , '0033123888456' , 'samirliton@orage.fr'      , '24'  , '44'    , to_date('15/10/2022','dd/mm/yyyy') );
-insert into vik_client values ( '18'  , '2' , '14' , 'DURAND'       , 'Simone'    , 'Ifs'        , '0033729113115' , 'simone.durand@gmal.com'   , '65'  , '65'    , to_date('13/02/2023','dd/mm/yyyy') );
-insert into vik_client values ( '20'  , '2' , '14' , 'JORT'         , 'Etama'     , 'Ifs'        , '0033623524456' , 'etamajort@frie.fr'        , '46'  , '246'   , to_date('11/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '24'  , '5' , '14' , 'VERGLASSEE'   , 'Ruth'      , 'Ifs'        , '0033729113116' , 'rverglassee@gmal.com'     , '55'  , '58000' , to_date('13/10/2022','dd/mm/yyyy') );
-insert into vik_client values ( '26'  , '3' , '14' , 'GZAGUEE'      , 'Suzie'     , 'Caen'       , '0033729403110' , 'suzie14@gmal.com'         , '9'   , '4908'  , to_date('16/02/2023','dd/mm/yyyy') );
-insert into vik_client values ( '27'  , '4' , '76' , 'NAGE'         , 'Icare'     , 'Rouen'      , '0033619003100' , 'icarenage@gmal.com'       , '46'  , '13506' , to_date('05/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '31'  , '1' , '14' , 'SUPLONG'      , 'Arthur'    , 'Boulon'     , '0033666004007' , 'supdeboulon@gmal.com'     , '2'   , '2'     , to_date('05/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '33'  , '2' , '50' , 'TALUT'        , 'Jean'      , 'Cherbourg'  , ''              , '4jeantalut@gmal.com'      , '81'  , '198'   , to_date('13/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '35'  , '3' , '50' , 'DEWAERE'      , 'Marlène'   , 'Valognes'   , ''              , 'marlenedewaere@gmal.com'  , '95'  , '3505'  , to_date('12/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '38'  , '5' , '50' , 'RIVES'        , 'Chiquita'  , 'Taillepied' , '0033688241309' , 'ChiquitaRives@gmal.com'   , '0'   , '58000' , to_date('15/10/2022','dd/mm/yyyy') );
-insert into vik_client values ( '40'  , '1' , '61' , 'POIGNON'      , 'Vincent'   , 'Flers'      , ''              , ''                         , '0'   , '0'     , to_date('01/05/2022','dd/mm/yyyy') );
-insert into vik_client values ( '41'  , '1' , '61' , 'DE THUNE'     , 'Aplu'      , 'Alençon'    , ''              , ''                         , '0'   , '0'     , to_date('01/04/2022','dd/mm/yyyy') );
-insert into vik_client values ( '42'  , '1' , '14' , 'CANTE'        , 'Hermine'   , 'Caen'       , ''              , ''                         , '0'   , '0'     , to_date('01/09/2022','dd/mm/yyyy') );
-insert into vik_client values ( '101' , '1' , '14' , 'DUPONT'       , 'Luc'       , 'Caen'       , '0600000001'    , 'luc.dupont@mail.fr'       , '5'   , '120'   , to_date('10/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '102' , '2' , '76' , 'LEMAIRE'      , 'Sophie'    , 'Rouen'      , '0600000002'    , 'sophie.lemaire@mail.fr'   , '10'  , '210'   , to_date('12/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '103' , '1' , '14' , 'CARON'        , 'Paul'      , 'Lisieux'    , '0600000003'    , 'paul.caron@mail.fr'       , '0'   , '15'    , to_date('08/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '104' , '1' , '61' , 'LEFEBVRE'     , 'Claire'    , 'Flers'      , '0600000004'    , 'claire.lefebvre@mail.fr'  , '3'   , '60'    , to_date('09/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '105' , '2' , '50' , 'MARTIN'       , 'Thomas'    , 'Granville'  , '0600000005'    , 'thomas.martin@mail.fr'    , '8'   , '190'   , to_date('07/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '106' , '1' , '14' , 'ROBERT'       , 'Julie'     , 'Vire'       , '0600000006'    , 'julie.robert@mail.fr'     , '2'   , '30'    , to_date('06/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '107' , '1' , '14' , 'PETIT'        , 'Antoine'   , 'Bayeux'     , '0600000007'    , 'antoine.petit@mail.fr'    , '4'   , '90'    , to_date('11/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '108' , '1' , '61' , 'GIRARD'       , 'Camille'   , 'Argentan'   , '0600000008'    , 'camille.girard@mail.fr'   , '1'   , '25'    , to_date('05/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '109' , '2' , '50' , 'ROUSSEAU'     , 'Nicolas'   , 'Cherbourg'  , '0600000009'    , 'nicolas.rousseau@mail.fr' , '7'   , '150'   , to_date('13/03/2026','dd/mm/yyyy') );
-insert into vik_client values ( '110' , '2' , '50' , 'MOREAU'       , 'Emma'      , 'Avranches'  , '0600000010'    , 'emma.moreau@mail.fr'      , '6'  , '140'    , to_date('12/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '0'   , ''  , ''   , 'NON INSCRIT'  , ''          , ''           , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , ''          );
+insert into vik_client values ( '4'   , '1' , '14' , 'MARIE'        , 'Veronique' , 'Caen'       , ''              , 'v.marie@gmal.com'         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '5'   , '5'     , to_date('16/01/2023','dd/mm/yyyy') );
+insert into vik_client values ( '5'   , '2' , '14' , 'LE BOURGEOIS' , 'Bernard'   , 'Caen'       , '0033231112118' ,'nanard@orage.fr'           , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '35'  , '35'    , to_date('13/12/2022','dd/mm/yyyy') );
+insert into vik_client values ( '6'   , '2' , '50' , 'SMITH'        , 'Tom'       , 'Cherbourg'  , ''              , 'tom.smith43@free.uk'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '46'  , '46'    , to_date('15/03/2023','dd/mm/yyyy') );
+insert into vik_client values ( '7'   , '2' , '14' , 'MARIE'        , 'Josiane'   , 'Ifs'        , '0033621112112' , 'j.marie@frie.fr'          , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '25'  , '35'    , to_date('13/01/2023','dd/mm/yyyy') );
+insert into vik_client values ( '8'   , '2' , '14' , 'DURAND'       , 'Paul'      , 'Ifs'        , '0033231202020' , 'paul.durand@wanadoo.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '38'  , '58'    , to_date('28/03/2023','dd/mm/yyyy') );
+insert into vik_client values ( '9'   , '2' , '61' , 'POULEQ'       , 'Patrick'   , 'Flers'      , '0033612202021' , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '106' , '306'   , to_date('16/03/2023','dd/mm/yyyy') );
+insert into vik_client values ( '10'  , '3' , '61' , 'NEIGE'        , 'Blanche'   , 'Flers'      , '0033612202022' , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '9'   , '3410'  , to_date('10/03/2023','dd/mm/yyyy') );
+insert into vik_client values ( '11'  , '3' , '61' , 'ESCARRE'      , 'Stéphane'  , 'Flers'      , ''              , 'sescarre@wanadogou.ke'    , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '95'  , '3795'  , to_date('09/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '13'  , '1' , '50' , 'SUPORMOI'     , 'Sylvie'    , 'Cherbourg'  , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '8'   , '8'     , to_date('14/08/2022','dd/mm/yyyy') );
+insert into vik_client values ( '16'  , '2' , '14' , 'LITON'        , 'Samir'     , 'Ifs'        , '0033123888456' , 'samirliton@orage.fr'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '24'  , '44'    , to_date('15/10/2022','dd/mm/yyyy') );
+insert into vik_client values ( '18'  , '2' , '14' , 'DURAND'       , 'Simone'    , 'Ifs'        , '0033729113115' , 'simone.durand@gmal.com'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '65'  , '65'    , to_date('13/02/2023','dd/mm/yyyy') );
+insert into vik_client values ( '20'  , '2' , '14' , 'JORT'         , 'Etama'     , 'Ifs'        , '0033623524456' , 'etamajort@frie.fr'        , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '46'  , '246'   , to_date('11/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '24'  , '5' , '14' , 'VERGLASSEE'   , 'Ruth'      , 'Ifs'        , '0033729113116' , 'rverglassee@gmal.com'     , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '55'  , '58000' , to_date('13/10/2022','dd/mm/yyyy') );
+insert into vik_client values ( '26'  , '3' , '14' , 'GZAGUEE'      , 'Suzie'     , 'Caen'       , '0033729403110' , 'suzie14@gmal.com'         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '9'   , '4908'  , to_date('16/02/2023','dd/mm/yyyy') );
+insert into vik_client values ( '27'  , '4' , '76' , 'NAGE'         , 'Icare'     , 'Rouen'      , '0033619003100' , 'icarenage@gmal.com'       , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '46'  , '13506' , to_date('05/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '31'  , '1' , '14' , 'SUPLONG'      , 'Arthur'    , 'Boulon'     , '0033666004007' , 'supdeboulon@gmal.com'     , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '2'   , '2'     , to_date('05/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '33'  , '2' , '50' , 'TALUT'        , 'Jean'      , 'Cherbourg'  , ''              , '4jeantalut@gmal.com'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '81'  , '198'   , to_date('13/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '35'  , '3' , '50' , 'DEWAERE'      , 'Marlène'   , 'Valognes'   , ''              , 'marlenedewaere@gmal.com'  , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '95'  , '3505'  , to_date('12/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '38'  , '5' , '50' , 'RIVES'        , 'Chiquita'  , 'Taillepied' , '0033688241309' , 'ChiquitaRives@gmal.com'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '58000' , to_date('15/10/2022','dd/mm/yyyy') );
+insert into vik_client values ( '40'  , '1' , '61' , 'POIGNON'      , 'Vincent'   , 'Flers'      , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/05/2022','dd/mm/yyyy') );
+insert into vik_client values ( '41'  , '1' , '61' , 'DE THUNE'     , 'Aplu'      , 'Alençon'    , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/04/2022','dd/mm/yyyy') );
+insert into vik_client values ( '42'  , '1' , '14' , 'CANTE'        , 'Hermine'   , 'Caen'       , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/09/2022','dd/mm/yyyy') );
+insert into vik_client values ( '101' , '1' , '14' , 'DUPONT'       , 'Luc'       , 'Caen'       , '0600000001'    , 'luc.dupont@mail.fr'       , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '5'   , '120'   , to_date('10/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '102' , '2' , '76' , 'LEMAIRE'      , 'Sophie'    , 'Rouen'      , '0600000002'    , 'sophie.lemaire@mail.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '10'  , '210'   , to_date('12/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '103' , '1' , '14' , 'CARON'        , 'Paul'      , 'Lisieux'    , '0600000003'    , 'paul.caron@mail.fr'       , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '15'    , to_date('08/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '104' , '1' , '61' , 'LEFEBVRE'     , 'Claire'    , 'Flers'      , '0600000004'    , 'claire.lefebvre@mail.fr'  , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '3'   , '60'    , to_date('09/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '105' , '2' , '50' , 'MARTIN'       , 'Thomas'    , 'Granville'  , '0600000005'    , 'thomas.martin@mail.fr'    , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '8'   , '190'   , to_date('07/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '106' , '1' , '14' , 'ROBERT'       , 'Julie'     , 'Vire'       , '0600000006'    , 'julie.robert@mail.fr'     , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '2'   , '30'    , to_date('06/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '107' , '1' , '14' , 'PETIT'        , 'Antoine'   , 'Bayeux'     , '0600000007'    , 'antoine.petit@mail.fr'    , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '4'   , '90'    , to_date('11/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '108' , '1' , '61' , 'GIRARD'       , 'Camille'   , 'Argentan'   , '0600000008'    , 'camille.girard@mail.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '1'   , '25'    , to_date('05/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '109' , '2' , '50' , 'ROUSSEAU'     , 'Nicolas'   , 'Cherbourg'  , '0600000009'    , 'nicolas.rousseau@mail.fr' , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '7'   , '150'   , to_date('13/03/2026','dd/mm/yyyy') );
+insert into vik_client values ( '110' , '2' , '50' , 'MOREAU'       , 'Emma'      , 'Avranches'  , '0600000010'    , 'emma.moreau@mail.fr'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '6'  , '140'    , to_date('12/03/2026','dd/mm/yyyy') );
 
 insert into vik_tarif values ( 1  ,  0  , 10  , 5  );
 insert into vik_tarif values ( 2  , 11  , 20  , 7  );
