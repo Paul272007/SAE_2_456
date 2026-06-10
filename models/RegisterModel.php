@@ -18,7 +18,7 @@ class RegisterModel extends Model
      */
     public function register(array $params): void
     {
-        $sql = "INSERT INTO users(user_name, password) VALUES (?, ?)";
+        $sql = "INSERT INTO vik_client(ndjznjefn, password) VALUES (?, ?)";
         $result = $this->runQuery($sql, $params);
 
         if (!$result) {

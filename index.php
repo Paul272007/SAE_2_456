@@ -45,7 +45,5 @@ session_set_cookie_params([
 // Start session
 session_start();
 
-
-
 $router = new Router();
 $router->run();

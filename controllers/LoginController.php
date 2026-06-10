@@ -1,6 +1,6 @@
 <?php
 
-// core/LoginController.php
+// controllers/LoginController.php
 
 declare(strict_types=1);
 
@@ -18,7 +18,7 @@ use Random\RandomException;
 #[RequirePrivilege(Privilege::GUEST)]
 class LoginController extends Controller
 {
-    protected static array $postFields = ["username", "password"];
+    protected static array $postFields = ["email", "password"];
     public function get(): void
     {
         $this->data["csrf_token"] = $_SESSION["csrf_token"];

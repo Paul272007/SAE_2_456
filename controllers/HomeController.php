@@ -11,5 +11,4 @@ use Core\Privilege;
 use Core\RequirePrivilege;
 
 #[RequirePrivilege(Privilege::GUEST)]
-class HomeController extends Controller
- {}
+class HomeController extends Controller {}
