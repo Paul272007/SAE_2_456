@@ -10,14 +10,17 @@ class LinesModel extends Model
     {
         $sql = "SELECT DISTINCT
                        l.LIG_NUM,
-                       l.LIG_NOM,
+                       c_debu.COM_NOM AS COM_NOM_DEBU,
+                       c_term.COM_NOM AS COM_NOM_TERM,
                        n.COM_CODE_INSEE_ARRET,
                        c.COM_NOM,
                        d.DEP_NOM,
                        n.NOE_HEURE_PASSAGE
-                FROM VIK_LIGNES l
+                FROM VIK_LIGNE l
                 JOIN VIK_NOEUD n ON n.LIG_NUM = l.LIG_NUM
                 JOIN VIK_COMMUNE c ON c.COM_CODE_INSEE = n.COM_CODE_INSEE_ARRET
+                JOIN VIK_COMMUNE c_debu ON c_debu.COM_CODE_INSEE = l.COM_CODE_INSEE_DEBU
+                JOIN VIK_COMMUNE c_term ON c_term.COM_CODE_INSEE = l.COM_CODE_INSEE_TERM
                 JOIN VIK_DEPARTEMENT d ON d.DEP_NUM = c.DEP_NUM
                 ORDER BY l.LIG_NUM, c.COM_NOM, n.NOE_HEURE_PASSAGE";
 
@@ -36,7 +39,7 @@ class LinesModel extends Model
             if (!isset($lines[$lid])) {
                 $lines[$lid] = [
                     'num_ligne' => $lid,
-                    'nom_ligne' => $row['LIG_NOM'],
+                    'nom_ligne' => $row['COM_NOM_DEBU'] . ' ↔ ' . $row['COM_NOM_TERM'],
                     'stops'     => [],
                 ];
             }

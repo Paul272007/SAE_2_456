@@ -89,6 +89,7 @@ abstract class Controller
           'Register' => 'Inscription',
           'Dashboard' => 'Tableau de bord',
           'Home' => 'Accueil',
+          'Lines' => 'Lignes',
           default => $this->controllerName
         },
         "connected" => isAuthenticated(),
