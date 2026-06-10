@@ -1,7 +1,7 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-    <h1>{{ lang(title) }}</h1>
+    <h1>Inscription</h1>
 
     <form action="index.php?route=register" method="POST">
         <p>
@@ -10,15 +10,15 @@
         </p>
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-        <label for="username">{{ lang('username') }}</label>
+        <label for="username">Nom d'utilisateur</label>
         <input name="username" id="username" type="text" required>
 
-        <label for="password">{{ lang('password') }}</label>
+        <label for="password">Mot de passe</label>
         <input name="password" id="password" type="password" required>
 
-        <label for="confirm_password">{{ lang('confirm_password') }}</label>
+        <label for="confirm_password">Confirmer le mot de passe</label>
         <input name="confirm_password" id="confirm_password" type="password" required>
 
-        <button type="submit">{{ lang('register') }}</button>
+        <button type="submit">S'inscrire</button>
     </form>
 {% endblock %}

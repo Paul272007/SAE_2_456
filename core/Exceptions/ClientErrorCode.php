@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace Core\Exceptions;
 
-use Core\Language;
 
 enum ClientErrorCode: string
 {
@@ -29,6 +28,23 @@ enum ClientErrorCode: string
 
     public function message() : string
     {
-        return Language::get($this->value);
+        return match($this) {
+            self::BAD_REQUEST => 'Requête incorrecte',
+            self::METHOD_NOT_ALLOWED => 'Méthode non autorisée',
+            self::EMPTY_FIELD => 'Champ(s) vide(s)',
+            self::USER_NOT_FOUND => 'Utilisateur introuvable',
+            self::PASSWORD_ERROR => 'Mot de passe incorrect',
+            self::CSRF_ERROR => 'Jeton CSRF invalide',
+            self::LOGIN_ERROR => 'Vous devez être connecté',
+            self::ADMIN_ERROR => 'Vous devez être administrateur',
+            self::ROOT_ERROR => 'Vous devez être super-administrateur',
+            self::USER_ALREADY_EXISTS => 'Cet utilisateur existe déjà',
+            self::PASSWORD_MISMATCH => 'Les mots de passe ne correspondent pas',
+            self::PASSWORD_LENGTH => 'Le mot de passe doit faire entre 8 et 20 caractères',
+            self::USERNAME_LENGTH => 'Le nom d\'utilisateur doit faire entre 1 et 20 caractères',
+            self::SPECIAL_CHARACTERS => 'Les caractères spéciaux ne sont pas autorisés',
+            self::REGISTRATION_ERROR => 'Erreur lors de l\'inscription',
+            self::SETTINGS_ERROR => 'Erreur lors de la sauvegarde des paramètres',
+        };
     }
 }

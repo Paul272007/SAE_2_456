@@ -2,11 +2,10 @@
 
 {% block content %}
 
-    <h1>{{ lang('welcome') }} {{ username }}</h1>
-    <a href="index.php?route=user/settings">{{ lang('settings') }}</a>
+    <h1>Bienvenue {{ username }}</h1>
     <form action="index.php?route=user/logout" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit">{{ lang('logout') }}</button>
+        <button type="submit">Se déconnecter</button>
     </form>
 
 {% endblock %}

@@ -71,11 +71,6 @@ abstract class Controller
         "debug" => $config["debug"],
       ]);
 
-      $this->twig->addFunction(
-        new TwigFunction("lang", function ($key) {
-          return Language::get($key);
-        }),
-      );
 
       // View
       $this->view = "$assetPath.twig";
@@ -89,7 +84,13 @@ abstract class Controller
       // Data
       $this->data = [
         "site" => Config::get("site")["title"],
-        "title" => $this->controllerName,
+        "title" => match($this->controllerName) {
+          'Login' => 'Connexion',
+          'Register' => 'Inscription',
+          'Dashboard' => 'Tableau de bord',
+          'Home' => 'Accueil',
+          default => $this->controllerName
+        },
         "connected" => isAuthenticated(),
       ];
 
@@ -109,9 +110,9 @@ abstract class Controller
       // Get potential error messages
       if (isset($_SESSION["flash_error"])) {
         $this->data["error"] =
-          Language::get(ClientErrorCode::tryFrom(
+          ClientErrorCode::tryFrom(
             $_SESSION["flash_error"],
-          )?->message() ?? "Unknown error");
+          )?->message() ?? "Erreur inconnue";
         unset($_SESSION["flash_error"]);
       }
 
@@ -119,7 +120,7 @@ abstract class Controller
       $categories = ["success", "info", "warning"];
       foreach ($categories as $category) {
         if (isset($_SESSION["flash_" . $category])) {
-          $this->data[$category] = Language::get($_SESSION["flash_" . $category]);
+          $this->data[$category] = $_SESSION["flash_" . $category];
           unset($_SESSION["flash_" . $category]);
         }
       }

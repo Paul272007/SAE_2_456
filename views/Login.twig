@@ -1,17 +1,17 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-    <h1>{{ lang(title) }}</h1>
+    <h1>Connexion</h1>
 
     <form action="index.php?route=login" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-        <label for="username">{{ lang('username') }}</label>
+        <label for="username">Nom d'utilisateur</label>
         <input name="username" id="username" type="text" required>
 
-        <label for="password">{{ lang('password') }}</label>
+        <label for="password">Mot de passe</label>
         <input name="password" id="password" type="password" required>
 
-        <button type="submit">{{ lang('login') }}</button>
+        <button type="submit">Se connecter</button>
     </form>
 {% endblock %}

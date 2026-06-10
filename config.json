@@ -1,14 +1,13 @@
 {
   "db": {
-    "host": "db",
-    "dbname": "MVC",
-    "user": "apache",
-    "passwd": "C4u7Yvw5f5dqQEUd",
+    "dbname": "harpagon.unicaen.fr:1521/info.harpagon.unicaen.fr",
+    "user": "agile2",
+    "passwd": "agile2",
     "charset": "utf8"
   },
   "site": {
-    "title": "MVC Template",
-    "default_language": "en",
+    "title": "Viking Transports",
+    "default_language": "fr",
     "debug": true,
     "https": false
   }

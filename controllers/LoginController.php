@@ -53,7 +53,7 @@ class LoginController extends Controller
             $_SESSION["username"] = $user["user_name"];
             $_SESSION["role"] = $user["user_role"];
             $_SESSION["theme"] = $user["user_theme"];
-            $_SESSION["language"] = $user["user_language"];
+
             buildCSRFToken();
 
             redirect("index.php?route=user/dashboard");

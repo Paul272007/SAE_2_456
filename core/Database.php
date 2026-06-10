@@ -16,7 +16,7 @@ class Database
     private function __construct()
     {
         $dbConfig = Config::get('db');
-        $this->pdo = new PDO("mysql:host={$dbConfig['host']};dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}", $dbConfig['user'], $dbConfig['passwd']);
+        $this->pdo = new PDO("oci:dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}", $dbConfig['user'], $dbConfig['passwd']);
     }
     public static function getInstance(): Database
     {

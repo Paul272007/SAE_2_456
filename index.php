@@ -9,7 +9,7 @@ require_once 'core/Helpers.php';
 
 use Core\Config;
 use Core\Exceptions\ServerError;
-use Core\Language;
+
 use Core\Router;
 
 // Load config
@@ -45,7 +45,7 @@ session_set_cookie_params([
 // Start session
 session_start();
 
-Language::load($_SESSION['language'] ?? Config::get('site')["default_language"] ?? 'en');
+
 
 $router = new Router();
 $router->run();
