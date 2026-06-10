@@ -41,7 +41,7 @@ class LoginController extends Controller
         $password = $_POST["password"];
 
         $this->model = $this->getModel();
-        $user = $this->model->getUserByUsername($username);
+        $user = $this->model->getUserByEMail($username);
 
         if (!$user) {
             throw new ClientError(ClientErrorCode::USER_NOT_FOUND);
