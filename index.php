@@ -45,5 +45,19 @@ session_set_cookie_params([
 // Start session
 session_start();
 
+// Cookie d'identification pour les clients non inscrits (F3/F4)
+// Permet de conserver les données de réservation entre les pages sans compte
+if (!isset($_COOKIE['guest_token'])) {
+    $guestToken = bin2hex(random_bytes(16));
+    setcookie('guest_token', $guestToken, [
+        'expires'  => time() + 30 * 24 * 3600, // 30 jours
+        'path'     => '/',
+        'httponly' => true,
+        'samesite' => 'Strict',
+        'secure'   => $siteConfig['https'] ?? false,
+    ]);
+    $_COOKIE['guest_token'] = $guestToken;
+}
+
 $router = new Router();
 $router->run();
