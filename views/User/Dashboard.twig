@@ -1,0 +1,12 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+    <h1>{{ lang('welcome') }} {{ username }}</h1>
+    <a href="/user/settings">{{ lang('settings') }}</a>
+    <form action="/user/logout" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit">{{ lang('logout') }}</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h1>{{ lang(title) }}</h1>
+
+    <form action="/login" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <label for="username">{{ lang('username') }}</label>
+        <input name="username" id="username" type="text" required>
+
+        <label for="password">{{ lang('password') }}</label>
+        <input name="password" id="password" type="password" required>
+
+        <button type="submit">{{ lang('login') }}</button>
+    </form>
+{% endblock %}

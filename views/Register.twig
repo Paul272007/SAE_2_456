@@ -1,0 +1,24 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    <h1>{{ lang(title) }}</h1>
+
+    <form action="/register" method="POST">
+        <p>
+            Password has to be between 8 and 20 characters long.
+            Username has to be between 1 and 20 characters long and cannot contain special characters.
+        </p>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        <label for="username">{{ lang('username') }}</label>
+        <input name="username" id="username" type="text" required>
+
+        <label for="password">{{ lang('password') }}</label>
+        <input name="password" id="password" type="password" required>
+
+        <label for="confirm_password">{{ lang('confirm_password') }}</label>
+        <input name="confirm_password" id="confirm_password" type="password" required>
+
+        <button type="submit">{{ lang('register') }}</button>
+    </form>
+{% endblock %}

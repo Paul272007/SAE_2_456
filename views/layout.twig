@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="{{ session.language ?? 'en' }}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site }} - {{ lang(title) }}</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    {% if stylesheet %}
+        <link rel="stylesheet" href="{{ stylesheet }}">
+    {% endif %}
+</head>
+
+<body>
+    <header>
+        <h2>
+            <a href="{{ connected ? '/user/dashboard' : '/' }}">{{ site }}</a>
+        </h2>
+    </header>
+
+    <main>
+        {% if error %}
+            <p style="color: red">Error: {{ error }}</p>
+        {% endif %}
+
+        {% if info %}
+            <p style="color: navy">{{ info }}</p>
+        {% endif %}
+
+        {% if success %}
+            <p style="color: green">{{ success }}</p>
+        {% endif %}
+
+        {% if warning %}
+            <p style="color: yellow">{{ warning }}</p>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 {{ site }}</p>
+    </footer>
+
+    {% if javascript %}
+        <script src="{{ javascript }}"></script>
+    {% endif %}
+</body>
+
+</html>

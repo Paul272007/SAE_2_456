@@ -1,0 +1,20 @@
+{
+  "name": "paul/mvc",
+  "autoload": {
+    "psr-4": {
+      "Core\\": "core/",
+      "Controllers\\": "controllers/",
+      "Models\\": "models/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Paul Maillard",
+      "email": "pmaillard27@proton.me"
+    }
+  ],
+  "require": {
+    "ext-pdo": "*",
+    "twig/twig": "^3.23"
+  }
+}
