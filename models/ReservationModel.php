@@ -89,7 +89,7 @@ class ReservationModel extends Model
                 FROM vik_tarif
                 WHERE tar_min_dist <= ? AND tar_max_dist >= ?
                 ORDER BY tar_num_tranche ASC
-                LIMIT 1";
+                FETCH FIRST 1 ROWS ONLY";
         return $this->fetch($sql, [$distance, $distance]);
     }
 
@@ -118,7 +118,7 @@ class ReservationModel extends Model
                 JOIN vik_etape e ON e.res_num = r.res_num AND e.lig_num = ?
                 JOIN vik_noeud nd ON nd.lig_num = ? AND nd.com_code_insee_arret = e.com_code_insee_depar
                 JOIN vik_noeud na ON na.lig_num = ? AND na.com_code_insee_arret = e.com_code_insee_arrive
-                WHERE r.res_date = ?
+                WHERE TRUNC(r.res_date) = TO_DATE(?, 'YYYY-MM-DD')
                   AND nd.noe_heure_passage < na.noe_heure_passage";
         $result = $this->fetch($sql, [$ligNum, $ligNum, $ligNum, $date]);
         $existingCount = (int)($result['nb'] ?? 0);
@@ -143,7 +143,7 @@ class ReservationModel extends Model
 
         $sql = "INSERT INTO vik_reservation
                     (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
         $result = $this->runQuery($sql, [$newId, $cliNum, $tarNumTranche, $date, $nbPoints, $prixTotal]);
 
         if (!$result) {
@@ -167,7 +167,7 @@ class ReservationModel extends Model
     ): void {
         $sql = "INSERT INTO vik_etape
                     (lig_num, res_num, com_code_insee_depar, com_code_insee_arrive, eta_distance, eta_heure)
-                VALUES (?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'))";
         $this->runQuery($sql, [$ligNum, $resNum, $codeDepart, $codeArrivee, $distance, $heure]);
     }
 
@@ -180,7 +180,7 @@ class ReservationModel extends Model
         $sql = "UPDATE vik_client
                 SET cli_nb_points_ec  = cli_nb_points_ec + ?,
                     cli_nb_points_tot = cli_nb_points_tot + ?,
-                    cli_date_connec   = CURRENT_DATE
+                    cli_date_connec   = SYSDATE
                 WHERE cli_num = ?";
         $this->runQuery($sql, [$points, $points, $cliNum]);
     }
