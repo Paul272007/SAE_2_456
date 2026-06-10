@@ -5,19 +5,31 @@
 
     <form action="index.php?route=register" method="POST">
         <p>
-            Password has to be between 8 and 20 characters long.
-            Username has to be between 1 and 20 characters long and cannot contain special characters.
+            Le mot de passe doit contenir entre 8 et 20 caractères.
+            Le nom et prénom doivent contenir entre 1 et 20 caractères sans caractères spéciaux.
         </p>
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-        <label for="username">Nom d'utilisateur</label>
-        <input name="username" id="username" type="text" required>
+        <label for="cli_nom">Nom</label>
+        <input name="cli_nom" id="cli_nom" type="text" required maxlength="20">
+
+        <label for="cli_prenom">Prénom</label>
+        <input name="cli_prenom" id="cli_prenom" type="text" required maxlength="20">
+
+        <label for="cli_ville">Ville</label>
+        <input name="cli_ville" id="cli_ville" type="text" required>
+
+        <label for="cli_telephone">Téléphone</label>
+        <input name="cli_telephone" id="cli_telephone" type="tel" required placeholder="0612345678">
+
+        <label for="cli_courriel">Adresse e-mail</label>
+        <input name="cli_courriel" id="cli_courriel" type="email" required>
 
         <label for="password">Mot de passe</label>
-        <input name="password" id="password" type="password" required>
+        <input name="password" id="password" type="password" required minlength="8" maxlength="20">
 
         <label for="confirm_password">Confirmer le mot de passe</label>
-        <input name="confirm_password" id="confirm_password" type="password" required>
+        <input name="confirm_password" id="confirm_password" type="password" required minlength="8" maxlength="20">
 
         <button type="submit">S'inscrire</button>
     </form>

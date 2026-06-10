@@ -58,20 +58,20 @@ class Model
     /**
      * @throws Exception
      */
-    public function userExists($username) : bool
+    public function userExists(string $email) : bool
     {
-        $sql = "SELECT user_name FROM users WHERE user_name = ?";
-        $user = $this->fetch($sql, [$username]);
-        return $user != false;
+        $sql = "SELECT cli_courriel FROM vik_client WHERE cli_courriel = ?";
+        $result = $this->fetch($sql, [$email]);
+        return $result !== false;
     }
 
     /**
      * @throws Exception
      */
-    public function getUserByUsername($username) : mixed
+    public function getUserByEMail(string $email) : mixed
     {
         $sql = "SELECT * FROM users WHERE user_name = ?";
-        return $this->fetch($sql, [$username]);
+        return $this->fetch($sql, [$email]);
     }
 
     public function lastInsertId() : string | false
