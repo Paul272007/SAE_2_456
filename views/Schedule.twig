@@ -1,0 +1,52 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<h1>Horaires — Ligne {{ line.lig_num }}</h1>
+<p class="line-subtitle">
+    <strong>{{ line.commune_depart }}</strong>
+    <span class="line-arrow">→</span>
+    <strong>{{ line.commune_arrivee }}</strong>
+</p>
+
+<a href="index.php?route=lines" class="btn-back">← Retour aux lignes</a>
+<a href="index.php?route=reservation&lig_num={{ lig_num }}" class="btn-primary">Réserver sur cette ligne</a>
+
+{% if schedule is empty %}
+    <p>Aucun arrêt disponible pour cette ligne.</p>
+{% else %}
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Arrêt</th>
+                <th>Heure de passage</th>
+                <th>Distance jusqu'au suivant (km)</th>
+                <th>Durée jusqu'au suivant (min)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i, stop in schedule %}
+                <tr class="{{ i == 0 ? 'stop-first' : (stop.com_code_insee_suivant is null ? 'stop-last' : '') }}">
+                    <td>{{ i + 1 }}</td>
+                    <td class="stop-name">{{ stop.arret_nom }}</td>
+                    <td class="stop-time">{{ stop.noe_heure_passage }}</td>
+                    <td>
+                        {% if stop.noe_distance_prochain is not null %}
+                            {{ stop.noe_distance_prochain }} km
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if stop.noe_duree_prochain is not null %}
+                            {{ stop.noe_duree_prochain }} min
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% endblock %}

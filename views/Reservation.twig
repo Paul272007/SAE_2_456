@@ -1,0 +1,53 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<h1>Réserver un voyage</h1>
+<p class="line-subtitle">
+    Ligne {{ lig_num }} :
+    <strong>{{ line.commune_depart }}</strong>
+    <span class="line-arrow">→</span>
+    <strong>{{ line.commune_arrivee }}</strong>
+</p>
+
+<a href="index.php?route=lines" class="btn-back">← Retour aux lignes</a>
+
+{% if not connected %}
+    <p class="info-box">
+        ℹ️ Vous pouvez consulter les tarifs sans compte. La finalisation de votre réservation
+        nécessitera de <a href="index.php?route=login">vous connecter</a> ou de
+        <a href="index.php?route=register">créer un compte</a>.
+    </p>
+{% endif %}
+
+<form action="index.php?route=reservation" method="POST" class="reservation-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="lig_num" value="{{ lig_num }}">
+
+    <div class="form-group">
+        <label for="depart">Arrêt de départ</label>
+        <select name="depart" id="depart" required>
+            <option value="">-- Choisissez un arrêt --</option>
+            {% for stop in stops %}
+                <option value="{{ stop.code }}">{{ stop.nom }} ({{ stop.noe_heure_passage }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="arrivee">Arrêt d'arrivée</label>
+        <select name="arrivee" id="arrivee" required>
+            <option value="">-- Choisissez un arrêt --</option>
+            {% for stop in stops %}
+                <option value="{{ stop.code }}">{{ stop.nom }} ({{ stop.noe_heure_passage }})</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Date du voyage</label>
+        <input type="date" name="date" id="date" required min="{{ today }}">
+    </div>
+
+    <button type="submit" class="btn-primary">Voir le prix & Continuer</button>
+</form>
+{% endblock %}

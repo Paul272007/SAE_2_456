@@ -85,11 +85,15 @@ abstract class Controller
       $this->data = [
         "site" => Config::get("site")["title"],
         "title" => match($this->controllerName) {
-          'Login' => 'Connexion',
-          'Register' => 'Inscription',
-          'Dashboard' => 'Tableau de bord',
-          'Home' => 'Accueil',
-          default => $this->controllerName
+          'Login'       => 'Connexion',
+          'Register'    => 'Inscription',
+          'Dashboard'   => 'Tableau de bord',
+          'Home'        => 'Accueil',
+          'Lines'       => 'Lignes',
+          'Schedule'    => 'Horaires',
+          'Reservation' => 'Réservation',
+          'Confirm'     => 'Confirmation',
+          default       => $this->controllerName
         },
         "connected" => isAuthenticated(),
       ];

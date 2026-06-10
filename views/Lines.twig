@@ -1,9 +1,32 @@
 {% extends "layout.twig" %}
 
 {% block content %}
+<h1>Lignes de transport</h1>
 
-    <h1>Bonjour tout le monde !</h1>
-    <a href="/index.php?route=login">Se connecter</a>
-    <a href="/index.php?route=register">S'inscrire</a>
-
+{% if lines is empty %}
+    <p>Aucune ligne disponible pour le moment.</p>
+{% else %}
+    <ul class="lines-list">
+        {% for line in lines %}
+            <li class="line-card">
+                <div class="line-info">
+                    <span class="line-number">Ligne {{ line.lig_num }}</span>
+                    <span class="line-route">
+                        <strong>{{ line.commune_depart }}</strong>
+                        <span class="line-arrow">→</span>
+                        <strong>{{ line.commune_arrivee }}</strong>
+                    </span>
+                </div>
+                <div class="line-actions">
+                    <a href="index.php?route=schedule&lig_num={{ line.lig_num }}" class="btn-secondary">
+                        Voir les horaires
+                    </a>
+                    <a href="index.php?route=reservation&lig_num={{ line.lig_num }}" class="btn-primary">
+                        Réserver
+                    </a>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}

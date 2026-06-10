@@ -1,6 +1,6 @@
 <?php
 
-// models/Guest/RegisterModel
+// models/RegisterModel.php
 
 declare(strict_types=1);
 
@@ -14,13 +14,15 @@ use Exception;
 class RegisterModel extends Model
 {
     /**
+     * Insère un nouveau client dans vik_client.
+     * Paramètres attendus dans $params (dans l'ordre) :
+     *   typ_num, dep_num, cli_nom, cli_prenom, cli_ville,
+     *   cli_telephone, cli_courriel, cli_password, cli_date_connec
      * @throws Exception
      */
     public function register(array $params): void
     {
-        $maxIdSql = "SELECT MAX(cli_num) as max_id FROM vik_client";
-        $maxIdResult = $this->fetch($maxIdSql);
-        $newId = ($maxIdResult['max_id'] ?? 0) + 1;
+        $newId = $this->getLastClientId() + 1;
 
         $sql = "INSERT INTO vik_client(
                        cli_num,
@@ -31,7 +33,7 @@ class RegisterModel extends Model
                        cli_ville,
                        cli_telephone,
                        cli_courriel,
-                       cli_mdp,
+                       cli_password,
                        cli_nb_points_ec,
                        cli_nb_points_tot,
                        cli_date_connec
@@ -42,5 +44,27 @@ class RegisterModel extends Model
         if (!$result) {
             throw new ClientError(ClientErrorCode::REGISTRATION_ERROR);
         }
+    }
+
+    /**
+     * Vérifie si un client existe déjà avec cet email.
+     * @throws Exception
+     */
+    public function userExists(string $email): bool
+    {
+        $sql    = "SELECT cli_courriel FROM vik_client WHERE cli_courriel = ?";
+        $result = $this->fetch($sql, [$email]);
+        return $result !== false;
+    }
+
+    /**
+     * Retourne le cli_num le plus élevé (utilisé pour générer le prochain ID).
+     * @throws Exception
+     */
+    public function getLastClientId(): int
+    {
+        $sql    = "SELECT MAX(cli_num) AS max_id FROM vik_client";
+        $result = $this->fetch($sql);
+        return (int)($result['max_id'] ?? 0);
     }
 }
