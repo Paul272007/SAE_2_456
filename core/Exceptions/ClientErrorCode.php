@@ -21,7 +21,7 @@ enum ClientErrorCode: string
     case USER_ALREADY_EXISTS = 'user_already_exists';
     case PASSWORD_MISMATCH = 'password_mismatch';
     case PASSWORD_LENGTH = 'password_length';
-    case USERNAME_LENGTH = 'username_length';
+    case NAME_LENGTH = 'username_length';
     case SPECIAL_CHARACTERS = 'special_characters';
     case REGISTRATION_ERROR = 'registration_error';
     case SETTINGS_ERROR = 'settings_error';
@@ -41,7 +41,7 @@ enum ClientErrorCode: string
             self::USER_ALREADY_EXISTS => 'Cet utilisateur existe déjà',
             self::PASSWORD_MISMATCH => 'Les mots de passe ne correspondent pas',
             self::PASSWORD_LENGTH => 'Le mot de passe doit faire entre 8 et 20 caractères',
-            self::USERNAME_LENGTH => 'Le nom d\'utilisateur doit faire entre 1 et 20 caractères',
+            self::NAME_LENGTH => 'Le nom doit contenir entre 1 et 20 caractères',
             self::SPECIAL_CHARACTERS => 'Les caractères spéciaux ne sont pas autorisés',
             self::REGISTRATION_ERROR => 'Erreur lors de l\'inscription',
             self::SETTINGS_ERROR => 'Erreur lors de la sauvegarde des paramètres',
