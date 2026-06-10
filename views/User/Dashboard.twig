@@ -1,11 +1,68 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-
-    <h1>Bienvenue {{ username }}</h1>
+<div class="dashboard-header">
+    <h1>Tableau de bord - {{ username }}</h1>
     <form action="index.php?route=user/logout" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit">Se déconnecter</button>
+        <button type="submit" class="btn-secondary">Se déconnecter</button>
     </form>
+</div>
 
+<div class="dashboard-grid">
+    <!-- Profil Section -->
+    <div class="card">
+        <h2>Mes Informations</h2>
+        <p><strong>Nom :</strong> {{ user.cli_nom }} {{ user.cli_prenom }}</p>
+        <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
+        <p><strong>Téléphone :</strong> {{ user.cli_telephone }}</p>
+        <p><strong>Ville :</strong> {{ user.cli_ville }}</p>
+        
+        <div style="margin-top: 15px;">
+            <a href="index.php?route=user/profile/edit" class="btn-primary btn-small">Modifier mon profil</a>
+        </div>
+    </div>
+
+    <!-- Fidélité Section -->
+    <div class="card">
+        <h2>Programme de Fidélité</h2>
+        <p class="loyalty-points">
+            <span class="points-value">{{ user.cli_nb_points_ec }}</span>
+            <span class="points-label">points disponibles</span>
+        </p>
+        <p><em>Total des points gagnés : {{ user.cli_nb_points_tot }}</em></p>
+        <p>10 points = 1€ de réduction sur vos prochains trajets !</p>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+    <h2>Mes Réservations</h2>
+    {% if reservations is empty %}
+        <p>Vous n'avez pas encore effectué de réservation.</p>
+        <a href="index.php?route=lines" class="btn-primary">Réserver un trajet</a>
+    {% else %}
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Date</th>
+                    <th>Trajet(s)</th>
+                    <th>Prix</th>
+                    <th>Points gagnés</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in reservations %}
+                    <tr>
+                        <td>{{ res.res_num }}</td>
+                        <td>{{ res.res_date|date("d/m/Y") }}</td>
+                        <td>{{ res.trajets }}</td>
+                        <td>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</td>
+                        <td>+{{ res.res_nb_points }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
 {% endblock %}

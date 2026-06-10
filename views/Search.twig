@@ -1,0 +1,83 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<h1>Recherche d'Itinéraire</h1>
+
+<div class="card" style="margin-bottom: 20px;">
+    <form action="index.php" method="GET" class="reservation-form">
+        <input type="hidden" name="route" value="search">
+        
+        <div class="form-group">
+            <label for="depart">Ville de départ</label>
+            <select name="depart" id="depart" required>
+                <option value="">-- Choisissez --</option>
+                {% for com in communes %}
+                    <option value="{{ com.com_code_insee }}" {{ search_depart == com.com_code_insee ? 'selected' : '' }}>{{ com.com_nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="arrivee">Ville d'arrivée</label>
+            <select name="arrivee" id="arrivee" required>
+                <option value="">-- Choisissez --</option>
+                {% for com in communes %}
+                    <option value="{{ com.com_code_insee }}" {{ search_arrivee == com.com_code_insee ? 'selected' : '' }}>{{ com.com_nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="criterion">Critère d'optimisation</label>
+            <select name="criterion" id="criterion">
+                <option value="duration" {{ search_criterion == 'duration' ? 'selected' : '' }}>Le plus rapide (Temps)</option>
+                <option value="distance" {{ search_criterion == 'distance' ? 'selected' : '' }}>Le plus court (Distance)</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary">Rechercher</button>
+    </form>
+</div>
+
+{% if error %}
+    <p class="error-msg" style="color:red; font-weight:bold;">{{ error }}</p>
+{% endif %}
+
+{% if path %}
+    <div class="card">
+        <h2>Résultat : Trajet {{ path.criterion == 'duration' ? 'le plus rapide' : 'le plus court' }}</h2>
+        
+        <div class="path-summary" style="margin: 15px 0; padding: 15px; background: #eef2f5; border-radius: 8px;">
+            <p><strong>Distance totale :</strong> {{ path.total_distance|round(2) }} km</p>
+            <p><strong>Durée estimée :</strong> {{ path.total_duration }} minutes</p>
+            <p><strong>Correspondances :</strong> {{ path.num_transfers }}</p>
+            <p><strong>Prix total :</strong> {{ path.total_price|number_format(2, ',', ' ') }} €</p>
+        </div>
+
+        <h3>Détail du trajet :</h3>
+        <ul style="list-style: none; padding: 0;">
+            {% for segment in path.segments %}
+                <li style="margin-bottom: 10px; padding: 10px; border-left: 4px solid #0056b3; background: #f9f9f9;">
+                    <strong>Ligne {{ segment.lig_num }}</strong> : 
+                    De {{ segment.nom_depart }} à {{ segment.nom_arrivee }}
+                    <br>
+                    <small>Distance : {{ segment.distance|round(2) }} km | Prix : {{ segment.prix|number_format(2, ',', ' ') }} €</small>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <form action="index.php?route=search" method="POST" style="margin-top: 20px;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="add_to_cart" value="1">
+            <input type="hidden" name="segments" value="{{ path.segments|json_encode }}">
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="date">Date du voyage</label>
+                <input type="date" name="date" id="date" value="{{ "now"|date("Y-m-d") }}" required min="{{ "now"|date("Y-m-d") }}">
+            </div>
+            
+            <button type="submit" class="btn-primary">Ajouter cet itinéraire au panier</button>
+        </form>
+    </div>
+{% endif %}
+{% endblock %}

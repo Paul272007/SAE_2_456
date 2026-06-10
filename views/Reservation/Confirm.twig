@@ -8,32 +8,26 @@
 
     <table class="recap-table">
         <tr>
-            <th>Ligne</th>
-            <td>{{ reservation.ligne_nom }}</td>
+            <th>Trajets</th>
+            <td>
+                <ul>
+                    {% for item in cart %}
+                        <li>{{ item.ligne_nom }} ({{ item.nom_depart }} → {{ item.nom_arrivee }} le {{ item.date }})</li>
+                    {% endfor %}
+                </ul>
+            </td>
         </tr>
         <tr>
-            <th>Départ</th>
-            <td>{{ reservation.nom_depart }}</td>
-        </tr>
-        <tr>
-            <th>Arrivée</th>
-            <td>{{ reservation.nom_arrivee }}</td>
-        </tr>
-        <tr>
-            <th>Date</th>
-            <td>{{ reservation.date }}</td>
-        </tr>
-        <tr>
-            <th>Distance</th>
-            <td>{{ reservation.distance|round(2) }} km</td>
+            <th>Distance totale</th>
+            <td>{{ total_distance|round(2) }} km</td>
         </tr>
         <tr>
             <th>Points de fidélité gagnés</th>
-            <td>+ {{ reservation.nb_points }} points</td>
+            <td>+ {{ total_points_earned }} points</td>
         </tr>
         <tr class="total-row">
             <th>Prix total</th>
-            <td><strong>{{ reservation.prix_total|number_format(2, ',', ' ') }} €</strong></td>
+            <td><strong>{{ total_price|number_format(2, ',', ' ') }} €</strong></td>
         </tr>
     </table>
 </div>
@@ -44,13 +38,46 @@
         <h2>Paiement</h2>
         <p>En cliquant sur "Confirmer et payer", vous validez votre réservation.</p>
 
-        <form action="index.php?route=reservation/confirm" method="POST">
+        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
             <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit" class="btn-confirm">✓ Confirmer et payer ({{ reservation.prix_total|number_format(2, ',', ' ') }} €)</button>
+            
+            {% if points_available > 0 and points_to_use > 0 %}
+                <div class="points-section" style="margin-bottom: 15px; padding: 10px; background: #f0f8ff; border-radius: 5px;">
+                    <p>Vous avez <strong>{{ points_available }} points</strong> de fidélité disponibles.</p>
+                    <label>
+                        <input type="checkbox" name="use_points" value="yes" id="usePointsCheckbox">
+                        Utiliser {{ points_to_use }} points pour une réduction de {{ points_discount_value|number_format(2, ',', ' ') }} €
+                    </label>
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn-confirm" id="btnConfirm">
+                ✓ Confirmer et payer (<span id="finalPrice">{{ total_price|number_format(2, ',', ' ') }}</span> €)
+            </button>
         </form>
 
-        <a href="index.php?route=reservation&lig_num={{ reservation.lig_num }}" class="btn-back">← Modifier ma réservation</a>
+        <a href="index.php?route=reservation/cart" class="btn-back">← Retour au panier</a>
     </div>
+
+    {% if points_available > 0 and points_to_use > 0 %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkbox = document.getElementById('usePointsCheckbox');
+            const priceSpan = document.getElementById('finalPrice');
+            const originalPrice = {{ total_price|number_format(2, '.', '') }};
+            const discount = {{ points_discount_value|number_format(2, '.', '') }};
+
+            checkbox.addEventListener('change', function() {
+                let currentPrice = originalPrice;
+                if (this.checked) {
+                    currentPrice -= discount;
+                }
+                // Format to French locale
+                priceSpan.textContent = currentPrice.toFixed(2).replace('.', ',');
+            });
+        });
+    </script>
+    {% endif %}
 {% else %}
     {# Client non inscrit : invitation à se connecter ou créer un compte #}
     <div class="guest-section">
@@ -62,7 +89,7 @@
             <a href="index.php?route=login" class="btn-primary">Se connecter</a>
             <a href="index.php?route=register" class="btn-secondary">Créer un compte</a>
         </div>
-        <a href="index.php?route=reservation&lig_num={{ reservation.lig_num }}" class="btn-back">← Modifier ma réservation</a>
+        <a href="index.php?route=reservation/cart" class="btn-back">← Retour au panier</a>
     </div>
 {% endif %}
 {% endblock %}

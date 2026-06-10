@@ -172,16 +172,16 @@ class ReservationModel extends Model
     }
 
     /**
-     * Met à jour les points du client après une réservation.
+     * Met à jour les points du client après une réservation (points gagnés et points utilisés).
      * @throws Exception
      */
-    public function addClientPoints(int $cliNum, int $points): void
+    public function updatePointsAfterReservation(int $cliNum, int $pointsEarned, int $pointsUsed): void
     {
         $sql = "UPDATE vik_client
-                SET cli_nb_points_ec  = cli_nb_points_ec + ?,
+                SET cli_nb_points_ec  = cli_nb_points_ec + ? - ?,
                     cli_nb_points_tot = cli_nb_points_tot + ?,
-                    cli_date_connec   = CURRENT_DATE
+                    cli_date_connec   = SYSDATE
                 WHERE cli_num = ?";
-        $this->runQuery($sql, [$points, $points, $cliNum]);
+        $this->runQuery($sql, [$pointsEarned, $pointsUsed, $pointsEarned, $cliNum]);
     }
 }

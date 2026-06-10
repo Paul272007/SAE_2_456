@@ -1,0 +1,58 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Gestion des Clients</h1>
+    <nav class="admin-nav">
+        <a href="index.php?route=admin/dashboard" class="btn-secondary">Statistiques</a>
+        <a href="index.php?route=admin/users" class="btn-primary">Gérer les clients</a>
+        <a href="index.php?route=admin/lines" class="btn-secondary">Gérer les lignes</a>
+    </nav>
+</div>
+
+<div class="filter-section" style="margin: 20px 0;">
+    <a href="index.php?route=admin/users" class="btn-small {{ filter == 'all' ? 'btn-primary' : 'btn-secondary' }}">Tous les clients</a>
+    <a href="index.php?route=admin/users&filter=inactive" class="btn-small {{ filter == 'inactive' ? 'btn-primary' : 'btn-secondary' }}">Clients inactifs (> 6 mois)</a>
+</div>
+
+<div class="card">
+    <table class="schedule-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Dernière connexion</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.cli_num }}</td>
+                    <td>{{ user.cli_nom }}</td>
+                    <td>{{ user.cli_prenom }}</td>
+                    <td>{{ user.cli_courriel }}</td>
+                    <td>{{ user.cli_date_connec|date("d/m/Y") }}</td>
+                    <td>{{ user.typ_num == 1 ? 'Client' : 'Admin' }}</td>
+                    <td>
+                        <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn-small btn-secondary">Éditer</a>
+                        <form action="index.php?route=admin/useredit" method="POST" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                            <button type="submit" class="btn-small btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" style="text-align:center;">Aucun client trouvé.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

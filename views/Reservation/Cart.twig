@@ -1,0 +1,61 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<h1>Votre Panier</h1>
+
+{% if cart is empty %}
+    <p>Votre panier est vide.</p>
+    <a href="index.php?route=lines" class="btn-primary">Voir les lignes</a>
+{% else %}
+    <div class="cart-container">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Ligne</th>
+                    <th>Départ</th>
+                    <th>Arrivée</th>
+                    <th>Date</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, item in cart %}
+                    <tr>
+                        <td>{{ item.ligne_nom }}</td>
+                        <td>{{ item.nom_depart }}</td>
+                        <td>{{ item.nom_arrivee }}</td>
+                        <td>{{ item.date }}</td>
+                        <td>{{ item.prix_total|number_format(2, ',', ' ') }} €</td>
+                        <td>
+                            <form action="index.php?route=reservation/cart" method="POST" style="display:inline;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                                <input type="hidden" name="action" value="remove">
+                                <input type="hidden" name="index" value="{{ i }}">
+                                <button type="submit" class="btn-danger btn-small">Retirer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4" style="text-align:right;">Total :</th>
+                    <th>{{ total_price|number_format(2, ',', ' ') }} €</th>
+                    <th></th>
+                </tr>
+            </tfoot>
+        </table>
+
+        <div class="cart-actions" style="margin-top: 20px; display: flex; gap: 10px;">
+            <a href="index.php?route=lines" class="btn-secondary">Ajouter un autre trajet</a>
+            <form action="index.php?route=reservation/cart" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="clear">
+                <button type="submit" class="btn-danger">Vider le panier</button>
+            </form>
+            <a href="index.php?route=reservation/confirm" class="btn-primary">Procéder au paiement</a>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

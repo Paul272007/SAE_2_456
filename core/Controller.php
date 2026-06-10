@@ -92,7 +92,12 @@ abstract class Controller
           'Lines'       => 'Lignes',
           'Schedule'    => 'Horaires',
           'Reservation' => 'Réservation',
+          'Cart'        => 'Mon Panier',
           'Confirm'     => 'Confirmation',
+          'ProfileEdit' => 'Modifier mon profil',
+          'Search'      => 'Recherche d\'itinéraire',
+          'Users'       => 'Gestion des clients',
+          'Useredit'    => 'Édition client',
           default       => $this->controllerName
         },
         "connected" => isAuthenticated(),

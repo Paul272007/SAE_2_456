@@ -1,0 +1,79 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Édition de Client - {{ user.cli_nom }} {{ user.cli_prenom }}</h1>
+    <a href="index.php?route=admin/users" class="btn-back">← Retour à la liste</a>
+</div>
+
+<div class="dashboard-grid" style="margin-top: 20px;">
+    <!-- Modifier les infos -->
+    <div class="card">
+        <h2>Informations du compte</h2>
+        <form action="index.php?route=admin/useredit" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+            
+            <div class="form-group">
+                <label for="cli_nom">Nom</label>
+                <input type="text" id="cli_nom" name="cli_nom" value="{{ user.cli_nom }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cli_prenom">Prénom</label>
+                <input type="text" id="cli_prenom" name="cli_prenom" value="{{ user.cli_prenom }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cli_ville">Ville</label>
+                <input type="text" id="cli_ville" name="cli_ville" value="{{ user.cli_ville }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="cli_telephone">Téléphone</label>
+                <input type="text" id="cli_telephone" name="cli_telephone" value="{{ user.cli_telephone }}" required>
+            </div>
+            
+            <button type="submit" class="btn-primary">Enregistrer les modifications</button>
+        </form>
+    </div>
+
+    <!-- Stats Rapides -->
+    <div class="card">
+        <h2>Détails</h2>
+        <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
+        <p><strong>Points en cours :</strong> {{ user.cli_nb_points_ec }}</p>
+        <p><strong>Points au total :</strong> {{ user.cli_nb_points_tot }}</p>
+        <p><strong>Dernière connexion :</strong> {{ user.cli_date_connec|date("d/m/Y") }}</p>
+    </div>
+</div>
+
+<div class="card" style="margin-top: 20px;">
+    <h2>Réservations du client</h2>
+    {% if reservations is empty %}
+        <p>Aucune réservation.</p>
+    {% else %}
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Date</th>
+                    <th>Trajet(s)</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for res in reservations %}
+                    <tr>
+                        <td>{{ res.res_num }}</td>
+                        <td>{{ res.res_date|date("d/m/Y") }}</td>
+                        <td>{{ res.trajets }}</td>
+                        <td>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+{% endblock %}

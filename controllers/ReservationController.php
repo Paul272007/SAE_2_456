@@ -101,8 +101,12 @@ class ReservationController extends Controller
         $stopMap  = array_column($stops, 'nom', 'code');
         $line     = $model->getLine($ligNum);
 
-        // 6. Stockage de la réservation en attente dans la session
-        $_SESSION['pending_reservation'] = [
+        // 6. Stockage de la réservation dans le panier en session
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        $_SESSION['cart'][] = [
             'lig_num'        => $ligNum,
             'ligne_nom'      => ($line['commune_depart'] ?? '') . ' → ' . ($line['commune_arrivee'] ?? ''),
             'code_depart'    => $codeDepart,
@@ -116,6 +120,7 @@ class ReservationController extends Controller
             'nb_points'      => $nbPoints,
         ];
 
-        redirect('index.php?route=reservation/confirm');
+        $_SESSION['flash_success'] = "Trajet ajouté au panier.";
+        redirect('index.php?route=reservation/cart');
     }
 }

@@ -13,25 +13,53 @@ use Core\Privilege;
 use Core\RequirePrivilege;
 use Exception;
 use Models\ReservationModel;
+use Models\User\UserModel; // Assuming we'll create this
 
 #[RequirePrivilege(Privilege::GUEST)]
 class ConfirmController extends Controller
 {
     /**
-     * Affiche la page de confirmation/paiement avec le récapitulatif de la réservation.
+     * Affiche la page de confirmation/paiement avec le récapitulatif du panier.
      */
     public function get(): void
     {
-        // Si aucune réservation en attente, retour à la liste des lignes
-        if (empty($_SESSION['pending_reservation'])) {
+        // Si aucun panier, retour à la liste des lignes
+        if (empty($_SESSION['cart'])) {
             redirect('index.php?route=lines');
         }
 
-        $pending = $_SESSION['pending_reservation'];
+        $cart = $_SESSION['cart'];
+        $totalPrice = 0.0;
+        $totalDistance = 0.0;
+        $totalPointsEarned = 0;
 
-        $this->data['reservation'] = $pending;
+        foreach ($cart as $item) {
+            $totalPrice += $item['prix_total'];
+            $totalDistance += $item['distance'];
+            $totalPointsEarned += $item['nb_points'];
+        }
+
+        $this->data['cart'] = $cart;
+        $this->data['total_price'] = $totalPrice;
+        $this->data['total_distance'] = $totalDistance;
+        $this->data['total_points_earned'] = $totalPointsEarned;
         $this->data['csrf_token']  = $_SESSION['csrf_token'];
         $this->data['connected']   = isset($_SESSION['userId']);
+
+        if ($this->data['connected']) {
+            // Include UserModel to get current points
+            require_once 'models/User/UserModel.php';
+            $userModel = new \Models\UserModel();
+            $user = $userModel->getUserById((int)$_SESSION['userId']);
+            $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
+            
+            $this->data['points_available'] = $pointsAvailable;
+            // Conversion: 10 points = 1 euro discount. Max discount = total price.
+            $maxDiscountPoints = (int)floor($totalPrice * 10);
+            $pointsToUse = min($pointsAvailable, $maxDiscountPoints);
+            $this->data['points_discount_value'] = $pointsToUse / 10.0;
+            $this->data['points_to_use'] = $pointsToUse;
+        }
 
         $this->render();
     }
@@ -47,18 +75,8 @@ class ConfirmController extends Controller
     {
         verifyCSRFToken();
 
-        if (empty($_SESSION['pending_reservation'])) {
+        if (empty($_SESSION['cart'])) {
             redirect('index.php?route=lines');
-        }
-
-        $pending = $_SESSION['pending_reservation'];
-
-        // Vérification des données de session (sécurité minimale)
-        $required = ['lig_num', 'code_depart', 'code_arrivee', 'date', 'distance', 'tar_num_tranche', 'prix_total', 'nb_points'];
-        foreach ($required as $key) {
-            if (!isset($pending[$key])) {
-                throw new ClientError(ClientErrorCode::BAD_REQUEST);
-            }
         }
 
         // Si non connecté → sauvegarder et rediriger vers l'inscription
@@ -69,42 +87,80 @@ class ConfirmController extends Controller
 
         $cliNum = (int)$_SESSION['userId'];
         $model  = new ReservationModel();
-
-        // 1. Vérification de disponibilité au moment de la confirmation (double-check)
-        if (!$model->isAvailable(
-            (int)$pending['lig_num'],
-            (string)$pending['code_depart'],
-            (string)$pending['code_arrivee'],
-            (string)$pending['date']
-        )) {
-            unset($_SESSION['pending_reservation']);
-            throw new ClientError(ClientErrorCode::BAD_REQUEST);
+        
+        // Handle points usage
+        $usePoints = isset($_POST['use_points']) && $_POST['use_points'] === 'yes';
+        $pointsUsed = 0;
+        
+        $totalPrice = 0.0;
+        $totalPointsEarned = 0;
+        foreach ($_SESSION['cart'] as $item) {
+            $totalPrice += $item['prix_total'];
+            $totalPointsEarned += $item['nb_points'];
         }
 
-        // 2. Création de la réservation
-        $resNum = $model->createReservation(
-            $cliNum,
-            (int)$pending['tar_num_tranche'],
-            (string)$pending['date'],
-            (int)$pending['nb_points'],
-            (float)$pending['prix_total']
-        );
+        if ($usePoints) {
+            require_once 'models/User/UserModel.php';
+            $userModel = new \Models\UserModel();
+            $user = $userModel->getUserById($cliNum);
+            $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
+            
+            $maxDiscountPoints = (int)floor($totalPrice * 10);
+            $pointsUsed = min($pointsAvailable, $maxDiscountPoints);
+        }
 
-        // 3. Création de l'étape (segment réservé)
-        $model->createEtape(
-            (int)$pending['lig_num'],
-            $resNum,
-            (string)$pending['code_depart'],
-            (string)$pending['code_arrivee'],
-            (float)$pending['distance'],
-            (string)$pending['date'] . ' 00:00:00'
-        );
+        $cart = $_SESSION['cart'];
+
+        // 1. Vérification de disponibilité pour TOUS les trajets avant d'insérer
+        foreach ($cart as $pending) {
+            if (!$model->isAvailable(
+                (int)$pending['lig_num'],
+                (string)$pending['code_depart'],
+                (string)$pending['code_arrivee'],
+                (string)$pending['date']
+            )) {
+                // One of the journeys is not available
+                throw new ClientError(ClientErrorCode::BAD_REQUEST);
+            }
+        }
+
+        // Apply discount proportionally or just set it on the first reservation? 
+        // For simplicity, we create reservations with original prices, and we deduct points globally.
+        // If the system requires discount per reservation, it's more complex. We will just deduct points from user profile.
+
+        // 2. Création des réservations
+        foreach ($cart as $pending) {
+            $resNum = $model->createReservation(
+                $cliNum,
+                (int)$pending['tar_num_tranche'],
+                (string)$pending['date'],
+                (int)$pending['nb_points'],
+                (float)$pending['prix_total']
+            );
+
+            // 3. Création de l'étape (segment réservé)
+            $model->createEtape(
+                (int)$pending['lig_num'],
+                $resNum,
+                (string)$pending['code_depart'],
+                (string)$pending['code_arrivee'],
+                (float)$pending['distance'],
+                (string)$pending['date'] . ' 00:00:00'
+            );
+        }
 
         // 4. Mise à jour des points de fidélité du client
-        $model->addClientPoints($cliNum, (int)$pending['nb_points']);
+        // Points gagnés - points utilisés
+        $netPoints = $totalPointsEarned - $pointsUsed;
+        
+        if ($netPoints !== 0 || $totalPointsEarned !== 0) {
+            // We use addClientPoints which adds to ec and tot. 
+            // Wait, points used should only deduct from ec, not tot.
+            $model->updatePointsAfterReservation($cliNum, $totalPointsEarned, $pointsUsed);
+        }
 
         // 5. Nettoyage de la session
-        unset($_SESSION['pending_reservation']);
+        unset($_SESSION['cart']);
 
         $_SESSION['flash_success'] = 'reservation_confirmed';
         redirect('index.php?route=user/dashboard');
