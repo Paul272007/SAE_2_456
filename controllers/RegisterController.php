@@ -75,8 +75,6 @@ class RegisterController extends Controller
             $phoneNumber,   // cli_telephone
             $email,         // cli_courriel
             $password,      // cli_password
-            0,              // cli_nb_points_ec
-            0,              // cli_nb_points_tot
             date('Y-m-d')   // cli_date_connec
         ]);
         $_SESSION['flash_success'] = 'account_created';
