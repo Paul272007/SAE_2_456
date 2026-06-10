@@ -1,8 +1,8 @@
 {
   "db": {
     "dbname": "harpagon.unicaen.fr:1521/info.harpagon.unicaen.fr",
-    "user": "agile2",
-    "passwd": "agile2",
+    "user": "agile_2",
+    "passwd": "DPASIT",
     "charset": "AL32UTF8"
   },
   "site": {
