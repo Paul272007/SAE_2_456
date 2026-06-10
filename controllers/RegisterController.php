@@ -33,11 +33,11 @@ class RegisterController extends Controller
         verifyCSRFToken();
         $this->checkPostFields();
 
-        $name = $_POST["cli_nom"];
-        $firstName = $_POST["cli_prenom"];
-        $city = $_POST["cli_ville"];
-        $phoneNumber = $_POST["cli_telephone"];
-        $email = $_POST["cli_courriel"];
+        $name = trim($_POST["cli_nom"]);
+        $firstName = trim($_POST["cli_prenom"]);
+        $city = trim($_POST["cli_ville"]);
+        $phoneNumber = trim($_POST["cli_telephone"]);
+        $email = trim($_POST["cli_courriel"]);
         $password1 = $_POST["password"];
         $password2 = $_POST["confirm_password"];
 
@@ -56,7 +56,10 @@ class RegisterController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
 
-        if (!preg_match('/^[0-9]{10}$/', $phoneNumber) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $phoneNumber))
+        // Clean phone number before validation
+        $cleanPhone = str_replace([' ', '.', '-'], '', $phoneNumber);
+
+        if (!preg_match('/^[0-9]{10}$/', $cleanPhone) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $cleanPhone))
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
 
         $this->model = new RegisterModel();
@@ -72,7 +75,7 @@ class RegisterController extends Controller
             $name,          // cli_nom
             $firstName,     // cli_prenom
             $city,          // cli_ville
-            $phoneNumber,   // cli_telephone
+            $cleanPhone,    // cli_telephone
             $email,         // cli_courriel
             $password,      // cli_password
             date('Y-m-d')   // cli_date_connec
