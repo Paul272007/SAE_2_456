@@ -1,0 +1,36 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="lines-container">
+    <h1 class="lines-title">Lignes de bus</h1>
+
+    {% for line in lines %}
+    <div class="line-card">
+        <div class="line-header" onclick="toggleLine(this)">
+            <div class="line-header-left">
+                <span class="line-label">Ligne</span>
+                <span class="line-badge">{{ line.num_ligne }}</span>
+                <span class="line-route">{{ line.nom_ligne }}</span>
+            </div>
+            <div class="line-header-right">
+                <span class="line-chevron">∨</span>
+            </div>
+        </div>
+        <div class="line-stops">
+            {% for stop in line.stops %}
+            <div class="stop-row">
+                <span class="stop-bullet">-</span>
+                <span class="stop-name">{{ stop.com_nom }}</span>
+                <span class="stop-dept">{{ stop.dep_nom }}</span>
+                <span class="stop-times">
+                    {% for time in stop.horaires %}
+                    <span class="stop-time">{{ time }}</span>
+                    {% endfor %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
