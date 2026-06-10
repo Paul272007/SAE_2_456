@@ -17,6 +17,7 @@ class Database
     {
         $dbConfig = Config::get('db');
         $this->pdo = new PDO("oci:dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}", $dbConfig['user'], $dbConfig['passwd']);
+        $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
     }
     public static function getInstance(): Database
     {
