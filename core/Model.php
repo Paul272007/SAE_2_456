@@ -70,7 +70,7 @@ class Model
      */
     public function getUserByEMail(string $email) : mixed
     {
-        $sql = "SELECT * FROM users WHERE user_name = ?";
+        $sql = "SELECT * FROM vik_client WHERE cli_courriel = ?";
         return $this->fetch($sql, [$email]);
     }
 
