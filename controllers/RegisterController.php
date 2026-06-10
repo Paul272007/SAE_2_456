@@ -59,6 +59,6 @@ class RegisterController extends Controller
 
         $this->model->register([$username, $password]);
         $_SESSION['flash_success'] = 'account_created';
-        redirect('/login');
+        redirect('index.php?route=login');
     }
 }

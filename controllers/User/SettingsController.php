@@ -47,6 +47,6 @@ class SettingsController extends Controller
         $this->model->changeSettings([$language, $_SESSION['userId']]);
         $_SESSION['language'] = $language;
         $_SESSION['flash_success'] = 'settings_changed';
-        redirect('/user/settings');
+        redirect('index.php?route=user/settings');
     }
 }

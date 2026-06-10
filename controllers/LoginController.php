@@ -56,7 +56,7 @@ class LoginController extends Controller
             $_SESSION["language"] = $user["user_language"];
             buildCSRFToken();
 
-            redirect("/user/dashboard");
+            redirect("index.php?route=user/dashboard");
         } else {
             throw new ClientError(ClientErrorCode::PASSWORD_ERROR);
         }

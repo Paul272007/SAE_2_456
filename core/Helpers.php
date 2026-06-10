@@ -25,14 +25,14 @@ function requireAuth(): void
 {
     if (!isAuthenticated()) {
         $_SESSION["flash_error"] = "login_error";
-        redirect("/login");
+        redirect("index.php?route=login");
     }
 }
 
 function requireNotAuth(): void
 {
     if (isAuthenticated()) {
-        redirect("/user/dashboard");
+        redirect("index.php?route=user/dashboard");
     }
 }
 
@@ -41,7 +41,7 @@ function requireAdmin(): void
     requireAuth();
     if (!isset($_SESSION["role"]) || $_SESSION["role"] < 2) {
         $_SESSION["flash_error"] = "admin_error";
-        redirect("/user/dashboard");
+        redirect("index.php?route=user/dashboard");
     }
 }
 
@@ -50,7 +50,7 @@ function requireRoot(): void
     requireAdmin();
     if ($_SESSION["role"] < 3) {
         $_SESSION["flash_error"] = "root_error";
-        redirect("/user/dashboard");
+        redirect("index.php?route=user/dashboard");
     }
 }
 

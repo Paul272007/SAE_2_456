@@ -3,7 +3,7 @@
 {% block content %}
 
     <h1>{{ lang('settings') }}</h1>
-    <form action="/user/settings" method="POST">
+    <form action="index.php?route=user/settings" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
         <label>
             {{ lang('language') }}

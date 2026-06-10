@@ -45,6 +45,6 @@ class LogoutController extends Controller
 
     session_unset(); // Delete all session variables
     session_destroy(); // Delete session
-    redirect('/login');
+    redirect('index.php?route=login');
   }
 }

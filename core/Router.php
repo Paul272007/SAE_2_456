@@ -48,10 +48,8 @@ class Router
   public function run(): void
   {
     try {
-      // 1. Parse URL to get requested page
-      // Clean url : remove double slashes that could break the URL parser
-      $requestUri = preg_replace('#/+#', '/', $_SERVER['REQUEST_URI']);
-      $uri = parse_url($requestUri, PHP_URL_PATH) ?? '';
+      // 1. Get requested page from GET parameter
+      $uri = $_GET['route'] ?? '';
       $uri = trim($uri, '/');
 
       // Array containing all URL elements
