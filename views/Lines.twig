@@ -1,32 +1,54 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<h1>Lignes de transport</h1>
+<h1>Lignes de Transport</h1>
+<p class="text-muted">Consultez toutes nos lignes, leurs horaires et réservez votre prochain trajet.</p>
 
 {% if lines is empty %}
-    <p>Aucune ligne disponible pour le moment.</p>
+    <div class="alert alert-info">Aucune ligne disponible pour le moment.</div>
 {% else %}
-    <ul class="lines-list">
-        {% for line in lines %}
-            <li class="line-card">
-                <div class="line-info">
-                    <span class="line-number">Ligne {{ line.lig_num }}</span>
-                    <span class="line-route">
-                        <strong>{{ line.commune_depart }}</strong>
-                        <span class="line-arrow">→</span>
-                        <strong>{{ line.commune_arrivee }}</strong>
-                    </span>
-                </div>
-                <div class="line-actions">
-                    <a href="index.php?route=schedule&lig_num={{ line.lig_num }}" class="btn-secondary">
-                        Voir les horaires
-                    </a>
-                    <a href="index.php?route=reservation&lig_num={{ line.lig_num }}" class="btn-primary">
-                        Réserver
-                    </a>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>N° Ligne</th>
+                    <th>Départ</th>
+                    <th>Arrivée</th>
+                    <th>Arrêts</th>
+                    <th>Distance</th>
+                    <th>Durée estimée</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                    <tr>
+                        <td>
+                            <span class="badge bg-primary fs-6">{{ line.lig_num }}</span>
+                        </td>
+                        <td><strong>{{ line.commune_depart }}</strong></td>
+                        <td><strong>{{ line.commune_arrivee }}</strong></td>
+                        <td>{{ line.nb_arrets }} arrêts</td>
+                        <td>{{ line.distance_totale|round(1) }} km</td>
+                        <td>
+                            {% if line.duree_totale >= 60 %}
+                                {{ (line.duree_totale / 60)|round(0, 'floor') }}h{{ line.duree_totale % 60 }}
+                            {% else %}
+                                {{ line.duree_totale|round(0) }} min
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="index.php?route=schedule&lig_num={{ line.lig_num }}" class="btn btn-outline-secondary btn-sm">
+                                Horaires
+                            </a>
+                            <a href="index.php?route=reservation&lig_num={{ line.lig_num }}" class="btn btn-primary btn-sm">
+                                Réserver
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endif %}
 {% endblock %}

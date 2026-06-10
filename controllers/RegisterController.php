@@ -79,14 +79,15 @@ class RegisterController extends Controller
         ]);
         $_SESSION['flash_success'] = 'account_created';
 
-        // Si une réservation était en attente, connecter directement et finaliser
-        if (!empty($_SESSION['pending_reservation'])) {
+        // Si un panier était en attente, connecter directement et finaliser
+        if (!empty($_SESSION['cart'])) {
             session_regenerate_id(true);
             $_SESSION['userId']   = $this->model->getLastClientId();
             $_SESSION['username'] = $name . ' ' . $firstName;
             $_SESSION['role']     = 1;
             $_SESSION['email']    = $email;
             $_SESSION['points']   = 0;
+            unset($_SESSION["csrf_token"]);
             buildCSRFToken();
             redirect('index.php?route=reservation/confirm');
         }

@@ -17,7 +17,7 @@ class LinesController extends Controller
     public function get(): void
     {
         $this->model = new LinesModel();
-        $this->data["lines"] = $this->model->getLines();
+        $this->data["lines"] = $this->model->getLinesWithDetails();
         $this->render();
     }
 }

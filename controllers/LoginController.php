@@ -47,7 +47,7 @@ class LoginController extends Controller
             throw new ClientError(ClientErrorCode::USER_NOT_FOUND);
         }
 
-        if (!password_verify($password, $user["cli_password"])) {
+        if (!password_verify($password, $user["cli_mdp"])) {
             throw new ClientError(ClientErrorCode::PASSWORD_ERROR);
         }
 
@@ -55,14 +55,16 @@ class LoginController extends Controller
 
         $_SESSION["userId"]   = $user["cli_num"];
         $_SESSION["username"] = $user["cli_nom"] . ' ' . $user["cli_prenom"];
-        $_SESSION["role"]     = 1; // Tous les clients VIK sont des utilisateurs (niveau USER)
+        $_SESSION["role"]     = (int)($user["typ_num"] ?? 1);
         $_SESSION["email"]    = $user["cli_courriel"];
         $_SESSION["points"]   = $user["cli_nb_points_ec"];
 
+        // Force la régénération du token CSRF après le changement de session
+        unset($_SESSION["csrf_token"]);
         buildCSRFToken();
 
-        // Si une réservation était en attente avant la connexion, finaliser automatiquement
-        if (!empty($_SESSION['pending_reservation'])) {
+        // Si un panier était en attente avant la connexion, rediriger vers la confirmation
+        if (!empty($_SESSION['cart'])) {
             redirect('index.php?route=reservation/confirm');
         }
 

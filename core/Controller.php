@@ -89,7 +89,8 @@ abstract class Controller
           'Register'    => 'Inscription',
           'Dashboard'   => 'Tableau de bord',
           'Home'        => 'Accueil',
-          'Lines'       => 'Lignes',
+          'About'       => 'À propos',
+          'Lines'       => 'Lignes de transport',
           'Schedule'    => 'Horaires',
           'Reservation' => 'Réservation',
           'Cart'        => 'Mon Panier',
@@ -108,10 +109,10 @@ abstract class Controller
       $jsFile = "scripts/$assetPath.js";
 
       if (file_exists($cssFile)) {
-        $this->data["stylesheet"] = "/" . $cssFile;
+        $this->data["stylesheet"] = $cssFile;
       }
       if (file_exists($jsFile)) {
-        $this->data["javascript"] = "/" . $jsFile;
+        $this->data["javascript"] = $jsFile;
       }
 
       // ... (rest of the constructor remains the same)
