@@ -10,6 +10,7 @@ use Core\Controller;
 
 use Core\Privilege;
 use Core\RequirePrivilege;
+use Models\UserModel;
 
 #[RequirePrivilege(Privilege::USER)]
 class DashboardController extends Controller
@@ -17,7 +18,7 @@ class DashboardController extends Controller
     public function get(): void
     {
         require_once 'models/User/UserModel.php';
-        $model = new \Models\UserModel();
+        $model = new UserModel();
         $cliNum = (int)$_SESSION['userId'];
 
         $user = $model->getUserById($cliNum);

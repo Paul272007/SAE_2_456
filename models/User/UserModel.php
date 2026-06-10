@@ -42,9 +42,9 @@ class UserModel extends Model
                        r.res_nb_points,
                        (SELECT LISTAGG(c1.com_nom || ' → ' || c2.com_nom, ', ') WITHIN GROUP (ORDER BY e.eta_heure)
                         FROM vik_etape e
-                        JOIN vik_noeud n1 ON n1.com_code_insee_arret = e.com_code_insee_depar AND n1.lig_num = e.lig_num
+                        JOIN vik_noeud n1 ON n1.com_code_insee_arret = e.com_code_insee_depart AND n1.lig_num = e.lig_num
                         JOIN vik_commune c1 ON c1.com_code_insee = n1.com_code_insee_arret
-                        JOIN vik_noeud n2 ON n2.com_code_insee_arret = e.com_code_insee_arrive AND n2.lig_num = e.lig_num
+                        JOIN vik_noeud n2 ON n2.com_code_insee_arret = e.com_code_insee_arrivee AND n2.lig_num = e.lig_num
                         JOIN vik_commune c2 ON c2.com_code_insee = n2.com_code_insee_arret
                         WHERE e.res_num = r.res_num) AS trajets
                 FROM vik_reservation r

@@ -116,8 +116,8 @@ class ReservationModel extends Model
         $sql = "SELECT COUNT(*) AS nb
                 FROM vik_reservation r
                 JOIN vik_etape e ON e.res_num = r.res_num AND e.lig_num = ?
-                JOIN vik_noeud nd ON nd.lig_num = ? AND nd.com_code_insee_arret = e.com_code_insee_depar
-                JOIN vik_noeud na ON na.lig_num = ? AND na.com_code_insee_arret = e.com_code_insee_arrive
+                JOIN vik_noeud nd ON nd.lig_num = ? AND nd.com_code_insee_arret = e.com_code_insee_depart
+                JOIN vik_noeud na ON na.lig_num = ? AND na.com_code_insee_arret = e.com_code_insee_arrivee
                 WHERE r.res_date = ?
                   AND nd.noe_heure_passage < na.noe_heure_passage";
         $result = $this->fetch($sql, [$ligNum, $ligNum, $ligNum, $date]);
@@ -166,7 +166,7 @@ class ReservationModel extends Model
         string $heure
     ): void {
         $sql = "INSERT INTO vik_etape
-                    (lig_num, res_num, com_code_insee_depar, com_code_insee_arrive, eta_distance, eta_heure)
+                    (lig_num, res_num, com_code_insee_depart, com_code_insee_arrivee, eta_distance, eta_heure)
                 VALUES (?, ?, ?, ?, ?, ?)";
         $this->runQuery($sql, [$ligNum, $resNum, $codeDepart, $codeArrivee, $distance, $heure]);
     }
