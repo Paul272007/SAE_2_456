@@ -1,0 +1,9 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+    {% if line_number is not null %}
+        {% include "Components/Line.twig" %}
+    {% else %}
+        <p>{{ error }}</p>
+    {% endif %}
+{% endblock %}

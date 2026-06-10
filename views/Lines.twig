@@ -8,24 +8,12 @@
 {% else %}
     <ul class="lines-list">
         {% for line in lines %}
-            <li class="line-card">
-                <div class="line-info">
-                    <span class="line-number">Ligne {{ line.lig_num }}</span>
-                    <span class="line-route">
-                        <strong>{{ line.commune_depart }}</strong>
-                        <span class="line-arrow">→</span>
-                        <strong>{{ line.commune_arrivee }}</strong>
-                    </span>
-                </div>
-                <div class="line-actions">
-                    <a href="index.php?route=schedule&lig_num={{ line.lig_num }}" class="btn-secondary">
-                        Voir les horaires
-                    </a>
-                    <a href="index.php?route=reservation&lig_num={{ line.lig_num }}" class="btn-primary">
-                        Réserver
-                    </a>
-                </div>
-            </li>
+            {%include "Components/Line.twig" with {
+                line_number_ line.lig_num,
+                line_terminus_1: line.commune_depart,
+                line_terminus_2: line. commune_arrovée,
+                sops:[]
+            }%}
         {% endfor %}
     </ul>
 {% endif %}

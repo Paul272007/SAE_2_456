@@ -61,4 +61,39 @@ class ScheduleModel extends Model
                 ORDER BY n.noe_heure_passage ASC";
         return $this->fetchAll($sql, [$ligNum]);
     }
+
+
+    // peut on merge les fonctiions? la dif est l'ajout du nom du dep et le rajout de l'order by com_code_insee
+    public function getStopsLig(string $ligNum): array
+    {
+        $sql = "SELECT n.COM_CODE_INSEE_ARRET as code,
+                       c.COM_NOM as nom,
+                       d.DEP_NOM as dep_nom,
+                       n.noe_heure_passage as heure
+                FROM vik_noeud n
+                JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
+                JOIN vik_departement d ON c.dep_num = d.dep_num
+                WHERE n.lig_num = ?
+                ORDER BY code, heure ASC";
+        return $this->fetchAll($sql, [$ligNum]);
+    }
+
+    public function getStopsHours(string $ligNum) : array
+    {
+        $stops = [];
+        $rows = $this->getStopsLig($ligNum);
+        foreach($rows as $row){
+            $code = $row['code'];
+            if (!isset($stops[$code])){
+                $stops[$code]=[
+                    'city' => $row['nom'],
+                    'department' => $row['dep_nom'],
+                    'hours' => [],
+                ];
+            }
+
+            $stops[$code]['hours'][] = $row['heure'];
+        }
+        return $stops;
+    }
 }

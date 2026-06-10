@@ -1,0 +1,26 @@
+<div class="line">
+  <div class="line-header">
+    <div class="header-content">
+      Ligne
+      <div class="line-number">{{ line_number }}</div>
+      <div class="line-terminus">{{ line_terminus_1 }} - {{ line_terminus_2 }}</div>
+    </div>
+    <button class="open-toggle">❭</button>
+  </div>
+  <div class="stop-list">
+    {% for stop in stops %}
+      <div class="stop-item">
+        <div class="stop-item-header">
+          -
+          <span class="city-name">{{ stop.city }}</span>
+          {{ stop.department }}
+        </div>
+        <div class="stop-item-hours">
+          {% for hour in stop.hours %}
+            <span>{{ hour }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

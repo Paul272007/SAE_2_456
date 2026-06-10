@@ -1,0 +1,114 @@
+:root {
+  --bg-line: #e7e4e4;
+  --border: #726565;
+  --accent: #ff0000;
+  --text-on-accent: #ffffff;
+  --transparent: transparent;
+}
+
+.line {
+  background-color: var(--bg-line);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+.line-header {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+
+.line-number {
+  background-color: var(--accent);
+  border-radius: 5px;
+  color: var(--text-on-accent);
+  font-weight: bold;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line-terminus {
+  font-weight: bold;
+}
+
+.stop-list {
+  display: flex;
+  transition:
+    max-height 0.3s ease-out,
+    margin-top 0.3s ease-out,
+    padding-top 0.3s ease-out,
+    border-top 0.3s ease-out;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 20px;
+  overflow: hidden;
+  max-height: 0;
+  padding-top: 0;
+  border-top: none;
+  margin-top: -10px;
+  border-top: 1px solid var(--transparent);
+}
+
+.stop-list.open {
+  padding-top: 10px;
+  max-height: 500px;
+  margin-top: 0;
+  border-color: var(--border);
+}
+
+.stop-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.stop-item-header {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.city-name {
+  font-weight: bold;
+}
+
+.stop-item-hours {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.open-toggle {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  scale: 2;
+  rotate: 0.25turn;
+  font-weight: bold;
+  transition: rotate 0.3s ease-in-out;
+}
+.open-toggle.open {
+  rotate: 0.75turn;
+}
+.open-toggle:hover {
+  color: var(--accent);
+}
