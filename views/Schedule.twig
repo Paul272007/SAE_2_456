@@ -1,0 +1,86 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+    <section class="page-section">
+
+        <div class="page-title">
+            <h1>Horaires des lignes</h1>
+            <p>Consultez les horaires de passage du réseau Viking Transport.</p>
+        </div>
+
+        <form class="filter-box schedule-filter">
+
+            <input
+                type="text"
+                name="city"
+                placeholder="Rechercher une commune..."
+            >
+
+            <select name="line">
+                <option value="">Toutes les lignes</option>
+
+                <!--
+                BDD plus tard :
+
+                <option value="1">Ligne 1</option>
+                <option value="2">Ligne 2</option>
+
+                -->
+            </select>
+
+            <button type="submit" class="primary-btn">
+                Filtrer
+            </button>
+
+        </form>
+
+        <div class="accordion-list">
+
+            <div class="accordion-item">
+
+                <div class="accordion-header">
+                    <div class="accordion-header-left">
+                        <span class="line-badge">?</span>
+                        Ligne à charger depuis la base de données
+                    </div>
+
+                    <span class="arrow-icon">▼</span>
+                </div>
+
+                <div class="accordion-body">
+
+                    <table class="schedule-table">
+
+                        <thead>
+                            <tr>
+                                <th>Arrêt</th>
+                                <th>Heure de passage</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    Les horaires seront chargés depuis la base de données
+                                </td>
+
+                                <td>
+                                    --
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+    <section class="page-section">
+        <div class="page-title">
+            <h1>Réserver un voyage</h1>
+            <p>Choisissez votre départ, votre arrivée et votre date de voyage.</p>
+        </div>
+
+        <form class="reservation-form" action="#" method="post">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departure">Ville de départ</label>
+                    <select id="departure" name="departure_city" required>
+                        <option value="">Choisir une ville de départ</option>
+                        <!-- BDD plus tard : options des communes ici -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="arrival">Ville d'arrivée</label>
+                    <select id="arrival" name="arrival_city" required>
+                        <option value="">Choisir une ville d'arrivée</option>
+                        <!-- BDD plus tard : options des communes ici -->
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date du voyage</label>
+                <input type="date" id="date" name="travel_date" required>
+            </div>
+
+            <button type="submit" class="primary-btn full-btn">
+                Rechercher les trajets disponibles
+            </button>
+        </form>
+    </section>
+
+{% endblock %}

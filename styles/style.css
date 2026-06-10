@@ -1,4 +1,232 @@
-body
-{
-    background: #999;
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #e8e4e4;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1d1717;
+}
+
+.page-main {
+    min-height: 78vh;
+}
+
+.page-section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.page-title {
+    margin-bottom: 2rem;
+}
+
+.page-title h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+}
+
+.page-title p {
+    color: #716767;
+    font-size: 1.1rem;
+}
+
+.reservation-form,
+.filter-box,
+.accordion-item {
+    background: #f7f4f4;
+    border: 1px solid #b8b0b0;
+    border-radius: 8px;
+}
+
+.reservation-form,
+.filter-box {
+    padding: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+}
+
+.form-group select,
+.form-group input,
+.filter-box select,
+.filter-box input {
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid #9d9696;
+    border-radius: 5px;
+    background: white;
+}
+
+.summary-box {
+    background: #e8e4e4;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-box h3 {
+    margin-top: 0;
+}
+
+.primary-btn {
+    display: inline-block;
+    background: #1d1717;
+    color: white;
+    border: none;
+    text-decoration: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 5px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.primary-btn:hover {
+    background: #3a3030;
+}
+
+.full-btn {
+    width: 100%;
+    text-align: center;
+}
+
+.schedule-filter {
+    display: grid;
+    grid-template-columns: 1fr 220px auto;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.accordion-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.accordion-item {
+    overflow: hidden;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.3rem;
+    cursor: pointer;
+}
+
+.accordion-header:hover {
+    background: #eee9e9;
+}
+
+.accordion-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 700;
+}
+
+.line-badge {
+    background: #1d1717;
+    color: white;
+    padding: 0.35rem 0.7rem;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.arrow-icon {
+    color: #716767;
+    transition: transform 0.2s;
+}
+
+.accordion-item.open .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-body {
+    display: none;
+    padding: 0 1.3rem 1.3rem;
+}
+
+.accordion-item.open .accordion-body {
+    display: block;
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 0.9rem;
+    border-bottom: 1px solid #ded6d6;
+    text-align: center;
+}
+
+.schedule-table th:first-child,
+.schedule-table td:first-child {
+    text-align: left;
+}
+
+.schedule-table th {
+    background: #1d1717;
+    color: white;
+    font-size: 0.85rem;
+}
+
+.schedule-table td strong {
+    display: block;
+}
+
+.schedule-table td span {
+    display: block;
+    color: #716767;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+.departure-time {
+    color: #0d6efd;
+    font-weight: 700;
+}
+
+.arrival-time {
+    color: #c0392b;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .form-row,
+    .schedule-filter {
+        grid-template-columns: 1fr;
+    }
+
+    .page-section {
+        padding: 2rem 1rem;
+    }
+
+    .schedule-table {
+        font-size: 0.85rem;
+    }
 }
