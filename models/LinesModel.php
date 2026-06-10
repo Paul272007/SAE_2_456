@@ -5,10 +5,11 @@ namespace Models;
 use Core\Model;
 
 class LinesModel extends Model
-{
+{   
+
     public function getLines(): array
     {
-        // TODO : Dylan : faire une requête SQL
-        return [];
+        $sql = "SELECT * FROM VIK_LIGNES";
+        return $this->fetchAll($sql);
     }
 }
