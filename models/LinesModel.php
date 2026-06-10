@@ -15,7 +15,7 @@ class LinesModel extends Model
                        n.COM_CODE_INSEE_ARRET,
                        c.COM_NOM,
                        d.DEP_NOM,
-                       n.NOE_HEURE_PASSAGE
+                       TO_CHAR(n.NOE_HEURE_PASSAGE, 'HH24:MI') AS NOE_HEURE_PASSAGE
                 FROM VIK_LIGNE l
                 JOIN VIK_NOEUD n ON n.LIG_NUM = l.LIG_NUM
                 JOIN VIK_COMMUNE c ON c.COM_CODE_INSEE = n.COM_CODE_INSEE_ARRET
