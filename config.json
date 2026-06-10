@@ -3,7 +3,7 @@
     "dbname": "harpagon.unicaen.fr:1521/info.harpagon.unicaen.fr",
     "user": "agile2",
     "passwd": "agile2",
-    "charset": "utf8"
+    "charset": "AL32UTF8"
   },
   "site": {
     "title": "Viking Transports",
