@@ -1,0 +1,262 @@
+.home {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.home::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('images/background.png');
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.6s ease;
+    opacity: 1;
+    z-index: 0;
+}
+
+.home::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('images/background_flou.png');
+    background-size: cover;
+    background-position: center;
+    transition: opacity 0.6s ease;
+    opacity: 0;
+    z-index: 0;
+}
+
+.home:hover::before { opacity: 1; }
+.home:hover::after {
+    transition: 500ms;
+    filter: blur(5px);
+}
+
+/* Overlay sombre pour lisibilité */
+.home-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 0 20px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 12px;
+    padding: 40px 60px;
+    backdrop-filter: blur(2px);
+}
+
+.home-eyebrow {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #cc0000;
+    margin-bottom: 10px;
+}
+
+.home h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+    color: #ffffff;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.8);
+}
+
+.home-accent {
+    color: #cc0000;
+}
+
+.home-sub {
+    font-size: 1.1rem;
+    color: #dddddd;
+    margin-bottom: 28px;
+    font-weight: 400;
+}
+
+.btn-hero {
+    background-color: #cc0000;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 36px;
+    border-radius: 4px;
+    border: 2px solid #cc0000;
+    transition: background 0.3s, color 0.3s;
+}
+
+.btn-hero:hover {
+    background-color: transparent;
+    color: #cc0000;
+}
+
+/* Flèche scroll */
+.home-scroll-hint {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    font-size: 1.5rem;
+    color: rgba(255,255,255,0.5);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(8px); }
+}
+
+/* =====================
+   CARTES
+===================== */
+.carte-section {
+    background-color: #e8e4e4;
+    padding: 80px 20px;
+}
+
+.carte {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.card-bulle {
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    padding: 36px 28px;
+    text-align: center;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.card-bulle:hover {
+    border-color: #cc0000;
+    transform: translateY(-4px);
+}
+
+.card-icon {
+    font-size: 2rem;
+}
+
+.card-bulle h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    margin: 0;
+}
+
+.card-bulle p {
+    font-size: 0.9rem;
+    color: #aaaaaa;
+    line-height: 1.6;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.btn-card {
+    background-color: #cc0000;
+    color: #fff;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 28px;
+    border-radius: 4px;
+    border: 2px solid #cc0000;
+    transition: background 0.3s, color 0.3s;
+    margin-top: auto;
+}
+
+.btn-card:hover {
+    background-color: transparent;
+    color: #cc0000;
+}
+
+/* =====================
+   STATS
+===================== */
+.stats-section {
+    background-color: #eaeaea;
+    border-top: 1px solid #e8e8e8;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 60px;
+}
+
+.stat-number {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #cc0000;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888888;
+    margin-top: 6px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 50px;
+    background-color: #2a2a2a;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 768px) {
+    .home-content {
+        padding: 30px 24px;
+    }
+
+    .carte {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stats-section {
+        gap: 30px;
+    }
+
+    .stat-divider {
+        display: none;
+    }
+
+    .stat {
+        padding: 0 30px;
+    }
+}
