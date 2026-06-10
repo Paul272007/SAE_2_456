@@ -230,3 +230,39 @@ body {
         font-size: 0.85rem;
     }
 }
+
+.navbar {
+    background-color: #000000;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    border-bottom: 1px solid #1a1a1a;
+    padding: 8px 0;
+}
+
+.nav-link {
+    color: #cccccc !important;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.3s ease;
+    padding: 6px 12px !important;
+}
+
+.nav-link:hover {
+    color: #cc0000 !important;
+}
+
+.nav-connect {
+    border: 1px solid #cc0000;
+    border-radius: 4px;
+    color: #cc0000 !important;
+    padding: 5px 14px !important;
+}
+
+.nav-connect:hover {
+    background-color: #cc0000;
+    color: #fff !important;
+}
