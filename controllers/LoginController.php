@@ -47,7 +47,7 @@ class LoginController extends Controller
             throw new ClientError(ClientErrorCode::USER_NOT_FOUND);
         }
 
-        if (!password_verify($password, $user["cli_password"])) {
+        if (!password_verify($password, $user["cli_mdp"])) {
             throw new ClientError(ClientErrorCode::PASSWORD_ERROR);
         }
 
