@@ -83,16 +83,16 @@ class ScheduleModel extends Model
         $stops = [];
         $rows = $this->getStopsLig($ligNum);
         foreach($rows as $row){
-            $code = $row['code'];
+            $code = $row['CODE'];
             if (!isset($stops[$code])){
                 $stops[$code]=[
-                    'city' => $row['nom'],
-                    'department' => $row['dep_nom'],
+                    'city' => $row['NOM'],
+                    'department' => $row['DEP_NOM'],
                     'hours' => [],
                 ];
             }
 
-            $stops[$code]['hours'][] = $row['heure'];
+            $stops[$code]['hours'][] = $row['HEURE'];
         }
         return $stops;
     }
