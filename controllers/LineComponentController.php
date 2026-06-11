@@ -33,15 +33,15 @@ class LineComponentController extends Controller
     }
 
     /**
-     * @param int  $ligNum
+     * @param string  $ligNum
      * @param string $terminus1
      * @param string $terminus2
      * @return array{line_number: int, line_terminus_1: string, line_terminus_2: string, stops: array}
      */
-    public static function getComponentData(int $ligNum, string $terminus1, string $terminus2): array
+    public static function getComponentData(string $ligNum, string $terminus1, string $terminus2): array
     {
         $model = new ScheduleModel();
-        $stops = $model->getStopsHours((string) $ligNum);
+        $stops = $model->getStopsHours($ligNum);
         
         return [
             'line_number'     => $ligNum,
