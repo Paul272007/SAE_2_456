@@ -94,7 +94,7 @@ class ScheduleModel extends Model
             }
 
             $parts = explode(':', $row['HEURE']);
-            $stops[$code]['hours'][] = (int)$parts[0] . 'H' . $parts[1];
+            $stops[$code]['hours'][] = (int)$parts[0] . ':' . $parts[1];
         }
         return $stops;
     }
