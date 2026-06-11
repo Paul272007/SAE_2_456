@@ -41,7 +41,7 @@
         <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
                         
             {% if points_available > 0 and points_to_use > 0 %}
-                <div class="points-section" style="margin-bottom: 15px; padding: 10px; background: #f0f8ff; border-radius: 5px;">
+                <div class="points-section" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
                     <p>Vous avez <strong>{{ points_available }} points</strong> de fidélité disponibles.</p>
                     <label>
                         <input type="checkbox" name="use_points" value="yes" id="usePointsCheckbox">
@@ -82,8 +82,8 @@
     <div class="payment-section">
         <h2>Paiement</h2>
         
-        <div class="alert alert-info shadow-sm">
-            <h5 class="alert-heading">🎁 Programme de fidélité</h5>
+        <div class="alert alert-secondary shadow-sm">
+            <h5 class="alert-heading">Programme de fidélité</h5>
             <p class="mb-0">
                 Saviez-vous que ce trajet vous rapporte <strong>{{ total_points_earned }} points</strong> ?<br>
                 <a href="index.php?route=login" class="fw-bold">Connectez-vous</a> ou <a href="index.php?route=register" class="fw-bold">créez un compte</a> dès maintenant pour les cumuler et profiter de réductions sur vos prochains trajets !
