@@ -78,17 +78,28 @@
     </script>
     {% endif %}
 {% else %}
-    {# Client non inscrit : invitation à se connecter ou créer un compte #}
-    <div class="guest-section">
-        <p class="info-box">
-            ⚠️ Votre réservation est bien calculée. Pour la finaliser, vous devez avoir un compte.
-            <br>Vos données seront conservées pendant la création de votre compte.
-        </p>
-        <div class="guest-actions mb-3">
-            <a href="index.php?route=login" class="btn btn-primary">Se connecter</a>
-            <a href="index.php?route=register" class="btn btn-secondary">Créer un compte</a>
+    {# Client non inscrit : possibilité de payer ou invitation à se connecter #}
+    <div class="payment-section">
+        <h2>Paiement</h2>
+        
+        <div class="alert alert-info shadow-sm">
+            <h5 class="alert-heading">🎁 Programme de fidélité</h5>
+            <p class="mb-0">
+                Saviez-vous que ce trajet vous rapporte <strong>{{ total_points_earned }} points</strong> ?<br>
+                <a href="index.php?route=login" class="fw-bold">Connectez-vous</a> ou <a href="index.php?route=register" class="fw-bold">créez un compte</a> dès maintenant pour les cumuler et profiter de réductions sur vos prochains trajets !
+            </p>
         </div>
-        <a href="index.php?route=reservation/cart" class="btn btn-outline-secondary">← Retour au panier</a>
+
+        <p class="text-muted">Ou continuez sans compte :</p>
+        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
+            <button type="submit" class="btn btn-success btn-lg px-4" id="btnConfirm">
+                ✓ Payer en tant qu'invité ({{ total_price|number_format(2, ',', ' ') }} €)
+            </button>
+        </form>
+
+        <div class="mt-4">
+            <a href="index.php?route=reservation/cart" class="btn btn-outline-secondary">← Retour au panier</a>
+        </div>
     </div>
 {% endif %}
 {% endblock %}

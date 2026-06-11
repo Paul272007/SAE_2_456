@@ -112,4 +112,52 @@ class ReservationModel extends Model
         $schedules = $this->getAvailableSchedules($ligNum, $codeDepart, $codeArrivee, '00:00');
         return count($schedules) > 0;
     }
+
+    public function createReservation(
+        ?int $cliNum,
+        int $tarNumTranche,
+        string $date,
+        int $nbPoints,
+        float $prixTotal
+    ): int {
+        // Obtenir le prochain ID de réservation (si on n'a pas de séquence)
+        $sqlId = "SELECT NVL(MAX(res_num), 0) + 1 AS next_id FROM vik_reservation";
+        $nextId = (int)$this->fetch($sqlId)['next_id'];
+
+        $clientId = $cliNum ?? 0; // Guest ID si null
+
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
+        
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixTotal]);
+        
+        return $nextId;
+    }
+
+    public function createEtape(
+        string $ligNum,
+        int $resNum,
+        ?int $cliNum,
+        string $codeDepart,
+        string $codeArrivee,
+        float $distance,
+        string $dateTime
+    ): void {
+        $clientId = $cliNum ?? 0;
+
+        $sql = "INSERT INTO vik_etape (lig_num, res_num, cli_num, com_code_insee_depart, com_code_insee_arrivee, eta_heure)
+                VALUES (?, ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'))";
+        
+        $this->runQuery($sql, [$ligNum, $resNum, $clientId, $codeDepart, $codeArrivee, $dateTime]);
+    }
+
+    public function updatePointsAfterReservation(int $cliNum, int $pointsEarned, int $pointsUsed): void
+    {
+        $sql = "UPDATE vik_client
+                SET cli_nb_points_ec = cli_nb_points_ec + ? - ?,
+                    cli_nb_points_tot = cli_nb_points_tot + ?
+                WHERE cli_num = ?";
+        
+        $this->runQuery($sql, [$pointsEarned, $pointsUsed, $pointsEarned, $cliNum]);
+    }
 }
