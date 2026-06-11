@@ -1,36 +1,67 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-    <h1>Inscription</h1>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4" style="color: var(--primary-color);">Créer un compte</h2>
+                
+                <p class="text-muted text-center mb-4">
+                    Rejoignez-nous ! Le mot de passe doit contenir entre 8 et 20 caractères.
+                    Le nom et le prénom ne doivent pas contenir de caractères spéciaux.
+                </p>
 
-    <form action="index.php?route=register" method="POST">
-        <p>
-            Le mot de passe doit contenir entre 8 et 20 caractères.
-            Le nom et prénom doivent contenir entre 1 et 20 caractères sans caractères spéciaux.
-        </p>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <form action="index.php?route=register" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-        <label for="cli_nom">Nom</label>
-        <input name="cli_nom" id="cli_nom" type="text" required maxlength="20">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cli_prenom" class="form-label">Prénom</label>
+                            <input name="cli_prenom" id="cli_prenom" class="form-control" type="text" required maxlength="20" placeholder="Jean">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cli_nom" class="form-label">Nom</label>
+                            <input name="cli_nom" id="cli_nom" class="form-control" type="text" required maxlength="20" placeholder="Dupont">
+                        </div>
+                    </div>
 
-        <label for="cli_prenom">Prénom</label>
-        <input name="cli_prenom" id="cli_prenom" type="text" required maxlength="20">
+                    <div class="mb-3">
+                        <label for="cli_courriel" class="form-label">Adresse e-mail</label>
+                        <input name="cli_courriel" id="cli_courriel" class="form-control" type="email" required placeholder="jean.dupont@exemple.com">
+                    </div>
 
-        <label for="cli_ville">Ville</label>
-        <input name="cli_ville" id="cli_ville" type="text" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cli_telephone" class="form-label">Téléphone</label>
+                            <input name="cli_telephone" id="cli_telephone" class="form-control" type="tel" required placeholder="06 12 34 56 78">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="cli_ville" class="form-label">Ville</label>
+                            <input name="cli_ville" id="cli_ville" class="form-control" type="text" required placeholder="Paris">
+                        </div>
+                    </div>
 
-        <label for="cli_telephone">Téléphone</label>
-        <input name="cli_telephone" id="cli_telephone" type="tel" required placeholder="0612345678">
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Mot de passe</label>
+                        <input name="password" id="password" class="form-control" type="password" required minlength="8" maxlength="20" placeholder="••••••••">
+                    </div>
 
-        <label for="cli_courriel">Adresse e-mail</label>
-        <input name="cli_courriel" id="cli_courriel" type="email" required>
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label">Confirmer le mot de passe</label>
+                        <input name="confirm_password" id="confirm_password" class="form-control" type="password" required minlength="8" maxlength="20" placeholder="••••••••">
+                    </div>
 
-        <label for="password">Mot de passe</label>
-        <input name="password" id="password" type="password" required minlength="8" maxlength="20">
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">M'inscrire</button>
+                    </div>
 
-        <label for="confirm_password">Confirmer le mot de passe</label>
-        <input name="confirm_password" id="confirm_password" type="password" required minlength="8" maxlength="20">
-
-        <button type="submit" class="btn btn-primary mt-3">S'inscrire</button>
-    </form>
+                    <p class="text-center mt-4 mb-0 text-muted">
+                        Vous avez déjà un compte ? <a href="index.php?route=login" class="text-decoration-none">Connectez-vous ici</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -82,7 +82,7 @@ class RegisterController extends Controller
             $password,      // cli_password
             date('Y-m-d')   // cli_date_connec
         ]);
-        $_SESSION['flash_success'] = 'account_created';
+        $_SESSION['flash_success'] = 'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.';
 
         // Si un panier était en attente, connecter directement et finaliser
         if (!empty($_SESSION['cart'])) {
