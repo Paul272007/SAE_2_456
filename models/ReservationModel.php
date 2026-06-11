@@ -87,12 +87,12 @@ class ReservationModel extends Model
                 $counting = true;
             }
 
-            if ($counting) {
-                $distance += (float)($node['distance_prochain'] ?? 0);
+            if ($counting && trim((string)$node['code']) === trim($codeArrivee)) {
+                break;
             }
 
-            if (trim((string)$node['code']) === trim($codeArrivee)) {
-                break;
+            if ($counting) {
+                $distance += (float)($node['distance_prochain'] ?? 0);
             }
         }
 
