@@ -36,7 +36,7 @@ class LineComponentController extends Controller
      * @param string  $ligNum
      * @param string $terminus1
      * @param string $terminus2
-     * @return array{line_number: int, line_terminus_1: string, line_terminus_2: string, stops: array}
+     * @return array{line_number: string, line_terminus_1: string, line_terminus_2: string, stops: array}
      */
     public static function getComponentData(string $ligNum, string $terminus1, string $terminus2): array
     {
