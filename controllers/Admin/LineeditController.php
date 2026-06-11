@@ -1,5 +1,4 @@
 <?php
-// hello worldS
 
 // controllers/Admin/LineeditController.php
 
