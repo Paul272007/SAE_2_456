@@ -1,23 +1,16 @@
-function refresh() {
-    setTimeout(showDate, 1000);
-}
-
-function showDate() {
+function showTime() {
     const date = new Date();
-    let h = date.getHours();
-    let m = date.getMinutes();
-    let s = date.getSeconds() + 1;
 
-    if (h < 10) h = "0" + h;
-    if (m < 10) m = "0" + m;
-    if (s < 10) s = "0" + s;
+    let h = String(date.getHours()).padStart(2, "0");
+    let m = String(date.getMinutes()).padStart(2, "0");
+    let s = String(date.getSeconds()).padStart(2, "0");
 
-    document.getElementById("horloge").textContent = `${h}:${m}:${s}`;
-    refresh();
+    let horlogeElement = document.getElementById("horloge");
+    if (horlogeElement) {
+        horlogeElement.textContent = `${h}:${m}:${s}`;
+    }
 }
-showDate();
 
-function showYear() {
-    document.getElementById("annee").textContent = new Date().getFullYear();
-}
-showYear();
+showTime();
+
+setInterval(showTime, 1000);

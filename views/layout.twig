@@ -77,41 +77,48 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+    <footer class="viking-footer mt-5">
     <div class="container text-center text-md-start">
         <div class="row text-center text-md-start">
             
             <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mt-3">
-                <h5 class="text-uppercase mb-4 font-weight-bold text-light">{{ site }}</h5>
+                <h5 class="text-uppercase mb-4 fw-bold footer-heading">{{ site }}</h5>
                 <p>
                     Votre réseau de cars normands reliant toutes les communes de la région. 
                     Voyagez en toute sérénité, cumulez des points et profitez de nos réductions !
+                    pour moins de retard sur nos lignes de bus nous ajoutons l'heure en direct !
                 </p>
             </div>
 
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3">
-                <h5 class="text-uppercase mb-4 font-weight-bold text-light">Liens rapides</h5>
-                <p><a href="index.php?route=lines" class="text-white text-decoration-none">Nos Lignes</a></p>
-                <p><a href="index.php?route=reservation" class="text-white text-decoration-none">Réserver un trajet</a></p>
-                <p><a href="index.php?route=about" class="text-white text-decoration-none">À propos</a></p>
+                <h5 class="text-uppercase mb-4 fw-bold footer-heading">Liens rapides</h5>
+                <p><a href="index.php?route=lines" class="footer-link">Nos Lignes</a></p>
+                <p><a href="index.php?route=reservation" class="footer-link">Réserver un trajet</a></p>
+                <p><a href="index.php?route=about" class="footer-link">À propos</a></p>
             </div>
 
             <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mt-3">
-                <h5 class="text-uppercase mb-4 font-weight-bold text-light">Contact</h5>
-                <p> Campus 3, 14123 Ifs, Normandie</p>
-                <p> contact@viking-transport.fr</p>
-                <p> +33 2 31 00 67 28</p>
+                <h5 class="text-uppercase mb-4 fw-bold footer-heading">Contact</h5>
+                <p>Campus 3, 14123 Ifs, Normandie</p>
+                <p>contact@viking-transport.fr</p>
+                <p>+33 2 31 00 67 28</p>
             </div>
             
         </div>
 
-        <hr class="mb-4">
+        <hr class="mb-4 footer-divider">
 
         <div class="row align-items-center">
-            <div class="col-12 text-center">
-                <img src="images/image.png" alt="Bootstrap" width="150" height="50">
-                <p class="mb-0">&copy; 2026 {{ site }}. Tous droits réservés.</p>
-                <p id="horloge"></p>
+            <div class="col-md-4 text-center text-md-start mb-3 mb-md-0">
+                <img src="images/image.png" alt="Viking Transport Logo" width="150" height="50" class="footer-logo">
+            </div>
+            
+            <div class="col-md-4 text-center mb-3 mb-md-0">
+                <p class="mb-0 copyright-text">&copy; 2026 {{ site }}. Tous droits réservés.</p>
+            </div>
+            
+            <div class="col-md-4 text-center text-md-end">
+                <p id="horloge" class="horloge-style mb-0"></p>
             </div>
         </div>
     </div>
