@@ -30,10 +30,12 @@
                                     <td class="text-muted">Distance totale</td>
                                     <td class="text-end fw-medium">{{ total_distance|round(2) }} km</td>
                                 </tr>
+                                {% if connected %}
                                 <tr>
                                     <td class="text-muted">Points de fidélité gagnés</td>
                                     <td class="text-end text-success fw-bold">+ {{ total_points_earned }} points</td>
                                 </tr>
+                                {% endif %}
                                 <tr class="border-top">
                                     <td class="pt-3"><strong class="fs-5">Prix total</strong></td>
                                     <td class="text-end pt-3"><strong class="fs-4">{{ total_price|number_format(2, ',', ' ') }} €</strong></td>
