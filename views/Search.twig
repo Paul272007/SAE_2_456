@@ -80,7 +80,15 @@
                             </li>
                             <li class="mb-3 d-flex justify-content-between">
                                 <span><i class="bi bi-clock me-2 text-primary"></i> Durée estimée</span>
-                                <strong>{{ path.total_duration }} min</strong>
+                                {% set duration_hours = (path.total_duration / 60)|round(0, 'floor') %}
+                                {% set duration_minutes = path.total_duration % 60 %}
+                                <strong>
+                                    {% if duration_hours > 0 %}
+                                        {{ duration_hours }}h {% if duration_minutes > 0 %}{{ duration_minutes < 10 ? '0' : '' }}{{ duration_minutes }}{% endif %}
+                                    {% else %}
+                                        {{ duration_minutes }} min
+                                    {% endif %}
+                                </strong>
                             </li>
                             <li class="mb-3 d-flex justify-content-between">
                                 <span><i class="bi bi-arrow-left-right me-2 text-primary"></i> Correspondances</span>
