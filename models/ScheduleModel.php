@@ -92,7 +92,7 @@ class ScheduleModel extends Model
                 ];
             }
 
-            $stops[$code]['hours'][] = $row['HEURE'];
+            $stops[$code]['hours'][] = date('G', strtotime($row['HEURE'])) . 'H';
         }
         return $stops;
     }
