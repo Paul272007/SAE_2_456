@@ -10,7 +10,7 @@
                 <input type="hidden" name="route" value="admin/users">
                 <input type="hidden" name="sort" value="{{ sort }}">
                 <input type="hidden" name="order" value="{{ order }}">
-                
+
                 <select name="filter" class="form-select" onchange="this.form.submit()" style="width: auto;">
                     <option value="all" {{ filter == 'all' ? 'selected' : '' }}>Toutes activités</option>
                     <option value="active" {{ filter == 'active' ? 'selected' : '' }}>Actifs</option>
@@ -23,7 +23,7 @@
                         <option value="{{ level.typ_num }}" {{ filterNiveau == level.typ_num ? 'selected' : '' }}>{{ level.typ_nom }}</option>
                     {% endfor %}
                 </select>
-                
+
                 <select name="statut" class="form-select" onchange="this.form.submit()" style="width: auto;">
                     <option value="">Tous les statuts</option>
                     <option value="0" {{ filterStatut is same as(0) ? 'selected' : '' }}>Client</option>
@@ -31,7 +31,7 @@
                 </select>
             </form>
         </div>
-        
+
         <form action="index.php?route=admin/users" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement TOUS les utilisateurs inactifs depuis plus de 2 ans ? Cette action est irréversible.');">
             <input type="hidden" name="action" value="clean_inactive">
             <button type="submit" class="btn btn-warning fw-bold text-dark">

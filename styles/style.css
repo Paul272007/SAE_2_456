@@ -182,11 +182,6 @@ body {
 .schedule-table td {
     padding: 0.9rem;
     border-bottom: 1px solid #ded6d6;
-    text-align: center;
-}
-
-.schedule-table th:first-child,
-.schedule-table td:first-child {
     text-align: left;
 }
 
