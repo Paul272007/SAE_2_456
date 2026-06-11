@@ -56,11 +56,21 @@ class UsereditController extends Controller
             require_once 'models/User/UserModel.php';
             $userModel = new \Models\UserModel();
             
+            $phone = $_POST['cli_telephone'] ?? '';
+            $cleanPhone = str_replace([' ', '.', '-'], '', $phone);
+            
+            if (!empty($phone) && !preg_match('/^[0-9]{10}$/', $cleanPhone) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $cleanPhone)) {
+                // Here we might just use flash error because there's no ClientError handling here natively
+                $_SESSION['flash_error'] = "Format de numéro de téléphone invalide.";
+                redirect('index.php?route=admin/useredit&id=' . $cliNum);
+                return;
+            }
+
             $data = [
                 'cli_nom' => $_POST['cli_nom'] ?? '',
                 'cli_prenom' => $_POST['cli_prenom'] ?? '',
                 'cli_ville' => $_POST['cli_ville'] ?? '',
-                'cli_telephone' => $_POST['cli_telephone'] ?? ''
+                'cli_telephone' => $cleanPhone
             ];
             
             $userModel->updateUser($cliNum, $data);
