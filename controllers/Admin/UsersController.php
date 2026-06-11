@@ -20,8 +20,19 @@ class UsersController extends Controller
         
         $onlyInactive = isset($_GET['filter']) && $_GET['filter'] === 'inactive';
         
-        $this->data['users'] = $model->getUsers($onlyInactive);
+        $sort = $_GET['sort'] ?? 'cli_num';
+        $order = $_GET['order'] ?? 'DESC';
+        $filterNiveau = isset($_GET['niveau']) && $_GET['niveau'] !== '' ? (int)$_GET['niveau'] : null;
+        $filterStatut = isset($_GET['statut']) && $_GET['statut'] !== '' ? (int)$_GET['statut'] : null;
+        
+        $this->data['users'] = $model->getUsers($onlyInactive, $sort, $order, $filterNiveau, $filterStatut);
+        $this->data['levels'] = $model->getLevels();
+        
         $this->data['filter'] = $onlyInactive ? 'inactive' : 'all';
+        $this->data['sort'] = $sort;
+        $this->data['order'] = $order;
+        $this->data['filterNiveau'] = $filterNiveau;
+        $this->data['filterStatut'] = $filterStatut;
         
         $this->render();
     }

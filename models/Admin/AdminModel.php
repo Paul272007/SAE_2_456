@@ -50,20 +50,52 @@ class AdminModel extends Model
     /**
      * Liste tous les utilisateurs (F13). Peut filtrer les inactifs (F15).
      */
-    public function getUsers(bool $onlyInactive = false): array
+    public function getLevels(): array
+    {
+        $sql = "SELECT typ_num, typ_nom FROM vik_type_client ORDER BY typ_num ASC";
+        return $this->fetchAll($sql);
+    }
+
+    /**
+     * Liste tous les utilisateurs avec filtres et tris.
+     */
+    public function getUsers(bool $onlyInactive = false, string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null): array
     {
         $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, t.typ_nom
                 FROM vik_client c
-                LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num ";
-                
+                LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num 
+                WHERE 1=1 ";
+        $params = [];
+
         // Inactif : pas connecté depuis plus de 6 mois (180 jours)
         if ($onlyInactive) {
-            $sql .= " WHERE c.cli_date_connec < SYSDATE - 180 ";
+            $sql .= " AND c.cli_date_connec < SYSDATE - 180 ";
         }
         
-        $sql .= " ORDER BY c.cli_num DESC";
+        if ($filterNiveau !== null) {
+            $sql .= " AND c.typ_num = ? ";
+            $params[] = $filterNiveau;
+        }
 
-        return $this->fetchAll($sql);
+        if ($filterStatut !== null) {
+            $sql .= " AND c.is_admin = ? ";
+            $params[] = $filterStatut;
+        }
+
+        $validSorts = [
+            'cli_num' => 'c.cli_num',
+            'cli_nom' => 'c.cli_nom',
+            'cli_prenom' => 'c.cli_prenom',
+            'cli_courriel' => 'c.cli_courriel',
+            'cli_date_connec' => 'c.cli_date_connec'
+        ];
+        
+        $sortColumn = $validSorts[$sort] ?? 'c.cli_num';
+        $orderDir = strtoupper($order) === 'ASC' ? 'ASC' : 'DESC';
+        
+        $sql .= " ORDER BY $sortColumn $orderDir";
+
+        return $this->fetchAll($sql, $params);
     }
 
     /**

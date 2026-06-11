@@ -5,9 +5,29 @@
 
     <!-- Filters and Actions -->
     <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
-        <div>
-            <a href="index.php?route=admin/users" class="btn {{ filter == 'all' ? 'btn-danger' : 'btn-outline-danger' }}">Tous les clients</a>
-            <a href="index.php?route=admin/users&filter=inactive" class="btn {{ filter == 'inactive' ? 'btn-danger' : 'btn-outline-danger' }} ms-2">Clients inactifs (> 6 mois)</a>
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <a href="index.php?route=admin/users" class="btn btn-sm {{ filter == 'all' ? 'btn-danger' : 'btn-outline-danger' }}">Tous</a>
+            <a href="index.php?route=admin/users&filter=inactive" class="btn btn-sm {{ filter == 'inactive' ? 'btn-danger' : 'btn-outline-danger' }}">Inactifs (> 6 mois)</a>
+            
+            <form action="index.php" method="GET" class="d-flex gap-2 m-0 align-items-center">
+                <input type="hidden" name="route" value="admin/users">
+                <input type="hidden" name="filter" value="{{ filter }}">
+                <input type="hidden" name="sort" value="{{ sort }}">
+                <input type="hidden" name="order" value="{{ order }}">
+                
+                <select name="niveau" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                    <option value="">Tous les niveaux</option>
+                    {% for level in levels %}
+                        <option value="{{ level.typ_num }}" {{ filterNiveau == level.typ_num ? 'selected' : '' }}>{{ level.typ_nom }}</option>
+                    {% endfor %}
+                </select>
+                
+                <select name="statut" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                    <option value="">Tous les statuts</option>
+                    <option value="0" {{ filterStatut is same as(0) ? 'selected' : '' }}>Client</option>
+                    <option value="1" {{ filterStatut is same as(1) ? 'selected' : '' }}>Admin</option>
+                </select>
+            </form>
         </div>
         
         <form action="index.php?route=admin/users" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement TOUS les utilisateurs inactifs depuis plus de 2 ans ? Cette action est irréversible.');">
@@ -25,10 +45,14 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-3">ID</th>
-                            <th>Nom complet</th>
-                            <th>Email</th>
-                            <th>Dernière connexion</th>
+                        <tr>
+                            {% set orderUrl = order == 'ASC' ? 'DESC' : 'ASC' %}
+                            {% set filterParams = '&filter=' ~ filter ~ (filterNiveau is not null ? '&niveau=' ~ filterNiveau : '') ~ (filterStatut is not null ? '&statut=' ~ filterStatut : '') %}
+
+                            <th class="ps-3"><a href="index.php?route=admin/users&sort=cli_num&order={{ sort == 'cli_num' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none">ID {% if sort == 'cli_num' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
+                            <th><a href="index.php?route=admin/users&sort=cli_nom&order={{ sort == 'cli_nom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none">Nom complet {% if sort == 'cli_nom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
+                            <th><a href="index.php?route=admin/users&sort=cli_courriel&order={{ sort == 'cli_courriel' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none">Email {% if sort == 'cli_courriel' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
+                            <th><a href="index.php?route=admin/users&sort=cli_date_connec&order={{ sort == 'cli_date_connec' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none">Dernière connexion {% if sort == 'cli_date_connec' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
                             <th>Niveau</th>
                             <th>Statut</th>
                             <th class="text-end pe-3">Actions</th>
