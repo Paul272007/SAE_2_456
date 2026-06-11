@@ -96,16 +96,27 @@ class ReservationModel extends Model
         $sql = "SELECT TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') as \"heure_depart\",
                        MIN(TO_CHAR(na.NOE_HEURE_PASSAGE, 'HH24:MI')) as \"heure_arrivee\"
                 FROM VIK_NOEUD nd
-                JOIN VIK_NOEUD na ON nd.LIG_NUM = na.LIG_NUM 
-                WHERE TRIM(nd.LIG_NUM) = ?
-                  AND TRIM(nd.COM_CODE_INSEE_ARRET) = ?
-                  AND TRIM(na.COM_CODE_INSEE_ARRET) = ?
+                JOIN (
+                    SELECT COM_CODE_INSEE_ARRET, LIG_NUM, NOE_HEURE_PASSAGE
+                    FROM VIK_NOEUD
+                    WHERE TRIM(LIG_NUM) = TRIM(?)
+                    UNION ALL
+                    SELECT l.COM_CODE_INSEE_TERM, l.LIG_NUM,
+                           last.NOE_HEURE_PASSAGE + (last.NOE_DUREE_PROCHAIN / 1440)
+                    FROM VIK_LIGNE l
+                    JOIN VIK_NOEUD last ON last.COM_CODE_INSEE_SUIVANT = l.COM_CODE_INSEE_TERM
+                                       AND TRIM(last.LIG_NUM) = TRIM(l.LIG_NUM)
+                    WHERE TRIM(l.LIG_NUM) = TRIM(?)
+                ) na ON nd.LIG_NUM = na.LIG_NUM
+                WHERE TRIM(nd.LIG_NUM) = TRIM(?)
+                  AND TRIM(nd.COM_CODE_INSEE_ARRET) = TRIM(?)
+                  AND TRIM(na.COM_CODE_INSEE_ARRET) = TRIM(?)
                   AND nd.NOE_HEURE_PASSAGE < na.NOE_HEURE_PASSAGE
                   AND TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') >= ?
                 GROUP BY TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI')
                 ORDER BY \"heure_depart\" ASC";
-                
-        return $this->fetchAll($sql, [trim($ligNum), trim($codeDepart), trim($codeArrivee), $minTime]);
+
+        return $this->fetchAll($sql, [trim($ligNum), trim($ligNum), trim($ligNum), trim($codeDepart), trim($codeArrivee), $minTime]);
     }
 
     public function isAvailable(
