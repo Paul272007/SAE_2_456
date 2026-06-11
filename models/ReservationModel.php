@@ -37,7 +37,7 @@ class ReservationModel extends Model
     {
         $sql = "SELECT n.com_code_insee_arret AS code,
                        c.com_nom              AS nom,
-                       MIN(n.noe_heure_passage) AS noe_heure_passage
+                       TO_CHAR(MIN(n.noe_heure_passage), 'HH24:MI') AS noe_heure_passage
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
                 WHERE TRIM(n.lig_num) = TRIM(?)
