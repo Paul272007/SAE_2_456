@@ -74,11 +74,12 @@ class LineeditController extends Controller
 
         for ($i = 0; $i < count($arrets); $i++) {
             $codeArret = $arrets[$i];
-            $oldH = $oldHeures[$i];
-            $newH = $newHeures[$i];
+            
+            $oldH_short = substr(trim($oldHeures[$i]), 0, 5);
+            $newH_short = substr(trim($newHeures[$i]), 0, 5);
 
-            if ($oldH !== $newH && !empty($newH)) {
-                $adminModel->updateScheduleTime($ligNum, $codeArret, $oldH, $newH);
+            if ($oldH_short !== $newH_short && !empty($newH_short)) {
+                $adminModel->updateScheduleTime($ligNum, $codeArret, $oldH_short, $newH_short);
             }
         }
 
