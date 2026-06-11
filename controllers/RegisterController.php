@@ -20,7 +20,10 @@ class RegisterController extends Controller
     protected static array $postFields = ["cli_nom", "cli_prenom", "cli_ville", "cli_telephone", "cli_courriel", "password", "confirm_password"];
     public function get(): void
     {
-                $this->render();
+        if ($_SESSION["role"] > 0) {
+            throw new ClientError(ClientErrorCode::BAD_PLACE);
+        }
+        $this->render();
     }
 
     /**

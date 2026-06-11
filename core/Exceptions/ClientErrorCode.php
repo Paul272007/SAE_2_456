@@ -24,6 +24,7 @@ enum ClientErrorCode: string
     case SPECIAL_CHARACTERS = 'special_characters';
     case REGISTRATION_ERROR = 'registration_error';
     case SETTINGS_ERROR = 'settings_error';
+    case BAD_PLACE = 'bad_place';
 
     public function message() : string
     {
@@ -43,6 +44,7 @@ enum ClientErrorCode: string
             self::SPECIAL_CHARACTERS => 'Les caractères spéciaux ne sont pas autorisés',
             self::REGISTRATION_ERROR => 'Erreur lors de l\'inscription',
             self::SETTINGS_ERROR => 'Erreur lors de la sauvegarde des paramètres',
+            self::BAD_PLACE => 'Vous ne pouvez accéder à cette page en étant connecté',
         };
     }
 }
