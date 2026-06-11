@@ -37,7 +37,7 @@ body {
 
 .reservation-form,
 .filter-box,
-.accordion-item {
+.line-accordion-item {
     background: #f7f4f4;
     border: 1px solid #b8b0b0;
     border-radius: 8px;
@@ -114,17 +114,17 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.accordion-list {
+.line-accordion-list {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
 }
 
-.accordion-item {
+.line-accordion-item {
     overflow: hidden;
 }
 
-.accordion-header {
+.line-accordion-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -132,11 +132,11 @@ body {
     cursor: pointer;
 }
 
-.accordion-header:hover {
+.line-accordion-header:hover {
     background: #eee9e9;
 }
 
-.accordion-header-left {
+.line-accordion-header-left {
     display: flex;
     align-items: center;
     gap: 0.8rem;
@@ -153,20 +153,20 @@ body {
 }
 
 .arrow-icon {
-    color: #716767;
-    transition: transform 0.2s;
+    font-size: 0.8rem;
+    transition: transform 0.3s;
 }
 
-.accordion-item.open .arrow-icon {
+.line-accordion-item.open .arrow-icon {
     transform: rotate(180deg);
 }
 
-.accordion-body {
+.line-accordion-body {
     display: none;
     padding: 0 1.3rem 1.3rem;
 }
 
-.accordion-item.open .accordion-body {
+.line-accordion-item.open .line-accordion-body {
     display: block;
 }
 
