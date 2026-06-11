@@ -59,7 +59,7 @@ class AdminModel extends Model
     /**
      * Liste tous les utilisateurs avec filtres et tris.
      */
-    public function getUsers(bool $onlyInactive = false, string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null): array
+    public function getUsers(string $filterActivity = 'all', string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null): array
     {
         $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, t.typ_nom
                 FROM vik_client c
@@ -67,9 +67,10 @@ class AdminModel extends Model
                 WHERE 1=1 ";
         $params = [];
 
-        // Inactif : pas connecté depuis plus de 6 mois (180 jours)
-        if ($onlyInactive) {
+        if ($filterActivity === 'inactive') {
             $sql .= " AND c.cli_date_connec < SYSDATE - 180 ";
+        } elseif ($filterActivity === 'active') {
+            $sql .= " AND (c.cli_date_connec >= SYSDATE - 180 OR c.cli_date_connec IS NULL) ";
         }
         
         if ($filterNiveau !== null) {

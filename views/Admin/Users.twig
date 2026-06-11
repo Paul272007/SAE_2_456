@@ -6,23 +6,25 @@
     <!-- Filters and Actions -->
     <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div class="d-flex align-items-center flex-wrap gap-2">
-            <a href="index.php?route=admin/users" class="btn btn-sm {{ filter == 'all' ? 'btn-danger' : 'btn-outline-danger' }}">Tous</a>
-            <a href="index.php?route=admin/users&filter=inactive" class="btn btn-sm {{ filter == 'inactive' ? 'btn-danger' : 'btn-outline-danger' }}">Inactifs (> 6 mois)</a>
-            
             <form action="index.php" method="GET" class="d-flex gap-2 m-0 align-items-center">
                 <input type="hidden" name="route" value="admin/users">
-                <input type="hidden" name="filter" value="{{ filter }}">
                 <input type="hidden" name="sort" value="{{ sort }}">
                 <input type="hidden" name="order" value="{{ order }}">
                 
-                <select name="niveau" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                <select name="filter" class="form-select" onchange="this.form.submit()" style="width: auto;">
+                    <option value="all" {{ filter == 'all' ? 'selected' : '' }}>Toutes activités</option>
+                    <option value="active" {{ filter == 'active' ? 'selected' : '' }}>Actifs</option>
+                    <option value="inactive" {{ filter == 'inactive' ? 'selected' : '' }}>Inactifs (> 6 mois)</option>
+                </select>
+
+                <select name="niveau" class="form-select" onchange="this.form.submit()" style="width: auto;">
                     <option value="">Tous les niveaux</option>
                     {% for level in levels %}
                         <option value="{{ level.typ_num }}" {{ filterNiveau == level.typ_num ? 'selected' : '' }}>{{ level.typ_nom }}</option>
                     {% endfor %}
                 </select>
                 
-                <select name="statut" class="form-select form-select-sm" onchange="this.form.submit()" style="width: auto;">
+                <select name="statut" class="form-select" onchange="this.form.submit()" style="width: auto;">
                     <option value="">Tous les statuts</option>
                     <option value="0" {{ filterStatut is same as(0) ? 'selected' : '' }}>Client</option>
                     <option value="1" {{ filterStatut is same as(1) ? 'selected' : '' }}>Admin</option>

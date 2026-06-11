@@ -18,17 +18,16 @@ class UsersController extends Controller
     {
         $model = new AdminModel();
         
-        $onlyInactive = isset($_GET['filter']) && $_GET['filter'] === 'inactive';
-        
+        $filterActivity = $_GET['filter'] ?? 'all';
         $sort = $_GET['sort'] ?? 'cli_num';
         $order = $_GET['order'] ?? 'DESC';
         $filterNiveau = isset($_GET['niveau']) && $_GET['niveau'] !== '' ? (int)$_GET['niveau'] : null;
         $filterStatut = isset($_GET['statut']) && $_GET['statut'] !== '' ? (int)$_GET['statut'] : null;
         
-        $this->data['users'] = $model->getUsers($onlyInactive, $sort, $order, $filterNiveau, $filterStatut);
+        $this->data['users'] = $model->getUsers($filterActivity, $sort, $order, $filterNiveau, $filterStatut);
         $this->data['levels'] = $model->getLevels();
         
-        $this->data['filter'] = $onlyInactive ? 'inactive' : 'all';
+        $this->data['filter'] = $filterActivity;
         $this->data['sort'] = $sort;
         $this->data['order'] = $order;
         $this->data['filterNiveau'] = $filterNiveau;
