@@ -12,7 +12,7 @@
             <td>
                 <ul>
                     {% for item in cart %}
-                        <li>{{ item.ligne_nom }} ({{ item.nom_depart }} → {{ item.nom_arrivee }} le {{ item.date }})</li>
+                        <li>{{ item.ligne_nom }} ({{ item.nom_depart }} → {{ item.nom_arrivee }} le {{ item.date|date('d/m/Y') }})</li>
                     {% endfor %}
                 </ul>
             </td>
