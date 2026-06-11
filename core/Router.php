@@ -100,7 +100,7 @@ class Router
       } else {
         // Redirect to previous page (or homepage if there is no previous page)
         // !! Some browsers block HTTP_REFERER, so it will redirect the user to the homepage (bad)
-        $referer = $_SERVER['HTTP_REFERER'] ?? '/';
+        $referer = $_SERVER['HTTP_REFERER'] ?? '/SAE_2_456/';
 
         // If previous page was not on my website redirect to homepage
         $refererHost = parse_url($referer, PHP_URL_HOST);

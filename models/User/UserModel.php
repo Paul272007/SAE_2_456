@@ -37,7 +37,7 @@ class UserModel extends Model
     public function getUserReservations(int $cliNum): array
     {
         $sql = "SELECT r.res_num,
-                       r.res_date,
+                       TO_CHAR(r.res_date, 'YYYY-MM-DD') as res_date,
                        r.res_prix_tot,
                        r.res_nb_points,
                        (SELECT LISTAGG(c1.com_nom || ' → ' || c2.com_nom, ', ') WITHIN GROUP (ORDER BY e.eta_heure)

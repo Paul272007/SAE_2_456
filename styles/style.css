@@ -335,6 +335,17 @@ body {
     color: #cc0000 !important;
 }
 
+/* Global link color */
+a {
+    color: #cc0000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #a00000;
+    text-decoration: underline;
+}
+
 /* =====================
    RESPONSIVE
 ===================== */
