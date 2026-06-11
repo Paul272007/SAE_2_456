@@ -94,7 +94,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: 5px;
-  justify-content: center;
+  align-items: center;
 }
 
 .open-toggle {
