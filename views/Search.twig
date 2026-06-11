@@ -1,82 +1,155 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<h1>Recherche d'Itinéraire</h1>
+<div class="container py-4">
+    <h1 class="mb-4 text-center">Recherche d'Itinéraire</h1>
 
-<div class="card" style="margin-bottom: 20px;">
-    <form action="index.php" method="GET" class="reservation-form">
-        <input type="hidden" name="route" value="search">
-        
-        <div class="form-group">
-            <label for="depart">Ville de départ</label>
-            <select name="depart" id="depart" required>
-                <option value="">-- Choisissez --</option>
-                {% for com in communes %}
-                    <option value="{{ com.com_code_insee }}" {{ search_depart == com.com_code_insee ? 'selected' : '' }}>{{ com.com_nom }}</option>
-                {% endfor %}
-            </select>
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body p-4 bg-light">
+            <form action="index.php" method="GET" class="row g-3">
+                <input type="hidden" name="route" value="search">
+                
+                <div class="col-md-6">
+                    <label for="depart" class="form-label fw-bold">Ville de départ</label>
+                    <select class="form-select" name="depart" id="depart" required>
+                        <option value="">-- Choisissez une ville --</option>
+                        {% for com in communes %}
+                            <option value="{{ com.com_code_insee }}" {{ search_depart == com.com_code_insee ? 'selected' : '' }}>{{ com.com_nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="arrivee" class="form-label fw-bold">Ville d'arrivée</label>
+                    <select class="form-select" name="arrivee" id="arrivee" required>
+                        <option value="">-- Choisissez une ville --</option>
+                        {% for com in communes %}
+                            <option value="{{ com.com_code_insee }}" {{ search_arrivee == com.com_code_insee ? 'selected' : '' }}>{{ com.com_nom }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="date" class="form-label fw-bold">Date du voyage</label>
+                    <input type="date" class="form-control" name="date" id="date" value="{{ search_date ?? "now"|date("Y-m-d") }}" required min="{{ "now"|date("Y-m-d") }}">
+                </div>
+
+                <div class="col-md-4">
+                    <label for="time" class="form-label fw-bold">Heure souhaitée</label>
+                    <input type="time" class="form-control" name="time" id="time" value="{{ search_time ?? "now"|date("H:i") }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="criterion" class="form-label fw-bold">Critère d'optimisation</label>
+                    <select class="form-select" name="criterion" id="criterion">
+                        <option value="duration" {{ search_criterion == 'duration' ? 'selected' : '' }}>Le plus rapide (Temps)</option>
+                        <option value="distance" {{ search_criterion == 'distance' ? 'selected' : '' }}>Le plus court (Distance)</option>
+                    </select>
+                </div>
+
+                <div class="col-12 text-end mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">Rechercher</button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label for="arrivee">Ville d'arrivée</label>
-            <select name="arrivee" id="arrivee" required>
-                <option value="">-- Choisissez --</option>
-                {% for com in communes %}
-                    <option value="{{ com.com_code_insee }}" {{ search_arrivee == com.com_code_insee ? 'selected' : '' }}>{{ com.com_nom }}</option>
-                {% endfor %}
-            </select>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
         </div>
+    {% endif %}
 
-        <div class="form-group">
-            <label for="criterion">Critère d'optimisation</label>
-            <select name="criterion" id="criterion">
-                <option value="duration" {{ search_criterion == 'duration' ? 'selected' : '' }}>Le plus rapide (Temps)</option>
-                <option value="distance" {{ search_criterion == 'distance' ? 'selected' : '' }}>Le plus court (Distance)</option>
-            </select>
+    {% if path %}
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-header bg-dark text-white py-3">
+                <h5 class="mb-0"><i class="bi bi-map"></i> Résultat : Trajet {{ path.criterion == 'duration' ? 'le plus rapide' : 'le plus court' }}</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-4 bg-light p-4 border-end">
+                        <h6 class="text-muted mb-4">Résumé du trajet</h6>
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-3 d-flex justify-content-between">
+                                <span><i class="bi bi-calendar-event me-2 text-primary"></i> Date</span>
+                                <strong>{{ search_date|date('d/m/Y') }} à {{ search_time }}</strong>
+                            </li>
+                            <li class="mb-3 d-flex justify-content-between">
+                                <span><i class="bi bi-signpost-split me-2 text-primary"></i> Distance</span>
+                                <strong>{{ path.total_distance|round(2) }} km</strong>
+                            </li>
+                            <li class="mb-3 d-flex justify-content-between">
+                                <span><i class="bi bi-clock me-2 text-primary"></i> Durée estimée</span>
+                                <strong>{{ path.total_duration }} min</strong>
+                            </li>
+                            <li class="mb-3 d-flex justify-content-between">
+                                <span><i class="bi bi-arrow-left-right me-2 text-primary"></i> Correspondances</span>
+                                <strong>{{ path.num_transfers }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between pt-3 border-top mt-3">
+                                <span class="fs-5">Prix total</span>
+                                <strong class="fs-5 text-success">{{ path.total_price|number_format(2, ',', ' ') }} €</strong>
+                            </li>
+                        </ul>
+                        
+                        <form action="index.php?route=search" method="POST" class="mt-4">
+                            <input type="hidden" name="add_to_cart" value="1">
+                            <input type="hidden" name="segments" value="{{ path.segments|json_encode }}">
+                            <input type="hidden" name="date" value="{{ search_date }}">
+                            
+                            <button type="submit" class="btn btn-success w-100 btn-lg">
+                                <i class="bi bi-cart-plus"></i> Ajouter au panier
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="col-md-8 p-4">
+                        <h6 class="text-muted mb-4">Détail des correspondances</h6>
+                        <div class="timeline">
+                            {% for segment in path.segments %}
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-body position-relative" style="border-left: 4px solid #cc0000;">
+                                        <h6 class="card-title mb-1">
+                                            <span class="badge bg-primary me-2">Ligne {{ segment.lig_num }}</span>
+                                        </h6>
+                                        <div class="mt-3">
+                                            <p class="mb-1"><i class="bi bi-geo-alt text-primary"></i> De <strong>{{ segment.nom_depart }}</strong></p>
+                                            <p class="mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> À <strong>{{ segment.nom_arrivee }}</strong></p>
+                                        </div>
+                                        <div class="text-muted small mt-2">
+                                            <span>Distance : {{ segment.distance|round(2) }} km</span> | 
+                                            <span>Prix : {{ segment.prix|number_format(2, ',', ' ') }} €</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary">Rechercher</button>
-    </form>
+    {% endif %}
 </div>
 
-{% if error %}
-    <p class="error-msg" style="color:red; font-weight:bold;">{{ error }}</p>
-{% endif %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const departSelect = document.getElementById('depart');
+    const arriveeSelect = document.getElementById('arrivee');
 
-{% if path %}
-    <div class="card">
-        <h2>Résultat : Trajet {{ path.criterion == 'duration' ? 'le plus rapide' : 'le plus court' }}</h2>
-        
-        <div class="path-summary" style="margin: 15px 0; padding: 15px; background: #eef2f5; border-radius: 8px;">
-            <p><strong>Distance totale :</strong> {{ path.total_distance|round(2) }} km</p>
-            <p><strong>Durée estimée :</strong> {{ path.total_duration }} minutes</p>
-            <p><strong>Correspondances :</strong> {{ path.num_transfers }}</p>
-            <p><strong>Prix total :</strong> {{ path.total_price|number_format(2, ',', ' ') }} €</p>
-        </div>
+    function updateArriveeOptions() {
+        const selectedDepart = departSelect.value;
+        Array.from(arriveeSelect.options).forEach(option => {
+            if (option.value === selectedDepart && selectedDepart !== "") {
+                option.disabled = true;
+            } else {
+                option.disabled = false;
+            }
+        });
+    }
 
-        <h3>Détail du trajet :</h3>
-        <ul style="list-style: none; padding: 0;">
-            {% for segment in path.segments %}
-                <li style="margin-bottom: 10px; padding: 10px; border-left: 4px solid #0056b3; background: #f9f9f9;">
-                    <strong>Ligne {{ segment.lig_num }}</strong> : 
-                    De {{ segment.nom_depart }} à {{ segment.nom_arrivee }}
-                    <br>
-                    <small>Distance : {{ segment.distance|round(2) }} km | Prix : {{ segment.prix|number_format(2, ',', ' ') }} €</small>
-                </li>
-            {% endfor %}
-        </ul>
-
-        <form action="index.php?route=search" method="POST" style="margin-top: 20px;">
-                        <input type="hidden" name="add_to_cart" value="1">
-            <input type="hidden" name="segments" value="{{ path.segments|json_encode }}">
-            
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="date">Date du voyage</label>
-                <input type="date" name="date" id="date" value="{{ "now"|date("Y-m-d") }}" required min="{{ "now"|date("Y-m-d") }}">
-            </div>
-            
-            <button type="submit" class="btn btn-primary">Ajouter cet itinéraire au panier</button>
-        </form>
-    </div>
-{% endif %}
+    departSelect.addEventListener('change', updateArriveeOptions);
+    // Initial call in case of pre-selected values
+    updateArriveeOptions();
+});
+</script>
 {% endblock %}

@@ -25,6 +25,11 @@ class SearchController extends Controller
             $depart = $_GET['depart'];
             $arrivee = $_GET['arrivee'];
             $criterion = $_GET['criterion'] ?? 'duration'; // duration or distance
+            $date = $_GET['date'] ?? date('Y-m-d');
+            $time = $_GET['time'] ?? date('H:i');
+            
+            $this->data['search_date'] = $date;
+            $this->data['search_time'] = $time;
             
             if ($depart !== $arrivee) {
                 $path = $model->findPath($depart, $arrivee, $criterion);
@@ -34,10 +39,9 @@ class SearchController extends Controller
                 $this->data['search_criterion'] = $criterion;
                 
                 if ($path) {
-                    // Set dates to today by default for display
-                    $today = date('Y-m-d');
+                    // Pass the selected date to segments for cart adding
                     foreach ($this->data['path']['segments'] as &$segment) {
-                        $segment['date'] = $today;
+                        $segment['date'] = $date;
                     }
                 }
             } else {
