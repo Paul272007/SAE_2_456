@@ -23,15 +23,13 @@ class ProfileEditController extends Controller
         $cliNum = (int)$_SESSION['userId'];
 
         $this->data['user'] = $model->getUserById($cliNum);
-        $this->data['csrf_token'] = $_SESSION["csrf_token"];
 
         $this->render();
     }
 
     public function post(): void
     {
-        verifyCSRFToken();
-
+        
         require_once 'models/User/UserModel.php';
         $model = new \Models\UserModel();
         $cliNum = (int)$_SESSION['userId'];

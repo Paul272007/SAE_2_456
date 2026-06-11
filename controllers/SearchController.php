@@ -19,7 +19,6 @@ class SearchController extends Controller
         $model = new SearchModel();
         
         $this->data['communes'] = $model->getCommunes();
-        $this->data['csrf_token'] = $_SESSION['csrf_token'];
 
         // If search parameters are present
         if (isset($_GET['depart'], $_GET['arrivee'])) {
@@ -51,8 +50,7 @@ class SearchController extends Controller
 
     public function post(): void
     {
-        verifyCSRFToken();
-
+        
         // Ajout du trajet trouvé au panier
         if (isset($_POST['add_to_cart'])) {
             $segmentsJson = $_POST['segments'] ?? '[]';

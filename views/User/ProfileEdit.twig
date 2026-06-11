@@ -10,8 +10,7 @@
     <div class="card">
         <h2>Mes Informations</h2>
         <form action="index.php?route=user/profile/edit" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="hidden" name="update_info" value="1">
+                        <input type="hidden" name="update_info" value="1">
             
             <div class="form-group">
                 <label for="cli_nom">Nom</label>
@@ -41,8 +40,7 @@
     <div class="card">
         <h2>Mot de passe</h2>
         <form action="index.php?route=user/profile/edit" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="hidden" name="update_password" value="1">
+                        <input type="hidden" name="update_password" value="1">
             
             <div class="form-group">
                 <label for="current_password">Mot de passe actuel</label>

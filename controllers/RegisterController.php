@@ -20,8 +20,7 @@ class RegisterController extends Controller
     protected static array $postFields = ["cli_nom", "cli_prenom", "cli_ville", "cli_telephone", "cli_courriel", "password", "confirm_password"];
     public function get(): void
     {
-        $this->data["csrf_token"] = $_SESSION["csrf_token"];
-        $this->render();
+                $this->render();
     }
 
     /**
@@ -30,8 +29,7 @@ class RegisterController extends Controller
      */
     public function post(): void
     {
-        verifyCSRFToken();
-        $this->checkPostFields();
+                $this->checkPostFields();
 
         $name = trim($_POST["cli_nom"]);
         $firstName = trim($_POST["cli_prenom"]);
@@ -92,9 +90,7 @@ class RegisterController extends Controller
             $_SESSION['role']     = 1;
             $_SESSION['email']    = $email;
             $_SESSION['points']   = 0;
-            unset($_SESSION["csrf_token"]);
-            buildCSRFToken();
-            redirect('index.php?route=reservation/confirm');
+                                    redirect('index.php?route=reservation/confirm');
         }
 
         redirect('index.php?route=login');

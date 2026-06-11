@@ -39,8 +39,7 @@
         <p>En cliquant sur "Confirmer et payer", vous validez votre réservation.</p>
 
         <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            
+                        
             {% if points_available > 0 and points_to_use > 0 %}
                 <div class="points-section" style="margin-bottom: 15px; padding: 10px; background: #f0f8ff; border-radius: 5px;">
                     <p>Vous avez <strong>{{ points_available }} points</strong> de fidélité disponibles.</p>

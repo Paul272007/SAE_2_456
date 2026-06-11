@@ -22,7 +22,6 @@ class UsersController extends Controller
         
         $this->data['users'] = $model->getUsers($onlyInactive);
         $this->data['filter'] = $onlyInactive ? 'inactive' : 'all';
-        $this->data['csrf_token'] = $_SESSION['csrf_token'];
         
         $this->render();
     }

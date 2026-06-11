@@ -11,8 +11,7 @@
     <div class="card">
         <h2>Informations du compte</h2>
         <form action="index.php?route=admin/useredit" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="action" value="update">
             <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
             
             <div class="form-group">

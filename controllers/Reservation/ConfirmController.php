@@ -43,7 +43,6 @@ class ConfirmController extends Controller
         $this->data['total_price'] = $totalPrice;
         $this->data['total_distance'] = $totalDistance;
         $this->data['total_points_earned'] = $totalPointsEarned;
-        $this->data['csrf_token']  = $_SESSION['csrf_token'];
         $this->data['connected']   = isset($_SESSION['userId']);
 
         if ($this->data['connected']) {
@@ -73,8 +72,7 @@ class ConfirmController extends Controller
      */
     public function post(): void
     {
-        verifyCSRFToken();
-
+        
         if (empty($_SESSION['cart'])) {
             redirect('index.php?route=lines');
         }

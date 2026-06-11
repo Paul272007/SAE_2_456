@@ -58,7 +58,9 @@
                                 </li>
                             {% endif %}
                             <li class="nav-item">
-                                <a class="nav-link text-danger" href="index.php?route=user/logout">Déconnexion</a>
+                                <form action="index.php?route=user/logout" method="POST" class="d-inline">
+                                    <button type="submit" class="nav-link text-danger btn btn-link" style="text-decoration: none;">Déconnexion</button>
+                                </form>
                             </li>
                         {% else %}
                             <li class="nav-item">

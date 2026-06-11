@@ -34,8 +34,7 @@ abstract class Controller
    */
   public function __construct()
   {
-    buildCSRFToken();
-    $config = Config::get("site");
+        $config = Config::get("site");
 
     // Derive model, view, stylesheet and script from namespace and class name
     $fullClassName = get_class($this);
@@ -149,21 +148,6 @@ abstract class Controller
     }
   }
 
-  /**
-   * @throws ServerError
-   */
-  protected function getModel(): Model
-  {
-      if ($this->model === null) {
-          $namespacePath = $this->folder ? str_replace("/", "\\", $this->folder) . "\\" : "";
-          $modelClassName = "Models\\" . $namespacePath . $this->controllerName . "Model";
-          throw new ServerError(
-              ServerErrorCode::MODEL_NOT_FOUND,
-              $modelClassName,
-          );
-      }
-      return $this->model;
-  }
   /**
    * @throws SyntaxError
    * @throws RuntimeError

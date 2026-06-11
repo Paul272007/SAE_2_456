@@ -23,8 +23,7 @@ class LoginController extends Controller
 
     public function get(): void
     {
-        $this->data["csrf_token"] = $_SESSION["csrf_token"];
-        $this->render();
+                $this->render();
     }
 
     /**
@@ -34,8 +33,7 @@ class LoginController extends Controller
      */
     public function post(): void
     {
-        verifyCSRFToken();
-        $this->checkPostFields();
+                $this->checkPostFields();
 
         $email    = trim($_POST["email"]);
         $password = $_POST["password"];
@@ -58,10 +56,6 @@ class LoginController extends Controller
         $_SESSION["role"]     = (int)($user["typ_num"] ?? 1);
         $_SESSION["email"]    = $user["cli_courriel"];
         $_SESSION["points"]   = $user["cli_nb_points_ec"];
-
-        // Force la régénération du token CSRF après le changement de session
-        unset($_SESSION["csrf_token"]);
-        buildCSRFToken();
 
         // Si un panier était en attente avant la connexion, rediriger vers la confirmation
         if (!empty($_SESSION['cart'])) {

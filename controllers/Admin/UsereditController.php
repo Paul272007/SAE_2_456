@@ -33,15 +33,13 @@ class UsereditController extends Controller
         }
         
         $this->data['reservations'] = $userModel->getUserReservations($cliNum);
-        $this->data['csrf_token'] = $_SESSION['csrf_token'];
         
         $this->render();
     }
 
     public function post(): void
     {
-        verifyCSRFToken();
-        
+                
         $action = $_POST['action'] ?? '';
         $cliNum = (int)($_POST['cli_num'] ?? 0);
         

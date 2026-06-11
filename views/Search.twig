@@ -67,8 +67,7 @@
         </ul>
 
         <form action="index.php?route=search" method="POST" style="margin-top: 20px;">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <input type="hidden" name="add_to_cart" value="1">
+                        <input type="hidden" name="add_to_cart" value="1">
             <input type="hidden" name="segments" value="{{ path.segments|json_encode }}">
             
             <div class="form-group" style="margin-bottom: 15px;">

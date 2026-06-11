@@ -27,7 +27,6 @@ class DashboardController extends Controller
         $this->data['user'] = $user;
         $this->data['reservations'] = $reservations;
         $this->data['username'] = $_SESSION['username'];
-        $this->data['csrf_token'] = $_SESSION["csrf_token"];
 
         $this->render();
     }

@@ -14,7 +14,6 @@ enum ClientErrorCode: string
     case EMPTY_FIELD = 'empty_field';
     case USER_NOT_FOUND = 'user_not_found';
     case PASSWORD_ERROR = 'password_error';
-    case CSRF_ERROR = 'csrf_error';
     case LOGIN_ERROR = 'login_error';
     case ADMIN_ERROR = 'admin_error';
     case ROOT_ERROR = 'root_error';
@@ -34,7 +33,6 @@ enum ClientErrorCode: string
             self::EMPTY_FIELD => 'Champ(s) vide(s)',
             self::USER_NOT_FOUND => 'Utilisateur introuvable',
             self::PASSWORD_ERROR => 'Mot de passe incorrect',
-            self::CSRF_ERROR => 'Jeton CSRF invalide',
             self::LOGIN_ERROR => 'Vous devez être connecté',
             self::ADMIN_ERROR => 'Vous devez être administrateur',
             self::ROOT_ERROR => 'Vous devez être super-administrateur',

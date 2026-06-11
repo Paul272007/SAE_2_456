@@ -40,8 +40,7 @@
                     <td>
                         <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn-small btn-secondary">Éditer</a>
                         <form action="index.php?route=admin/useredit" method="POST" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                            <input type="hidden" name="action" value="delete">
+                                                        <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
                             <button type="submit" class="btn-small btn-danger">Supprimer</button>
                         </form>

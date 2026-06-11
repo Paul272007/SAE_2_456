@@ -9,8 +9,7 @@
             <p>Bienvenue, <span class="home-accent">{{ username }}</span></p>
         </div>
         <form action="index.php?route=user/logout" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-            <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
+                        <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
         </form>
     </div>
 

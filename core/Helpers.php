@@ -63,22 +63,3 @@ function isGet(): bool
 {
     return $_SERVER["REQUEST_METHOD"] === "GET";
 }
-
-/**
- * @throws ClientError
- */
-function verifyCSRFToken(): void
-{
-    if (!isset($_SESSION['csrf_token']) || !isset($_POST['csrf_token']) || !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"]))
-        throw new ClientError(ClientErrorCode::CSRF_ERROR);
-}
-
-/**
- * @throws RandomException
- */
-function buildCSRFToken(): void
-{
-    if (!isset($_SESSION["csrf_token"])) {
-        $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
-    }
-}

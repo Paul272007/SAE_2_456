@@ -20,8 +20,7 @@
 {% endif %}
 
 <form action="index.php?route=reservation" method="POST" class="reservation-form">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-    <input type="hidden" name="lig_num" value="{{ lig_num }}">
+        <input type="hidden" name="lig_num" value="{{ lig_num }}">
 
     <div class="form-group">
         <label for="depart">Arrêt de départ</label>

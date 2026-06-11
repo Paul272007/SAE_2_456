@@ -23,7 +23,6 @@ class CartController extends Controller
 
         $this->data['cart'] = $cart;
         $this->data['total_price'] = $totalPrice;
-        $this->data['csrf_token'] = $_SESSION['csrf_token'];
         $this->data['connected'] = isset($_SESSION['userId']);
 
         $this->render();
@@ -31,8 +30,7 @@ class CartController extends Controller
 
     public function post(): void
     {
-        verifyCSRFToken();
-
+        
         $action = $_POST['action'] ?? '';
         
         if ($action === 'remove') {

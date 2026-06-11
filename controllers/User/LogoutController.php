@@ -27,8 +27,7 @@ class LogoutController extends Controller
   #[NoReturn]
   public function post(): void
   {
-    verifyCSRFToken();
-
+    
     // Additional security
     if (ini_get("session.use_cookies")) {
       $params = session_get_cookie_params();

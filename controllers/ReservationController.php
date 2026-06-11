@@ -41,7 +41,6 @@ class ReservationController extends Controller
         $this->data['line']       = $line;
         $this->data['stops']      = $model->getStops($ligNum);
         $this->data['lig_num']    = $ligNum;
-        $this->data['csrf_token'] = $_SESSION['csrf_token'];
         $this->data['today']      = date('Y-m-d');
         $this->data['connected']  = isset($_SESSION['userId']);
 
@@ -56,8 +55,7 @@ class ReservationController extends Controller
      */
     public function post(): void
     {
-        verifyCSRFToken();
-        $this->checkPostFields();
+                $this->checkPostFields();
 
         $ligNum     = (string)$_POST['lig_num'];
         $codeDepart  = trim($_POST['depart']);
