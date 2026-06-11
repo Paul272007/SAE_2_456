@@ -1,79 +1,102 @@
 {% extends "layout.twig" %}
-
 {% block content %}
 <div class="admin-header">
-    <h1>Édition des horaires - Ligne {{ lig_num }}</h1>
+    <h1>Édition des horaires</h1>
     <a href="index.php?route=admin/lines" class="btn-back">← Retour aux lignes</a>
 </div>
 
 <div class="card shadow-sm border-0 mt-4 p-4">
     
-    <div class="mb-3">
-        <h4 class="text-primary">Trajet actuel : {{ line.com_nom_depart }} → {{ line.com_nom_arrivee }}</h4>
-    </div>
-
     <form action="index.php" method="GET" class="mb-4 bg-light p-3 rounded border">
         <input type="hidden" name="route" value="admin/lineedit">
-        <input type="hidden" name="id" value="{{ lig_num }}">
-        
         <div class="row align-items-center">
             <div class="col-md-8">
-                <label for="arret" class="form-label fw-bold">Sélectionner un arrêt à modifier :</label>
-                <select name="arret" id="arret" class="form-select" onchange="this.form.submit()">
-                    <option value="">-- Tous les arrêts de la ligne --</option>
-                    {% for stop in unique_stops %}
-                        <option value="{{ stop.code }}" {% if selected_arret == stop.code %}selected{% endif %}>
-                            {{ stop.nom }}
+                <label for="id" class="form-label fw-bold">Sélectionner une ligne :</label>
+                <select name="id" id="id" class="form-select" onchange="this.form.submit()">
+                    <option value="">-- Choisissez une ligne --</option>
+                    {% for l in all_lines %}
+                        <option value="{{ l.lig_num }}" {% if lig_num == l.lig_num %}selected{% endif %}>
+                            Ligne {{ l.lig_num }} : {{ l.commune_depart }} → {{ l.commune_arrivee }}
                         </option>
                     {% endfor %}
                 </select>
             </div>
             <noscript>
                 <div class="col-md-4 mt-4 mt-md-0">
-                    <button type="submit" class="btn btn-primary">Filtrer</button>
+                    <button type="submit" class="btn btn-primary">Charger</button>
                 </div>
             </noscript>
         </div>
     </form>
 
-    <form action="index.php?route=admin/lineedit" method="POST">
-        <input type="hidden" name="lig_num" value="{{ lig_num }}">
-        <input type="hidden" name="selected_arret" value="{{ selected_arret }}">
-        
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle table-hover">
-                <thead class="table-light">
-                    <tr>
-                        <th>Nom de l'arrêt</th>
-                        <th style="width: 200px;">Heure de passage</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for stop in schedule %}
-                        <tr>
-                            <td>
-                                <input type="hidden" name="arret_code[]" value="{{ stop.com_code_insee_arret }}">
-                                <strong>{{ stop.arret_nom }}</strong>
-                            </td>
-                            <td>
-                                <input type="hidden" name="old_heure[]" value="{{ stop.noe_heure_passage|slice(0, 8) }}">
-                                <input type="time" name="new_heure[]" class="form-control" step="1" value="{{ stop.noe_heure_passage|slice(0, 8) }}" required>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2" class="text-center py-4 text-muted">Aucun horaire enregistré pour cette sélection.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    {% if lig_num %}
+        <div class="mb-3">
+            <h4 class="text-primary">Trajet actuel : Ligne {{ lig_num }} ({{ line.com_nom_depart }} → {{ line.com_nom_arrivee }})</h4>
         </div>
-        
-        <div class="mt-4 text-end">
-            <button type="submit" class="btn btn-success btn-lg">
-                Enregistrer les modifications
-            </button>
-        </div>
-    </form>
+
+        <form action="index.php" method="GET" class="mb-4 bg-light p-3 rounded border">
+            <input type="hidden" name="route" value="admin/lineedit">
+            <input type="hidden" name="id" value="{{ lig_num }}">
+            
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <label for="arret" class="form-label fw-bold">Sélectionner un arrêt à modifier :</label>
+                    <select name="arret" id="arret" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Tous les arrêts de la ligne --</option>
+                        {% for stop in unique_stops %}
+                            <option value="{{ stop.code }}" {% if selected_arret == stop.code %}selected{% endif %}>
+                                {{ stop.nom }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <noscript>
+                    <div class="col-md-4 mt-4 mt-md-0">
+                        <button type="submit" class="btn btn-primary">Filtrer</button>
+                    </div>
+                </noscript>
+            </div>
+        </form>
+
+        <form action="index.php?route=admin/lineedit" method="POST">
+            <input type="hidden" name="lig_num" value="{{ lig_num }}">
+            <input type="hidden" name="selected_arret" value="{{ selected_arret }}">
+            
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nom de l'arrêt</th>
+                            <th style="width: 200px;">Heure de passage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stop in schedule %}
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="arret_code[]" value="{{ stop.com_code_insee_arret }}">
+                                    <strong>{{ stop.arret_nom }}</strong>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="old_heure[]" value="{{ stop.noe_heure_passage|slice(0, 8) }}">
+                                    <input type="time" name="new_heure[]" class="form-control" step="1" value="{{ stop.noe_heure_passage|slice(0, 8) }}" required>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="2" class="text-center py-4 text-muted">Aucun horaire enregistré pour cette sélection.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-4 text-end">
+                <button type="submit" class="btn btn-success btn-lg">
+                    Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    {% endif %}
 </div>
 {% endblock %}

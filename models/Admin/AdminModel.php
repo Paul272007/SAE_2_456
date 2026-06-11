@@ -66,20 +66,20 @@ class AdminModel extends Model
         $this->runQuery($sql, [$cliNum]);
     }
 
-    public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeureShort, string $newHeureShort): void
+    public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeure, string $newHeure): void
     {
         $sql = "UPDATE vik_noeud 
-                SET noe_heure_passage = TO_DATE(:new_heure, 'HH24:MI') 
+                SET noe_heure_passage = TO_DATE(:new_heure, 'HH24:MI:SS') 
                 WHERE lig_num = :lig_num 
                 AND com_code_insee_arret = :arret 
-                AND TO_CHAR(noe_heure_passage, 'HH24:MI') = :old_heure";
+                AND TO_CHAR(noe_heure_passage, 'HH24:MI:SS') = :old_heure";
                 
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'new_heure' => $newHeureShort,
+            'new_heure' => $newHeure,
             'lig_num'   => $ligNum,
             'arret'     => $codeArret,
-            'old_heure' => $oldHeureShort
+            'old_heure' => $oldHeure
         ]);
     }
 }
