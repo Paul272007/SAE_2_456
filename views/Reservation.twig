@@ -54,7 +54,8 @@
         </div>
     </div>
 {% else %}
-    <form action="index.php?route=reservation" method="POST" class="reservation-form">
+    <form action="index.php" method="GET" class="reservation-form">
+        <input type="hidden" name="route" value="reservation">
         <input type="hidden" name="lig_num" value="{{ lig_num }}">
 
         <div class="form-group">
