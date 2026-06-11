@@ -7,12 +7,14 @@ declare(strict_types=1);
 namespace Models;
 
 use Core\Model;
+use Exception;
 
 class ScheduleModel extends Model
 {
     /**
      * Retourne toutes les stations d'une ligne avec leurs horaires,
      * triées par heure de passage.
+     * @throws Exception
      */
     public function getSchedule(string $ligNum): array
     {
@@ -24,13 +26,14 @@ class ScheduleModel extends Model
                        n.com_code_insee_suivant
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
-                WHERE n.lig_num = ?
+                WHERE TRIM(n.lig_num) = TRIM(?)
                 ORDER BY n.noe_heure_passage ASC";
         return $this->fetchAll($sql, [$ligNum]);
     }
 
     /**
      * Retourne les informations d'une ligne (communes départ/arrivée).
+     * @throws Exception
      */
     public function getLine(string $ligNum): mixed
     {
@@ -42,7 +45,7 @@ class ScheduleModel extends Model
                 FROM vik_ligne l
                 JOIN vik_commune c1 ON l.com_code_insee_debu = c1.com_code_insee
                 JOIN vik_commune c2 ON l.com_code_insee_term = c2.com_code_insee
-                WHERE l.lig_num = ?";
+                WHERE TRIM(l.lig_num) = TRIM(?)";
         return $this->fetch($sql, [$ligNum]);
     }
 
@@ -50,14 +53,14 @@ class ScheduleModel extends Model
      * Retourne toutes les stations d'une ligne avec leurs noms,
      * utilisable pour construire un sélecteur d'arrêts.
      */
-    public function getStops(int $ligNum): array
+    public function getStops(string $ligNum): array
     {
         $sql = "SELECT n.com_code_insee_arret AS code,
                        c.com_nom              AS nom,
                        n.noe_heure_passage
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
-                WHERE n.lig_num = ?
+                WHERE TRIM(n.lig_num) = TRIM(?)
                 ORDER BY n.noe_heure_passage ASC";
         return $this->fetchAll($sql, [$ligNum]);
     }

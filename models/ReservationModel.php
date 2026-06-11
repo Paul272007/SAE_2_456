@@ -26,7 +26,7 @@ class ReservationModel extends Model
                 FROM vik_ligne l
                 JOIN vik_commune c1 ON l.com_code_insee_debu = c1.com_code_insee
                 JOIN vik_commune c2 ON l.com_code_insee_term = c2.com_code_insee
-                WHERE l.lig_num = ?";
+                WHERE TRIM(l.lig_num) = TRIM(?)";
         return $this->fetch($sql, [$ligNum]);
     }
 
@@ -40,7 +40,7 @@ class ReservationModel extends Model
                        n.noe_heure_passage
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
-                WHERE n.lig_num = ?
+                WHERE TRIM(n.lig_num) = TRIM(?)
                 ORDER BY n.noe_heure_passage ASC";
         return $this->fetchAll($sql, [$ligNum]);
     }
@@ -56,7 +56,7 @@ class ReservationModel extends Model
         $sql = "SELECT com_code_insee_arret,
                        MAX(noe_distance_prochain) as noe_distance_prochain
                 FROM vik_noeud
-                WHERE lig_num = ?
+                WHERE TRIM(lig_num) = TRIM(?)
                 GROUP BY com_code_insee_arret
                 ORDER BY MIN(noe_heure_passage) ASC";
         $nodes = $this->fetchAll($sql, [$ligNum]);
@@ -115,9 +115,9 @@ class ReservationModel extends Model
         // Une réservation chevauche si son segment d'étape intersecte le nôtre
         $sql = "SELECT COUNT(*) AS nb
                 FROM vik_reservation r
-                JOIN vik_etape e ON e.res_num = r.res_num AND e.lig_num = ?
-                JOIN vik_noeud nd ON nd.lig_num = ? AND nd.com_code_insee_arret = e.com_code_insee_depart
-                JOIN vik_noeud na ON na.lig_num = ? AND na.com_code_insee_arret = e.com_code_insee_arrivee
+                JOIN vik_etape e ON e.res_num = r.res_num AND TRIM(e.lig_num) = TRIM(?)
+                JOIN vik_noeud nd ON TRIM(nd.lig_num) = TRIM(?) AND nd.com_code_insee_arret = e.com_code_insee_depart
+                JOIN vik_noeud na ON TRIM(na.lig_num) = TRIM(?) AND na.com_code_insee_arret = e.com_code_insee_arrivee
                 WHERE r.res_date = ?
                   AND nd.noe_heure_passage < na.noe_heure_passage";
         $result = $this->fetch($sql, [$ligNum, $ligNum, $ligNum, $date]);

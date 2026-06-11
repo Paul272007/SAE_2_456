@@ -9,13 +9,24 @@ namespace Controllers;
 use Core\Controller;
 use Core\Privilege;
 use Core\RequirePrivilege;
+use Exception;
 use Models\ScheduleModel;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 #[RequirePrivilege(Privilege::GUEST)]
 class ScheduleController extends Controller
 {
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     * @throws Exception
+     */
     public function get(): void
     {
+        // Pour être sûr que c'est un string
         $ligNum = isset($_GET['lig_num']) ? (string)$_GET['lig_num'] : null;
 
         if (!$ligNum) {
