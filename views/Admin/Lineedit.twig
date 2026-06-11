@@ -20,76 +20,66 @@
 							<a class="nav-link" href="index.php?route=admin/stats">Admin</a>
 						</li>
 					{% endif %}
-					<li class="nav-item">
-						<form action="index.php?route=user/logout" method="POST" class="d-inline">
-							<button type="submit" class="nav-link text-danger btn btn-link" style="text-decoration: none;">Déconnexion</button>
-						</form>
-					</li>
-				{% else %}
-					<li class="nav-item">
-						<a class="nav-link" href="index.php?route=login">Connexion</a>
-					</li>
-				{% endif %}
-			</ul>
-		</div>
-	</nav>
-</header>
+				</ul>
+			</div>
+		</nav>
+	</header>
 
-{% block content %}
-	<div class="admin-header">
-		<h1>Édition des horaires - Ligne
-			{{ lig_num }}</h1>
-		<a href="index.php?route=admin/lines" class="btn-back">← Retour aux lignes</a>
-	</div>
-
-	<div class="card shadow-sm border-0 mt-4 p-4">
-		<div class="mb-4">
-			<h4>Trajet :
-				{{ line.com_nom_depart }}
-				→
-				{{ line.com_nom_arrivee }}</h4>
+	{% block content %}
+		<div class="admin-header">
+			<h1>Édition des horaires - Ligne
+				{{ lig_num }}</h1>
+			<a href="index.php?route=admin/lines" class="btn-back">← Retour aux lignes</a>
 		</div>
 
-		<form action="index.php?route=admin/lineedit" method="POST">
-			<input type="hidden" name="lig_num" value="{{ lig_num }}">
-
-			<div class="table-responsive">
-				<table class="table table-bordered align-middle">
-					<thead class="table-light">
-						<tr>
-							<th>Arrêt (Code INSEE)</th>
-							<th>Nom de l'arrêt</th>
-							<th style="width: 250px;">Heure de passage</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for stop in schedule %}
-							<tr>
-								<td>
-									{{ stop.com_code_insee_arret }}
-									<input type="hidden" name="arret_code[]" value="{{ stop.com_code_insee_arret }}">
-								</td>
-								<td>
-									<strong>{{ stop.arret_nom }}</strong>
-								</td>
-								<td>
-									<input type="hidden" name="old_heure[]" value="{{ stop.noe_heure_passage|slice(11, 8) }}">
-
-									<input type="time" name="new_heure[]" class="form-control" step="1" value="{{ stop.noe_heure_passage|slice(11, 8) }}" required>
-								</td>
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="3" class="text-center py-4 text-muted">Aucun horaire trouvé pour cette ligne.</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+		<div class="card shadow-sm border-0 mt-4 p-4">
+			<div class="mb-4">
+				<h4>Trajet :
+					{{ line.com_nom_depart }}
+					→
+					{{ line.com_nom_arrivee }}</h4>
 			</div>
 
-			<div class="mt-4 text-end">
-				<button type="submit" class="btn btn-success btn-lg">Enregistrer les modifications</button>
-			</div>
-		</form>
-	</div>
-{% endblock %}
+			<form action="index.php?route=admin/lineedit" method="POST">
+				<input type="hidden" name="lig_num" value="{{ lig_num }}">
+
+				<div class="table-responsive">
+					<table class="table table-bordered align-middle">
+						<thead class="table-light">
+							<tr>
+								<th>Arrêt (Code INSEE)</th>
+								<th>Nom de l'arrêt</th>
+								<th style="width: 250px;">Heure de passage</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for stop in schedule %}
+								<tr>
+									<td>
+										{{ stop.com_code_insee_arret }}
+										<input type="hidden" name="arret_code[]" value="{{ stop.com_code_insee_arret }}">
+									</td>
+									<td>
+										<strong>{{ stop.arret_nom }}</strong>
+									</td>
+									<td>
+										<input type="hidden" name="old_heure[]" value="{{ stop.noe_heure_passage|slice(11, 8) }}">
+
+										<input type="time" name="new_heure[]" class="form-control" step="1" value="{{ stop.noe_heure_passage|slice(11, 8) }}" required>
+									</td>
+								</tr>
+							{% else %}
+								<tr>
+									<td colspan="3" class="text-center py-4 text-muted">Aucun horaire trouvé pour cette ligne.</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="mt-4 text-end">
+					<button type="submit" class="btn btn-success btn-lg">Enregistrer les modifications</button>
+				</div>
+			</form>
+		</div>
+	{% endblock %}

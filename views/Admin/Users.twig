@@ -21,20 +21,10 @@
 							<a class="nav-link" href="index.php?route=admin/stats">Admin</a>
 						</li>
 					{% endif %}
-					<li class="nav-item">
-						<form action="index.php?route=user/logout" method="POST" class="d-inline">
-							<button type="submit" class="nav-link text-danger btn btn-link" style="text-decoration: none;">Déconnexion</button>
-						</form>
-					</li>
-				{% else %}
-					<li class="nav-item">
-						<a class="nav-link" href="index.php?route=login">Connexion</a>
-					</li>
-				{% endif %}
-			</ul>
-		</div>
-	</nav>
-</header>
+				</ul>
+			</div>
+		</nav>
+	</header>
 
 {% block content %}
 <div class="container py-4">
