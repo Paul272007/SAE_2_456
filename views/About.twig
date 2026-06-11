@@ -30,10 +30,12 @@
             Ces points peuvent ensuite être utilisés lors de vos prochaines réservations pour réduire le prix
             de votre billet. <strong>10 points = 1€ de réduction.</strong>
         </p>
-        <p>
-            <a href="index.php?route=register" class="btn btn-primary">Créer un compte</a>
+        {% if not connected %}
+            <p>
+                <a href="index.php?route=register" class="btn btn-primary">Créer un compte</a>
             pour commencer à accumuler des points dès maintenant !
-        </p>
+            </p>
+        {% endif %}
     </div>
 
     <div class="about-section">
