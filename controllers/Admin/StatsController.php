@@ -1,6 +1,6 @@
 <?php
 
-// controllers/Admin/DashboardController.php
+// controllers/Admin/StatsController.php
 
 declare(strict_types=1);
 
@@ -12,7 +12,7 @@ use Core\RequirePrivilege;
 use Models\Admin\AdminModel;
 
 #[RequirePrivilege(Privilege::ADMIN)]
-class DashboardController extends Controller
+class StatsController extends Controller
 {
     public function get(): void
     {

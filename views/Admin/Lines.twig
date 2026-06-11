@@ -1,0 +1,45 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="admin-header">
+    <h1>Gestion des Lignes</h1>
+    <a href="index.php?route=admin/dashboard" class="btn-back">← Retour au tableau de bord</a>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Ligne</th>
+                        <th>Départ</th>
+                        <th>Arrivée</th>
+                        <th>Distance totale</th>
+                        <th class="text-end pe-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for line in lines %}
+                        <tr>
+                            <td class="ps-3 fw-bold">{{ line.lig_num }}</td>
+                            <td>{{ line.commune_depart }}</td>
+                            <td>{{ line.commune_arrivee }}</td>
+                            <td>{{ line.distance_totale|round(1) }} km</td>
+                            <td class="text-end pe-3">
+                                <a href="index.php?route=admin/lineedit&id={{ line.lig_num }}" class="btn btn-sm btn-primary">
+                                    Éditer les horaires
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">Aucune ligne trouvée.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

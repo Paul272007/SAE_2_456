@@ -29,7 +29,6 @@ abstract class Controller
   protected static array $postFields = [];
 
   /**
-   * @throws RandomException
    * @throws ServerError
    */
   public function __construct()
@@ -98,9 +97,13 @@ abstract class Controller
           'Search'      => 'Recherche d\'itinéraire',
           'Users'       => 'Gestion des clients',
           'Useredit'    => 'Édition client',
+          'Linesedit'    => 'Édition ligne',
           default       => $this->controllerName
         },
         "connected" => isAuthenticated(),
+        "isAdmin" => isset($_SESSION['role']) && $_SESSION['role'] === 2,
+        "controllerName" => $this->controllerName,
+        "controllerFolder" => $this->folder,
       ];
 
       // CSS and JavaScript files if they exist
