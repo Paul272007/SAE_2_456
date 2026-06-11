@@ -12,7 +12,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('images/background.png');
+    background-image: url('../images/background.png');
     background-size: cover;
     background-position: center;
     transition: opacity 0.6s ease;
@@ -24,7 +24,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background-image: url('images/background_flou.png');
+    background-image: url('../images/background_flou.png');
     background-size: cover;
     background-position: center;
     transition: opacity 0.6s ease;

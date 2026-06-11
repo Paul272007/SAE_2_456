@@ -103,10 +103,10 @@ abstract class Controller
       $jsFile = "scripts/$assetPath.js";
 
       if (file_exists($cssFile)) {
-        $this->data["stylesheet"] = "/" . $cssFile;
+        $this->data["stylesheet"] = $cssFile;
       }
       if (file_exists($jsFile)) {
-        $this->data["javascript"] = "/" . $jsFile;
+        $this->data["javascript"] = $jsFile;
       }
 
       // ... (rest of the constructor remains the same)
