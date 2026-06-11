@@ -54,6 +54,7 @@ class LoginController extends Controller
         $_SESSION["userId"]   = $user["cli_num"];
         $_SESSION["username"] = $user["cli_prenom"] . ' ' . $user["cli_nom"];
         $_SESSION["role"]     = (int)($user["typ_num"] ?? 1);
+        $_SESSION["is_admin"] = (int)($user["is_admin"] ?? 0);
         $_SESSION["email"]    = $user["cli_courriel"];
         $_SESSION["points"]   = $user["cli_nb_points_ec"];
 
