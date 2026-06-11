@@ -28,7 +28,7 @@
         <select name="depart" id="depart" required>
             <option value="">-- Choisissez un arrêt --</option>
             {% for stop in stops %}
-                <option value="{{ stop.code }}">{{ stop.nom }} ({{ stop.noe_heure_passage }})</option>
+                <option value="{{ stop.code }}">{{ stop.nom }}</option>
             {% endfor %}
         </select>
     </div>
@@ -38,7 +38,7 @@
         <select name="arrivee" id="arrivee" required>
             <option value="">-- Choisissez un arrêt --</option>
             {% for stop in stops %}
-                <option value="{{ stop.code }}">{{ stop.nom }} ({{ stop.noe_heure_passage }})</option>
+                <option value="{{ stop.code }}">{{ stop.nom }}</option>
             {% endfor %}
         </select>
     </div>

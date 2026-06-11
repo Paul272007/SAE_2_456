@@ -37,11 +37,12 @@ class ReservationModel extends Model
     {
         $sql = "SELECT n.com_code_insee_arret AS code,
                        c.com_nom              AS nom,
-                       n.noe_heure_passage
+                       MIN(n.noe_heure_passage) AS noe_heure_passage
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
                 WHERE TRIM(n.lig_num) = TRIM(?)
-                ORDER BY n.noe_heure_passage ASC";
+                GROUP BY n.com_code_insee_arret, c.com_nom
+                ORDER BY MIN(n.noe_heure_passage) ASC";
         return $this->fetchAll($sql, [$ligNum]);
     }
 
@@ -86,10 +87,13 @@ class ReservationModel extends Model
     public function getTarif(float $distance): mixed
     {
         $sql = "SELECT tar_num_tarif, tar_num_tranche, tar_prix
-                FROM vik_tarif
-                WHERE tar_min_dist <= ? AND tar_max_dist >= ?
-                ORDER BY tar_num_tranche ASC
-                LIMIT 1";
+                FROM (
+                    SELECT tar_num_tarif, tar_num_tranche, tar_prix
+                    FROM vik_tarif
+                    WHERE tar_min_dist <= ? AND tar_max_dist >= ?
+                    ORDER BY tar_num_tranche ASC
+                )
+                WHERE ROWNUM <= 1";
         return $this->fetch($sql, [$distance, $distance]);
     }
 
@@ -118,7 +122,7 @@ class ReservationModel extends Model
                 JOIN vik_etape e ON e.res_num = r.res_num AND TRIM(e.lig_num) = TRIM(?)
                 JOIN vik_noeud nd ON TRIM(nd.lig_num) = TRIM(?) AND nd.com_code_insee_arret = e.com_code_insee_depart
                 JOIN vik_noeud na ON TRIM(na.lig_num) = TRIM(?) AND na.com_code_insee_arret = e.com_code_insee_arrivee
-                WHERE r.res_date = ?
+                WHERE r.res_date = TO_DATE(?, 'YYYY-MM-DD')
                   AND nd.noe_heure_passage < na.noe_heure_passage";
         $result = $this->fetch($sql, [$ligNum, $ligNum, $ligNum, $date]);
         $existingCount = (int)($result['nb'] ?? 0);
@@ -143,7 +147,7 @@ class ReservationModel extends Model
 
         $sql = "INSERT INTO vik_reservation
                     (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
         $result = $this->runQuery($sql, [$newId, $cliNum, $tarNumTranche, $date, $nbPoints, $prixTotal]);
 
         if (!$result) {
@@ -167,7 +171,7 @@ class ReservationModel extends Model
     ): void {
         $sql = "INSERT INTO vik_etape
                     (lig_num, res_num, com_code_insee_depart, com_code_insee_arrivee, eta_distance, eta_heure)
-                VALUES (?, ?, ?, ?, ?, ?)";
+                VALUES (?, ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'))";
         $this->runQuery($sql, [$ligNum, $resNum, $codeDepart, $codeArrivee, $distance, $heure]);
     }
 
