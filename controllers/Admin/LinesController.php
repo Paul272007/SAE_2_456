@@ -36,8 +36,8 @@ class LinesController extends Controller
                 ];
             }
             $stopsGrouped[$code]['heures'][] = [
-                'old_heure' => substr((string)$s['noe_heure_passage'], 11, 8), // HH:MM:SS format from oracle
-                'value' => substr((string)$s['noe_heure_passage'], 11, 8)
+                'old_heure' => (string)$s['noe_heure_passage'], // already in HH:MM format
+                'value' => (string)$s['noe_heure_passage']
             ];
         }
         $line['stops'] = array_values($stopsGrouped);

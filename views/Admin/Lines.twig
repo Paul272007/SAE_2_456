@@ -1,10 +1,6 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<div class="admin-header">
-    <h1>Gestion des Lignes</h1>
-    <a href="index.php?route=user/dashboard" class="btn-back">← Retour au tableau de bord</a>
-</div>
 
 {% if lines is empty %}
     <div class="alert alert-info mt-4">Aucune ligne trouvée.</div>
