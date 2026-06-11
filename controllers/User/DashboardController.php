@@ -23,6 +23,10 @@ class DashboardController extends Controller
 
         $user = $model->getUserById($cliNum);
         $reservations = $model->getUserReservations($cliNum);
+        usort($reservations, function($a, $b) {
+
+            return $b['res_num'] <=> $a['res_num']; 
+        });
 
         $this->data['user'] = $user;
         $this->data['reservations'] = $reservations;
