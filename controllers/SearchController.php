@@ -78,7 +78,7 @@ class SearchController extends Controller
                         'distance'       => $segment['distance'],
                         'tar_num_tranche'=> $segment['tar_num_tranche'],
                         'prix_total'     => $segment['prix'],
-                        'nb_points'      => (int)ceil($segment['distance'] * 0.5), // Simple rules
+                        'nb_points'      => (int)floor($segment['distance'] / 10), // 1 point per 10km
                     ];
                 }
                 
