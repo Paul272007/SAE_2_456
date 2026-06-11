@@ -72,16 +72,23 @@ class ReservationModel extends Model
 
     public function getUniqueStops(string $ligNum): array
     {
-        $sql = 'SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS "code",
-                       c.COM_NOM AS "nom",
-                       MIN(n.NOE_HEURE_PASSAGE) as min_heure
-                FROM VIK_NOEUD n
-                JOIN VIK_COMMUNE c ON n.COM_CODE_INSEE_ARRET = c.COM_CODE_INSEE
-                WHERE TRIM(n.LIG_NUM) = ?
-                GROUP BY TRIM(n.COM_CODE_INSEE_ARRET), c.COM_NOM
-                ORDER BY MIN(n.NOE_HEURE_PASSAGE) ASC';
+        $scheduleModel = new ScheduleModel();
+        $schedule = $scheduleModel->getSchedule($ligNum);
 
-        return $this->fetchAll($sql, [trim($ligNum)]);
+        $seen = [];
+        $stops = [];
+        foreach ($schedule as $stop) {
+            $code = trim($stop['com_code_insee_arret']);
+            if (!isset($seen[$code])) {
+                $seen[$code] = true;
+                $stops[] = [
+                    'code' => $code,
+                    'nom' => $stop['arret_nom'],
+                    'min_heure' => $stop['noe_heure_passage'],
+                ];
+            }
+        }
+        return $stops;
     }
 
     public function getAvailableSchedules(string $ligNum, string $codeDepart, string $codeArrivee, string $minTime): array
