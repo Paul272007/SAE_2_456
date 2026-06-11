@@ -44,7 +44,7 @@ class AdminModel extends Model
      */
     public function getUsers(bool $onlyInactive = false): array
     {
-        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, cli_date_connec, typ_num
+        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, TO_CHAR(cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, typ_num
                 FROM vik_client ";
                 
         // Inactif : pas connecté depuis plus de 6 mois (180 jours)
