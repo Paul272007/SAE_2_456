@@ -1,55 +1,157 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<div class="admin-header">
-    <h1>Tableau de bord Administrateur</h1>
-    <nav class="admin-nav">
-        <a href="index.php?route=admin/dashboard" class="btn-primary">Statistiques</a>
-        <a href="index.php?route=admin/users" class="btn-secondary">Gérer les clients</a>
-        <a href="index.php?route=admin/lines" class="btn-secondary">Gérer les lignes</a>
-    </nav>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="bi bi-graph-up text-danger"></i> Statistiques
+        </h1>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 border-start border-danger border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs fw-bold text-danger text-uppercase mb-1" style="font-size: 0.8rem;">Total Clients</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ stats.total_clients }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-people fs-2 text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 border-start border-primary border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1" style="font-size: 0.8rem;">Réservations</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ stats.total_reservations }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-ticket-detailed fs-2 text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 h-100 border-start border-success border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1" style="font-size: 0.8rem;">Chiffre d'affaires</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">{{ stats.chiffre_affaires|number_format(2, ',', ' ') }} €</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-currency-euro fs-2 text-secondary opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart & Table -->
+    <div class="row g-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold text-gray-800"><i class="bi bi-bar-chart-fill me-2 text-danger"></i>Lignes les plus populaires</h5>
+                </div>
+                <div class="card-body">
+                    {% if stats.top_lines is empty %}
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-bar-chart-x fs-1 d-block mb-3"></i>
+                            <p class="mb-0">Aucune donnée disponible.</p>
+                        </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-md-5 mb-4 mb-md-0" style="min-height: 300px;">
+                                <canvas id="topLinesChart" 
+                                    data-labels='[{% for line in stats.top_lines %}"Ligne {{ line.lig_num }}"{% if not loop.last %},{% endif %}{% endfor %}]'
+                                    data-values='[{% for line in stats.top_lines %}{{ line.nb_trajets }}{% if not loop.last %},{% endif %}{% endfor %}]'>
+                                </canvas>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light text-muted small text-uppercase">
+                                            <tr>
+                                                <th class="ps-3">Ligne</th>
+                                                <th>Départ</th>
+                                                <th>Arrivée</th>
+                                                <th class="text-end pe-3">Trajets</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for line in stats.top_lines %}
+                                            <tr>
+                                                <td class="ps-3 fw-bold text-secondary">#{{ line.lig_num }}</td>
+                                                <td>{{ line.depart }}</td>
+                                                <td>{{ line.arrivee }}</td>
+                                                <td class="text-end pe-3 fw-bold text-success">{{ line.nb_trajets }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="dashboard-grid" style="margin-top: 20px;">
-    <div class="card">
-        <h2>Total Clients</h2>
-        <p class="stat-number">{{ stats.total_clients }}</p>
-    </div>
-    <div class="card">
-        <h2>Réservations</h2>
-        <p class="stat-number">{{ stats.total_reservations }}</p>
-    </div>
-    <div class="card">
-        <h2>Chiffre d'Affaires</h2>
-        <p class="stat-number">{{ stats.chiffre_affaires|number_format(2, ',', ' ') }} €</p>
-    </div>
-</div>
-
-<div class="card" style="margin-top: 20px;">
-    <h2>Lignes les plus populaires (Top 5)</h2>
-    {% if stats.top_lines is empty %}
-        <p>Aucune donnée disponible.</p>
-    {% else %}
-        <table class="schedule-table">
-            <thead>
-                <tr>
-                    <th>Ligne</th>
-                    <th>Départ</th>
-                    <th>Arrivée</th>
-                    <th>Nombre de trajets</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for line in stats.top_lines %}
-                    <tr>
-                        <td>{{ line.lig_num }}</td>
-                        <td>{{ line.depart }}</td>
-                        <td>{{ line.arrivee }}</td>
-                        <td>{{ line.nb_trajets }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const canvas = document.getElementById('topLinesChart');
+    if (canvas) {
+        const labels = JSON.parse(canvas.getAttribute('data-labels'));
+        const values = JSON.parse(canvas.getAttribute('data-values'));
+        
+        new Chart(canvas, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre de trajets',
+                    data: values,
+                    backgroundColor: 'rgba(204, 0, 0, 0.7)',
+                    borderColor: 'rgba(204, 0, 0, 1)',
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 {% endblock %}

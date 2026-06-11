@@ -64,7 +64,6 @@ class ReservationController extends Controller
         $this->data['today'] = date('Y-m-d');
         $this->data['connected'] = isset($_SESSION['userId']);
         
-        $this->data['javascript'] = 'scripts/reservation.js';
         $this->data['post_depart'] = $codeDepart;
         $this->data['post_arrivee'] = $codeArrivee;
         
