@@ -2,93 +2,82 @@
 
 {% block content %}
 <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3 mb-0 text-gray-800"><i class="bi bi-people text-danger"></i> Gestion des Clients</h1>
-        <a href="index.php?route=user/dashboard" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Retour au tableau de bord</a>
+    <!-- Admin Navigation -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center border-bottom pb-3 mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Gestion des Clients</h1>
+        <div class="d-flex gap-2">
+            <a href="index.php?route=admin/stats" class="btn btn-secondary">Statistiques</a>
+            <a href="index.php?route=admin/users" class="btn btn-primary">Gérer les clients</a>
+            <a href="index.php?route=admin/lines" class="btn btn-secondary">Gérer les lignes</a>
+            <a href="index.php?route=user/dashboard" class="btn btn-dark">Retour Dashboard</a>
+        </div>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <ul class="nav nav-pills card-header-pills m-0">
-                        <li class="nav-item">
-                            <a class="nav-link {{ filter == 'all' ? 'active bg-danger text-white' : 'text-danger' }}" href="index.php?route=admin/users">Tous les clients</a>
-                        </li>
-                        <li class="nav-item ms-2">
-                            <a class="nav-link {{ filter == 'inactive' ? 'active bg-danger text-white' : 'text-danger' }}" href="index.php?route=admin/users&filter=inactive">Inactifs (> 6 mois)</a>
-                        </li>
-                    </ul>
-                    <span class="badge bg-secondary rounded-pill py-2 px-3">{{ users|length }} client(s)</span>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light text-muted small text-uppercase">
-                                <tr>
-                                    <th class="ps-4">Client</th>
-                                    <th>Email</th>
-                                    <th>Connexion</th>
-                                    <th>Type</th>
-                                    <th class="text-end pe-4">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for user in users %}
-                                    <tr>
-                                        <td class="ps-4">
-                                            <div class="d-flex align-items-center">
-                                                <div class="bg-secondary bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                                    <span class="fw-bold">{{ user.cli_prenom|first|upper }}{{ user.cli_nom|first|upper }}</span>
-                                                </div>
-                                                <div>
-                                                    <div class="fw-bold">{{ user.cli_prenom }} {{ user.cli_nom }}</div>
-                                                    <div class="text-muted small">ID: #{{ user.cli_num }}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{ user.cli_courriel }}</td>
-                                        <td>
-                                            {% if user.cli_date_connec %}
-                                                {{ user.cli_date_connec|date("d/m/Y") }}
-                                            {% else %}
-                                                <span class="text-muted fst-italic">Jamais</span>
-                                            {% endif %}
-                                        </td>
-                                        <td>
-                                            {% if user.typ_num == 1 %}
-                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary-subtle">Client</span>
-                                            {% else %}
-                                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle">Admin</span>
-                                            {% endif %}
-                                        </td>
-                                        <td class="text-end pe-4">
-                                            <div class="btn-group btn-group-sm" role="group">
-                                                <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-outline-secondary" title="Modifier">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <form action="index.php?route=admin/useredit" method="POST" class="d-inline m-0 p-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte définitivement ?');">
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
-                                                    <button type="submit" class="btn btn-outline-danger" title="Supprimer">
-                                                        <i class="bi bi-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr>
-                                        <td colspan="5" class="text-center py-5 text-muted">
-                                            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
-                                            Aucun client trouvé dans cette catégorie.
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <!-- Filters -->
+    <div class="mb-4">
+        <a href="index.php?route=admin/users" class="btn {{ filter == 'all' ? 'btn-primary' : 'btn-outline-primary' }}">Tous les clients</a>
+        <a href="index.php?route=admin/users&filter=inactive" class="btn {{ filter == 'inactive' ? 'btn-primary' : 'btn-outline-primary' }} ms-2">Clients inactifs (> 6 mois)</a>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">ID</th>
+                            <th>Nom complet</th>
+                            <th>Email</th>
+                            <th>Dernière connexion</th>
+                            <th>Type</th>
+                            <th class="text-end pe-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
+                                <td>{{ user.cli_prenom }} {{ user.cli_nom }}</td>
+                                <td>{{ user.cli_courriel }}</td>
+                                <td>
+                                    {% if user.cli_date_connec %}
+                                        {{ user.cli_date_connec|date("d/m/Y") }}
+                                    {% else %}
+                                        <span class="text-muted fst-italic">Jamais</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user.typ_num == 1 %}
+                                        <span class="badge bg-secondary">Client</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Admin</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-3">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
+                                            Éditer
+                                        </a>
+                                        <form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                Supprimer
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    Aucun client trouvé.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
