@@ -17,7 +17,16 @@ class LinesController extends Controller
     public function get(): void
     {
         $this->model = new LinesModel();
-        $this->data["lines"] = $this->model->getLinesWithDetails();
+        $lines = $this->model->getLinesWithDetails();
+        
+        require_once 'models/ScheduleModel.php';
+        $scheduleModel = new \Models\ScheduleModel();
+
+        foreach ($lines as &$line) {
+            $line['stops'] = $scheduleModel->getSchedule((string)$line['lig_num']);
+        }
+        
+        $this->data["lines"] = $lines;
         $this->render();
     }
 }
