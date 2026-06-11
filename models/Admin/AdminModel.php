@@ -36,6 +36,14 @@ class AdminModel extends Model
                 FETCH FIRST 5 ROWS ONLY";
         $stats['top_lines'] = $this->fetchAll($sql);
 
+        $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, COUNT(r.res_num) as nb_reservations, SUM(r.res_prix_tot) as total_depense
+                FROM vik_client c
+                JOIN vik_reservation r ON c.cli_num = r.cli_num
+                GROUP BY c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel
+                ORDER BY total_depense DESC, nb_reservations DESC
+                FETCH FIRST 5 ROWS ONLY";
+        $stats['top_clients'] = $this->fetchAll($sql);
+
         return $stats;
     }
 
