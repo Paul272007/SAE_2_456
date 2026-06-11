@@ -1,59 +1,73 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<h1>Votre Panier</h1>
-
-{% if cart is empty %}
-    <p>Votre panier est vide.</p>
-    <a href="index.php?route=lines" class="btn btn-primary">Voir les lignes</a>
-{% else %}
-    <div class="cart-container">
-        <table class="cart-table">
-            <thead>
-                <tr>
-                    <th>Ligne</th>
-                    <th>Départ</th>
-                    <th>Arrivée</th>
-                    <th>Date</th>
-                    <th>Prix</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for i, item in cart %}
-                    <tr>
-                        <td>{{ item.ligne_nom }}</td>
-                        <td>{{ item.nom_depart }}</td>
-                        <td>{{ item.nom_arrivee }}</td>
-                        <td>{{ item.date }}</td>
-                        <td>{{ item.prix_total|number_format(2, ',', ' ') }} €</td>
-                        <td>
-                            <form action="index.php?route=reservation/cart" method="POST" style="display:inline;">
-                                                                <input type="hidden" name="action" value="remove">
-                                <input type="hidden" name="index" value="{{ i }}">
-                                <button type="submit" class="btn btn-danger btn-sm">Retirer</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="4" style="text-align:right;">Total :</th>
-                    <th>{{ total_price|number_format(2, ',', ' ') }} €</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
-
-        <div class="cart-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-            <a href="index.php?route=lines" class="btn btn-secondary">Ajouter un autre trajet</a>
-            <form action="index.php?route=reservation/cart" method="POST" style="display:inline;">
-                                <input type="hidden" name="action" value="clear">
-                <button type="submit" class="btn btn-danger">Vider le panier</button>
-            </form>
-            <a href="index.php?route=reservation/confirm" class="btn btn-primary">Procéder au paiement</a>
-        </div>
+<section class="page-section">
+    <div class="page-title text-center mb-5">
+        <h1>Votre Panier</h1>
+        <p class="text-muted">Vérifiez vos trajets avant de procéder au paiement.</p>
     </div>
-{% endif %}
+
+    {% if cart is empty %}
+        <div class="alert alert-secondary text-center py-4">
+            <p class="mb-3">Votre panier est vide.</p>
+            <a href="index.php?route=lines" class="btn btn-primary">Voir les lignes</a>
+        </div>
+    {% else %}
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Ligne</th>
+                                <th>Départ</th>
+                                <th>Arrivée</th>
+                                <th>Date & Heure</th>
+                                <th>Prix</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i, item in cart %}
+                                <tr>
+                                    <td><span class="badge bg-primary fs-6">{{ item.ligne_nom }}</span></td>
+                                    <td><strong>{{ item.nom_depart }}</strong></td>
+                                    <td><strong>{{ item.nom_arrivee }}</strong></td>
+                                    <td>{{ item.date|date('d/m/Y') }}{% if item.heure_depart is defined %}<br><small class="text-muted">{{ item.heure_depart }}</small>{% endif %}</td>
+                                    <td class="fw-bold">{{ item.prix_total|number_format(2, ',', ' ') }} €</td>
+                                    <td>
+                                        <form action="index.php?route=reservation/cart" method="POST" class="m-0">
+                                            <input type="hidden" name="action" value="remove">
+                                            <input type="hidden" name="index" value="{{ i }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Retirer</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light fw-bold fs-5">
+                            <tr>
+                                <td colspan="4" class="text-end pe-4">Total à payer :</td>
+                                <td class="text-danger">{{ total_price|number_format(2, ',', ' ') }} €</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+            <a href="index.php?route=lines" class="btn btn-outline-secondary">← Ajouter un autre trajet</a>
+            
+            <div class="d-flex gap-2">
+                <form action="index.php?route=reservation/cart" method="POST" class="m-0">
+                    <input type="hidden" name="action" value="clear">
+                    <button type="submit" class="btn btn-danger">Vider le panier</button>
+                </form>
+                <a href="index.php?route=reservation/confirm" class="btn btn-primary px-4">Procéder au paiement</a>
+            </div>
+        </div>
+    {% endif %}
+</section>
 {% endblock %}
