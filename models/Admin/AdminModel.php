@@ -68,8 +68,9 @@ class AdminModel extends Model
 
     public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeure, string $newHeure): void
     {
+        // On conserve la date (YYYY-MM-DD) et on y colle la nouvelle heure (HH24:MI:SS)
         $sql = "UPDATE vik_noeud 
-                SET noe_heure_passage = TO_DATE(:new_heure, 'HH24:MI:SS') 
+                SET noe_heure_passage = TO_DATE(TO_CHAR(noe_heure_passage, 'YYYY-MM-DD') || ' ' || :new_heure, 'YYYY-MM-DD HH24:MI:SS') 
                 WHERE lig_num = :lig_num 
                 AND com_code_insee_arret = :arret 
                 AND TO_CHAR(noe_heure_passage, 'HH24:MI:SS') = :old_heure";
