@@ -14,7 +14,8 @@
   padding: 10px 0;
   border: 1px solid var(--border);
   border-radius: 10px;
-  max-width: 500px;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .line-header {
@@ -38,8 +39,7 @@
   border-radius: 5px;
   color: var(--text-on-accent);
   font-weight: bold;
-  width: 25px;
-  height: 25px;
+  padding: 5px;
   display: flex;
   align-items: center;
   justify-content: center;

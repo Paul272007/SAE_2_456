@@ -66,7 +66,8 @@ class ScheduleModel extends Model
     // peut on merge les fonctions? la dif est l'ajout du nom du dep et le rajout de l'order by com_code_insee
     public function getStopsLig(string $ligNum): array
     {
-        $sql = "SELECT n.COM_CODE_INSEE_ARRET as code,
+        $sql = "SELECT DISTINCT
+                       n.COM_CODE_INSEE_ARRET as code,
                        c.COM_NOM as nom,
                        d.DEP_NOM as dep_nom,
                        TO_CHAR(n.noe_heure_passage, 'HH24') as heure
