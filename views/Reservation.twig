@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Réserver un voyage</h1>
+
 <p class="line-subtitle">
     Ligne {{ lig_num }} :
     <strong>{{ line.commune_depart }}</strong>
@@ -20,14 +21,16 @@
 {% endif %}
 
 <form action="index.php?route=reservation" method="POST" class="reservation-form">
-        <input type="hidden" name="lig_num" value="{{ lig_num }}">
+    <input type="hidden" name="lig_num" value="{{ lig_num }}">
 
     <div class="form-group">
         <label for="depart">Arrêt de départ</label>
         <select name="depart" id="depart" required>
             <option value="">-- Choisissez un arrêt --</option>
             {% for stop in stops %}
-                <option value="{{ stop.code }}">{{ stop.nom }}</option>
+                <option value="{{ stop.code }}">
+                    {{ stop.nom }}{% if stop.heure_passage is defined %} - {{ stop.heure_passage }}{% endif %}
+                </option>
             {% endfor %}
         </select>
     </div>
@@ -37,7 +40,9 @@
         <select name="arrivee" id="arrivee" required>
             <option value="">-- Choisissez un arrêt --</option>
             {% for stop in stops %}
-                <option value="{{ stop.code }}">{{ stop.nom }}</option>
+                <option value="{{ stop.code }}">
+                    {{ stop.nom }}{% if stop.heure_passage is defined %} - {{ stop.heure_passage }}{% endif %}
+                </option>
             {% endfor %}
         </select>
     </div>
