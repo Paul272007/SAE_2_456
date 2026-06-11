@@ -54,7 +54,7 @@
                             </li>
                             {% if session.role >= 2 %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="index.php?route=admin/dashboard">Admin</a>
+                                    <a class="nav-link" href="index.php?route=admin/stats">Admin</a>
                                 </li>
                             {% endif %}
                             <li class="nav-item">
@@ -79,7 +79,7 @@
                 <a href="index.php?route=user/dashboard" class="text-decoration-none py-1 {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? 'text-white fw-bold' : 'text-secondary' }}" style="{{ controllerName == 'Dashboard' and controllerFolder == 'User' ? 'border-bottom: 2px solid #cc0000;' : '' }}">Dashboard</a>
                 <a href="index.php?route=admin/users" class="text-decoration-none py-1 {{ controllerName == 'Users' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="{{ controllerName == 'Users' and controllerFolder == 'Admin' ? 'border-bottom: 2px solid #cc0000;' : '' }}">Clients</a>
                 <a href="index.php?route=admin/lines" class="text-decoration-none py-1 {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="{{ controllerName == 'Lines' and controllerFolder == 'Admin' ? 'border-bottom: 2px solid #cc0000;' : '' }}">Lignes</a>
-                <a href="index.php?route=admin/dashboard" class="text-decoration-none py-1 {{ controllerName == 'Dashboard' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="{{ controllerName == 'Dashboard' and controllerFolder == 'Admin' ? 'border-bottom: 2px solid #cc0000;' : '' }}">Statistiques</a>
+                <a href="index.php?route=admin/stats" class="text-decoration-none py-1 {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="{{ controllerName == 'Stats' and controllerFolder == 'Admin' ? 'border-bottom: 2px solid #cc0000;' : '' }}">Statistiques</a>
             </div>
         </div>
     {% endif %}
