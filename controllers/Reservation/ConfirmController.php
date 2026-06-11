@@ -77,13 +77,7 @@ class ConfirmController extends Controller
             redirect('index.php?route=lines');
         }
 
-        // Si non connecté → sauvegarder et rediriger vers l'inscription
-        if (!isset($_SESSION['userId'])) {
-            $_SESSION['flash_info'] = 'Créez un compte pour finaliser votre réservation.';
-            redirect('index.php?route=register');
-        }
-
-        $cliNum = (int)$_SESSION['userId'];
+        $cliNum = isset($_SESSION['userId']) ? (int)$_SESSION['userId'] : null;
         $model  = new ReservationModel();
         
         // Handle points usage
@@ -97,7 +91,7 @@ class ConfirmController extends Controller
             $totalPointsEarned += $item['nb_points'];
         }
 
-        if ($usePoints) {
+        if ($usePoints && $cliNum !== null) {
             require_once 'models/User/UserModel.php';
             $userModel = new \Models\UserModel();
             $user = $userModel->getUserById($cliNum);
@@ -122,10 +116,6 @@ class ConfirmController extends Controller
             }
         }
 
-        // Apply discount proportionally or just set it on the first reservation? 
-        // For simplicity, we create reservations with original prices, and we deduct points globally.
-        // If the system requires discount per reservation, it's more complex. We will just deduct points from user profile.
-
         // 2. Création des réservations
         foreach ($cart as $pending) {
             $resNum = $model->createReservation(
@@ -140,6 +130,7 @@ class ConfirmController extends Controller
             $model->createEtape(
                 (string)$pending['lig_num'],
                 $resNum,
+                $cliNum,
                 (string)$pending['code_depart'],
                 (string)$pending['code_arrivee'],
                 (float)$pending['distance'],
@@ -148,19 +139,17 @@ class ConfirmController extends Controller
         }
 
         // 4. Mise à jour des points de fidélité du client
-        // Points gagnés - points utilisés
-        $netPoints = $totalPointsEarned - $pointsUsed;
-        
-        if ($netPoints !== 0 || $totalPointsEarned !== 0) {
-            // We use addClientPoints which adds to ec and tot. 
-            // Wait, points used should only deduct from ec, not tot.
-            $model->updatePointsAfterReservation($cliNum, $totalPointsEarned, $pointsUsed);
+        if ($cliNum !== null) {
+            $netPoints = $totalPointsEarned - $pointsUsed;
+            if ($netPoints !== 0 || $totalPointsEarned !== 0) {
+                $model->updatePointsAfterReservation($cliNum, $totalPointsEarned, $pointsUsed);
+            }
         }
 
         // 5. Nettoyage de la session
         unset($_SESSION['cart']);
 
-        $_SESSION['flash_success'] = 'reservation_confirmed';
-        redirect('index.php?route=user/dashboard');
+        $_SESSION['flash_success'] = 'Réservation confirmée avec succès !';
+        redirect($cliNum !== null ? 'index.php?route=user/dashboard' : 'index.php');
     }
 }

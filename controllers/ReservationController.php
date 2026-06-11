@@ -99,7 +99,7 @@ class ReservationController extends Controller
 
         $tarNumTranche = (int)$tarif['tar_num_tranche'];
         $prixTotal = (float)$tarif['tar_prix'];
-        $nbPoints = max(1, (int)floor($distance / 10));
+        $nbPoints = (int)floor($distance / 10);
 
         $stops = $model->getUniqueStops($ligNum);
         $stopMap = array_column($stops, 'nom', 'code');

@@ -176,7 +176,7 @@ class SearchModel extends Model
 
         foreach ($pathNodeIds as $nodeId) {
             [$ligNum, $comCode] = explode('_', $nodeId);
-            $ligNum = (int)$ligNum;
+            $ligNum = trim((string)$ligNum);
 
             if ($currentSegment === null) {
                 $currentSegment = ['lig_num' => $ligNum, 'stops' => [$comCode]];
@@ -215,7 +215,7 @@ class SearchModel extends Model
                            MAX(noe_distance_prochain) as noe_distance_prochain, 
                            MAX(noe_duree_prochain) as noe_duree_prochain 
                     FROM vik_noeud 
-                    WHERE lig_num = ? 
+                    WHERE TRIM(lig_num) = ? 
                     GROUP BY com_code_insee_arret
                     ORDER BY MIN(noe_heure_passage) ASC";
             $nodes = $this->fetchAll($sql, [$ligNum]);
@@ -225,11 +225,11 @@ class SearchModel extends Model
             $counting = false;
             foreach ($nodes as $n) {
                 if ($n['com_code_insee_arret'] === $start) $counting = true;
+                if ($n['com_code_insee_arret'] === $end) break;
                 if ($counting) {
                     $dist += (float)$n['noe_distance_prochain'];
                     $dur += (float)$n['noe_duree_prochain'];
                 }
-                if ($n['com_code_insee_arret'] === $end) break;
             }
 
             $totalDistance += $dist;

@@ -112,36 +112,22 @@ class ReservationModel extends Model
 
     public function getUniqueStops(string $ligNum): array
     {
-        $sql = 'SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS "code",
-                       c.COM_NOM AS "nom",
-                       MIN(n.NOE_HEURE_PASSAGE) as min_heure
-                FROM VIK_NOEUD n
-                JOIN VIK_COMMUNE c ON n.COM_CODE_INSEE_ARRET = c.COM_CODE_INSEE
-                WHERE TRIM(n.LIG_NUM) = ?
-                GROUP BY TRIM(n.COM_CODE_INSEE_ARRET), c.COM_NOM
-                ORDER BY MIN(n.NOE_HEURE_PASSAGE) ASC';
+        $scheduleModel = new ScheduleModel();
+        $schedule = $scheduleModel->getSchedule($ligNum);
 
-        $stops = $this->fetchAll($sql, [trim($ligNum)]);
-
-        $line = $this->getLine($ligNum);
-        if ($line) {
-            $existingCodes = array_map(fn($s) => trim($s['code']), $stops);
-
-            if (!in_array(trim($line['code_debu']), $existingCodes)) {
-                array_unshift($stops, [
-                    'code' => $line['code_debu'],
-                    'nom'  => $line['commune_depart'],
-                ]);
-            }
-
-            if (!in_array(trim($line['code_term']), $existingCodes)) {
+        $seen = [];
+        $stops = [];
+        foreach ($schedule as $stop) {
+            $code = trim($stop['com_code_insee_arret']);
+            if (!isset($seen[$code])) {
+                $seen[$code] = true;
                 $stops[] = [
-                    'code' => $line['code_term'],
-                    'nom'  => $line['commune_arrivee'],
+                    'code' => $code,
+                    'nom' => $stop['arret_nom'],
+                    'min_heure' => $stop['noe_heure_passage'],
                 ];
             }
         }
-
         return $stops;
     }
 
@@ -153,16 +139,27 @@ class ReservationModel extends Model
         $sql = "SELECT TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') as \"heure_depart\",
                        MIN(TO_CHAR(na.NOE_HEURE_PASSAGE, 'HH24:MI')) as \"heure_arrivee\"
                 FROM VIK_NOEUD nd
-                JOIN VIK_NOEUD na ON nd.LIG_NUM = na.LIG_NUM 
-                WHERE TRIM(nd.LIG_NUM) = ?
-                  AND TRIM(nd.COM_CODE_INSEE_ARRET) = ?
-                  AND TRIM(na.COM_CODE_INSEE_ARRET) = ?
+                JOIN (
+                    SELECT COM_CODE_INSEE_ARRET, LIG_NUM, NOE_HEURE_PASSAGE
+                    FROM VIK_NOEUD
+                    WHERE TRIM(LIG_NUM) = TRIM(?)
+                    UNION ALL
+                    SELECT l.COM_CODE_INSEE_TERM, l.LIG_NUM,
+                           last.NOE_HEURE_PASSAGE + (last.NOE_DUREE_PROCHAIN / 1440)
+                    FROM VIK_LIGNE l
+                    JOIN VIK_NOEUD last ON last.COM_CODE_INSEE_SUIVANT = l.COM_CODE_INSEE_TERM
+                                       AND TRIM(last.LIG_NUM) = TRIM(l.LIG_NUM)
+                    WHERE TRIM(l.LIG_NUM) = TRIM(?)
+                ) na ON nd.LIG_NUM = na.LIG_NUM
+                WHERE TRIM(nd.LIG_NUM) = TRIM(?)
+                  AND TRIM(nd.COM_CODE_INSEE_ARRET) = TRIM(?)
+                  AND TRIM(na.COM_CODE_INSEE_ARRET) = TRIM(?)
                   AND nd.NOE_HEURE_PASSAGE < na.NOE_HEURE_PASSAGE
                   AND TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') >= ?
                 GROUP BY TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI')
                 ORDER BY \"heure_depart\" ASC";
-                
-        return $this->fetchAll($sql, [trim($ligNum), trim($codeDepart), trim($codeArrivee), $minTime]);
+
+        return $this->fetchAll($sql, [trim($ligNum), trim($ligNum), trim($ligNum), trim($codeDepart), trim($codeArrivee), $minTime]);
     }
 
     public function isAvailable(
@@ -175,5 +172,53 @@ class ReservationModel extends Model
         // Just checking if there is at least one schedule
         $schedules = $this->getAvailableSchedules($ligNum, $codeDepart, $codeArrivee, '00:00');
         return count($schedules) > 0;
+    }
+
+    public function createReservation(
+        ?int $cliNum,
+        int $tarNumTranche,
+        string $date,
+        int $nbPoints,
+        float $prixTotal
+    ): int {
+        // Obtenir le prochain ID de réservation (si on n'a pas de séquence)
+        $sqlId = "SELECT NVL(MAX(res_num), 0) + 1 AS next_id FROM vik_reservation";
+        $nextId = (int)$this->fetch($sqlId)['next_id'];
+
+        $clientId = $cliNum ?? 0; // Guest ID si null
+
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
+        
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixTotal]);
+        
+        return $nextId;
+    }
+
+    public function createEtape(
+        string $ligNum,
+        int $resNum,
+        ?int $cliNum,
+        string $codeDepart,
+        string $codeArrivee,
+        float $distance,
+        string $dateTime
+    ): void {
+        $clientId = $cliNum ?? 0;
+
+        $sql = "INSERT INTO vik_etape (lig_num, res_num, cli_num, com_code_insee_depart, com_code_insee_arrivee, eta_heure)
+                VALUES (?, ?, ?, ?, ?, TO_DATE(?, 'YYYY-MM-DD HH24:MI:SS'))";
+        
+        $this->runQuery($sql, [$ligNum, $resNum, $clientId, $codeDepart, $codeArrivee, $dateTime]);
+    }
+
+    public function updatePointsAfterReservation(int $cliNum, int $pointsEarned, int $pointsUsed): void
+    {
+        $sql = "UPDATE vik_client
+                SET cli_nb_points_ec = cli_nb_points_ec + ? - ?,
+                    cli_nb_points_tot = cli_nb_points_tot + ?
+                WHERE cli_num = ?";
+        
+        $this->runQuery($sql, [$pointsEarned, $pointsUsed, $pointsEarned, $cliNum]);
     }
 }
