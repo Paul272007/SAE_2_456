@@ -72,5 +72,25 @@
             </div>
         </div>
     </div>
+
+    <!-- Zone de danger -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card border-danger shadow-sm">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h4 class="mb-1 text-danger fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Zone de danger</h4>
+                        <p class="text-muted mb-0 small">Une fois que vous supprimez votre compte, il n'y a pas de retour en arrière possible. Soyez certain de votre choix.</p>
+                    </div>
+                    <form action="index.php?route=user/profileEdit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.');">
+                        <input type="hidden" name="delete_account" value="1">
+                        <button type="submit" class="btn btn-outline-danger fw-bold">
+                            Supprimer mon compte
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

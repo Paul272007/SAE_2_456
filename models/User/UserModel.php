@@ -84,4 +84,13 @@ class UserModel extends Model
                 WHERE cli_num = ?";
         $this->runQuery($sql, [$hashedPassword, $cliNum]);
     }
+
+    /**
+     * Supprime le compte de l'utilisateur.
+     */
+    public function deleteUser(int $cliNum): void
+    {
+        $sql = "DELETE FROM vik_client WHERE cli_num = ?";
+        $this->runQuery($sql, [$cliNum]);
+    }
 }

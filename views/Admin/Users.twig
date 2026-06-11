@@ -110,18 +110,22 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-end pe-3">
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
-                                            Éditer
-                                        </a>
-                                        <form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                    </div>
+                                    {% if user.is_admin == 0 %}
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
+                                                Éditer
+                                            </a>
+                                            <form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted fst-italic small">Intouchable</span>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% else %}

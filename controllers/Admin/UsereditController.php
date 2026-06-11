@@ -32,6 +32,11 @@ class UsereditController extends Controller
             redirect('index.php?route=admin/users');
         }
         
+        if ($this->data['user']['is_admin'] == 1) {
+            $_SESSION['flash_error'] = "Impossible de modifier le profil d'un administrateur.";
+            redirect('index.php?route=admin/users');
+        }
+        
         $this->data['reservations'] = $userModel->getUserReservations($cliNum);
         
         $this->render();
@@ -47,15 +52,22 @@ class UsereditController extends Controller
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
         }
 
+        require_once 'models/User/UserModel.php';
+        $userModel = new \Models\UserModel();
+        $targetUser = $userModel->getUserById($cliNum);
+        
+        if ($targetUser && $targetUser['is_admin'] == 1) {
+            $_SESSION['flash_error'] = "Opération interdite sur un compte administrateur.";
+            redirect('index.php?route=admin/users');
+            return;
+        }
+
         if ($action === 'delete') {
             $model = new AdminModel();
             $model->deleteUser($cliNum);
             $_SESSION['flash_success'] = "Utilisateur supprimé.";
             redirect('index.php?route=admin/users');
         } elseif ($action === 'update') {
-            require_once 'models/User/UserModel.php';
-            $userModel = new \Models\UserModel();
-            
             $phone = $_POST['cli_telephone'] ?? '';
             $cleanPhone = str_replace([' ', '.', '-'], '', $phone);
             
