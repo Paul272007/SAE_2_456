@@ -44,65 +44,65 @@
     <div class="card shadow-sm border-0 overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover align-middle mb-0">
+                <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
                             {% set orderUrl = order == 'ASC' ? 'DESC' : 'ASC' %}
                             {% set filterParams = '&filter=' ~ filter ~ (filterNiveau is not null ? '&niveau=' ~ filterNiveau : '') ~ (filterStatut is not null ? '&statut=' ~ filterStatut : '') %}
 
-                            <th class="ps-3">
+                            <th class="ps-3 border-end">
                                 <a href="index.php?route=admin/users&sort=cli_num&order={{ sort == 'cli_num' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
                                     ID 
                                     {% if sort == 'cli_num' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
                                 </a>
                             </th>
-                            <th>
+                            <th class="border-end">
                                 <a href="index.php?route=admin/users&sort=cli_nom&order={{ sort == 'cli_nom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
                                     Nom 
                                     {% if sort == 'cli_nom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
                                 </a>
                             </th>
-                            <th>
+                            <th class="border-end">
                                 <a href="index.php?route=admin/users&sort=cli_prenom&order={{ sort == 'cli_prenom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
                                     Prénom 
                                     {% if sort == 'cli_prenom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
                                 </a>
                             </th>
-                            <th>
+                            <th class="border-end">
                                 <a href="index.php?route=admin/users&sort=cli_courriel&order={{ sort == 'cli_courriel' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
                                     Email 
                                     {% if sort == 'cli_courriel' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
                                 </a>
                             </th>
-                            <th>
+                            <th class="border-end">
                                 <a href="index.php?route=admin/users&sort=cli_date_connec&order={{ sort == 'cli_date_connec' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
                                     Dernière connexion 
                                     {% if sort == 'cli_date_connec' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
                                 </a>
                             </th>
-                            <th>Niveau</th>
-                            <th>Statut</th>
+                            <th class="border-end">Niveau</th>
+                            <th class="border-end">Statut</th>
                             <th class="text-end pe-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for user in users %}
                             <tr>
-                                <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
-                                <td>{{ user.cli_nom|upper }}</td>
-                                <td>{{ user.cli_prenom }}</td>
-                                <td>{{ user.cli_courriel }}</td>
-                                <td>
+                                <td class="ps-3 fw-bold border-end">#{{ user.cli_num }}</td>
+                                <td class="border-end">{{ user.cli_nom|upper }}</td>
+                                <td class="border-end">{{ user.cli_prenom }}</td>
+                                <td class="border-end">{{ user.cli_courriel }}</td>
+                                <td class="border-end">
                                     {% if user.cli_date_connec %}
                                         {{ user.cli_date_connec|date("d/m/Y") }}
                                     {% else %}
                                         <span class="text-muted fst-italic">Jamais</span>
                                     {% endif %}
                                 </td>
-                                <td>
+                                <td class="border-end">
                                     <span class="badge bg-secondary">{{ user.typ_nom|default('Inconnu') }}</span>
                                 </td>
-                                <td>
+                                <td class="border-end">
                                     {% if user.is_admin == 1 %}
                                         <span class="badge bg-danger">Admin</span>
                                     {% else %}
