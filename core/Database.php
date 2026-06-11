@@ -30,4 +30,7 @@ class Database
     {
         return $this->pdo;
     }
+    public function __destruct() {
+        $this->pdo = null;
+    }
 }
