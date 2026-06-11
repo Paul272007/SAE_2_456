@@ -26,57 +26,73 @@ class ReservationController extends Controller
         }
 
         $model = $this->model ?? new ReservationModel();
-
         $line = $model->getLine($ligNum);
 
         if (!$line) {
             redirect('index.php?route=lines');
         }
 
+        $codeDepart = trim((string)($_GET['depart'] ?? ''));
+        $codeArrivee = trim((string)($_GET['arrivee'] ?? ''));
+        $date = trim((string)($_GET['date'] ?? ''));
+        $time = trim((string)($_GET['time'] ?? '00:00'));
+
+        if ($codeDepart !== '' && $codeArrivee !== '' && $date !== '') {
+            if ($codeDepart === $codeArrivee) {
+                $this->data['error'] = "La ville de départ ne peut pas être identique à la ville d'arrivée.";
+            } else if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || $date < date('Y-m-d')) {
+                $this->data['error'] = "La date sélectionnée n'est pas valide.";
+            } else {
+                $schedules = $model->getAvailableSchedules($ligNum, $codeDepart, $codeArrivee, $time);
+                if (empty($schedules)) {
+                    $this->data['error'] = "Aucun trajet disponible pour cette date à partir de cette heure.";
+                } else {
+                    $this->data['schedules'] = $schedules;
+                    
+                    $distance = $model->getSegmentDistance($ligNum, $codeDepart, $codeArrivee);
+                    $tarif = $model->getTarif($distance);
+                    if ($tarif) {
+                        $this->data['prix'] = (float)$tarif['tar_prix'];
+                    }
+                }
+            }
+        }
+
         $this->data['line'] = $line;
-        $this->data['stops'] = $model->getStops($ligNum);
+        $this->data['stops'] = $model->getUniqueStops($ligNum);
         $this->data['lig_num'] = $ligNum;
         $this->data['today'] = date('Y-m-d');
         $this->data['connected'] = isset($_SESSION['userId']);
+        
+        $this->data['post_depart'] = $codeDepart;
+        $this->data['post_arrivee'] = $codeArrivee;
+        $this->data['post_date'] = $date;
+        $this->data['post_time'] = $time;
 
         $this->render();
     }
 
     public function post(): void
     {
-        $this->checkPostFields();
-
-        $ligNum = trim((string)$_POST['lig_num']);
-        $codeDepart = trim((string)$_POST['depart']);
-        $codeArrivee = trim((string)$_POST['arrivee']);
-        $date = trim((string)$_POST['date']);
-
-        if ($codeDepart === '' || $codeArrivee === '' || $date === '') {
-            throw new ClientError(ClientErrorCode::BAD_REQUEST);
-        }
-
-        if ($codeDepart === $codeArrivee) {
-            throw new ClientError(ClientErrorCode::BAD_REQUEST);
-        }
-
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || $date < date('Y-m-d')) {
+        $ligNum = trim((string)($_POST['lig_num'] ?? ''));
+        $codeDepart = trim((string)($_POST['depart'] ?? ''));
+        $codeArrivee = trim((string)($_POST['arrivee'] ?? ''));
+        $date = trim((string)($_POST['date'] ?? ''));
+        
+        if (!isset($_POST['heure_depart']) || $codeDepart === '' || $codeArrivee === '' || $date === '') {
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
         }
 
         $model = new ReservationModel();
-
-        if (!$model->isAvailable($ligNum, $codeDepart, $codeArrivee, $date)) {
-            throw new ClientError(ClientErrorCode::BAD_REQUEST);
-        }
-
+        
+        $heureDepart = trim((string)$_POST['heure_depart']);
         $distance = $model->getSegmentDistance($ligNum, $codeDepart, $codeArrivee);
-
+        
         if ($distance <= 0) {
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
         }
 
         $tarif = $model->getTarif($distance);
-
         if (!$tarif) {
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
         }
@@ -85,7 +101,7 @@ class ReservationController extends Controller
         $prixTotal = (float)$tarif['tar_prix'];
         $nbPoints = max(1, (int)floor($distance / 10));
 
-        $stops = $model->getStops($ligNum);
+        $stops = $model->getUniqueStops($ligNum);
         $stopMap = array_column($stops, 'nom', 'code');
         $line = $model->getLine($ligNum);
 
@@ -95,12 +111,13 @@ class ReservationController extends Controller
 
         $_SESSION['cart'][] = [
             'lig_num' => $ligNum,
-            'ligne_nom' => ($line['commune_depart'] ?? '') . ' → ' . ($line['commune_arrivee'] ?? ''),
+            'ligne_nom' => $line['lig_num'] ?? $ligNum,
             'code_depart' => $codeDepart,
             'code_arrivee' => $codeArrivee,
             'nom_depart' => $stopMap[$codeDepart] ?? $codeDepart,
             'nom_arrivee' => $stopMap[$codeArrivee] ?? $codeArrivee,
             'date' => $date,
+            'heure_depart' => $heureDepart,
             'distance' => $distance,
             'tar_num_tranche' => $tarNumTranche,
             'prix_total' => $prixTotal,
