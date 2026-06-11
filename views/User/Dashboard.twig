@@ -19,6 +19,10 @@
             <div class="summary-box h-100 shadow-sm border-0">
                 <div class="card-body">
                     <h3 class="mb-4">Mes Informations</h3>
+                    <p>
+                        <strong>Statut Client :</strong> 
+                        <span class="badge bg-secondary">{{ user.typ_nom|default('Classique') }}</span>
+                    </p>
                     <p><strong>Nom :</strong> {{ user.cli_prenom }} {{ user.cli_nom }}</p>
                     <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
                     <p><strong>Téléphone :</strong> {{ user.cli_telephone }}</p>
