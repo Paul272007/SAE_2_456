@@ -101,6 +101,8 @@ abstract class Controller
           default       => $this->controllerName
         },
         "connected" => isAuthenticated(),
+        "isAdmin" => isset($_SESSION['role']) && $_SESSION['role'] === 2,
+        "controllerName" => $this->controllerName,
       ];
 
       // CSS and JavaScript files if they exist
