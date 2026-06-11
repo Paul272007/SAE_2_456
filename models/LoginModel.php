@@ -27,4 +27,13 @@ class LoginModel extends Model
                 WHERE cli_courriel = ?";
         return $this->fetch($sql, [$email]);
     }
+
+    /**
+     * Met à jour la date de dernière connexion du client.
+     */
+    public function updateLastConnection(int $cliNum): void
+    {
+        $sql = "UPDATE vik_client SET cli_date_connec = TO_DATE(?, 'YYYY-MM-DD') WHERE cli_num = ?";
+        $this->runQuery($sql, [date('Y-m-d'), $cliNum]);
+    }
 }
