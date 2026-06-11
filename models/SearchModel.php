@@ -211,10 +211,13 @@ class SearchModel extends Model
             $names = $this->fetch($sql, [$start, $end]);
 
             // Calculate distance and duration for this segment
-            $sql = "SELECT com_code_insee_arret, noe_distance_prochain, noe_duree_prochain 
+            $sql = "SELECT com_code_insee_arret, 
+                           MAX(noe_distance_prochain) as noe_distance_prochain, 
+                           MAX(noe_duree_prochain) as noe_duree_prochain 
                     FROM vik_noeud 
                     WHERE lig_num = ? 
-                    ORDER BY noe_heure_passage ASC";
+                    GROUP BY com_code_insee_arret
+                    ORDER BY MIN(noe_heure_passage) ASC";
             $nodes = $this->fetchAll($sql, [$ligNum]);
             
             $dist = 0;

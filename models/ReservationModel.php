@@ -53,12 +53,12 @@ class ReservationModel extends Model
     public function getSegmentDistance(int $ligNum, string $codeDepart, string $codeArrivee): float
     {
         // Récupération de tous les nœuds de la ligne dans l'ordre de passage
-        $sql = "SELECT n.com_code_insee_arret,
-                       n.noe_heure_passage,
-                       n.noe_distance_prochain
-                FROM vik_noeud n
-                WHERE n.lig_num = ?
-                ORDER BY n.noe_heure_passage ASC";
+        $sql = "SELECT com_code_insee_arret,
+                       MAX(noe_distance_prochain) as noe_distance_prochain
+                FROM vik_noeud
+                WHERE lig_num = ?
+                GROUP BY com_code_insee_arret
+                ORDER BY MIN(noe_heure_passage) ASC";
         $nodes = $this->fetchAll($sql, [$ligNum]);
 
         $distance = 0.0;

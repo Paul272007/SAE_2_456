@@ -53,9 +53,9 @@ class LinesModel extends Model
         $sql = "SELECT l.lig_num,
                        c1.com_nom AS commune_depart,
                        c2.com_nom AS commune_arrivee,
-                       (SELECT COUNT(*) FROM vik_noeud n WHERE n.lig_num = l.lig_num) AS nb_arrets,
-                       (SELECT NVL(SUM(n.noe_distance_prochain), 0) FROM vik_noeud n WHERE n.lig_num = l.lig_num) AS distance_totale,
-                       (SELECT NVL(SUM(n.noe_duree_prochain), 0) FROM vik_noeud n WHERE n.lig_num = l.lig_num) AS duree_totale
+                       (SELECT COUNT(DISTINCT n.com_code_insee_arret) FROM vik_noeud n WHERE n.lig_num = l.lig_num) AS nb_arrets,
+                       (SELECT NVL(SUM(dist), 0) FROM (SELECT DISTINCT lig_num, com_code_insee_arret, com_code_insee_suivant, noe_distance_prochain AS dist FROM vik_noeud) nd WHERE nd.lig_num = l.lig_num) AS distance_totale,
+                       (SELECT NVL(SUM(dur), 0) FROM (SELECT DISTINCT lig_num, com_code_insee_arret, com_code_insee_suivant, noe_duree_prochain AS dur FROM vik_noeud) nd WHERE nd.lig_num = l.lig_num) AS duree_totale
                 FROM vik_ligne l
                 JOIN vik_commune c1 ON l.com_code_insee_debu = c1.com_code_insee
                 JOIN vik_commune c2 ON l.com_code_insee_term = c2.com_code_insee
