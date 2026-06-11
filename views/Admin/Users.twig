@@ -51,10 +51,30 @@
                             {% set orderUrl = order == 'ASC' ? 'DESC' : 'ASC' %}
                             {% set filterParams = '&filter=' ~ filter ~ (filterNiveau is not null ? '&niveau=' ~ filterNiveau : '') ~ (filterStatut is not null ? '&statut=' ~ filterStatut : '') %}
 
-                            <th class="ps-3"><a href="index.php?route=admin/users&sort=cli_num&order={{ sort == 'cli_num' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none">ID {% if sort == 'cli_num' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
-                            <th><a href="index.php?route=admin/users&sort=cli_nom&order={{ sort == 'cli_nom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none">Nom complet {% if sort == 'cli_nom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
-                            <th><a href="index.php?route=admin/users&sort=cli_courriel&order={{ sort == 'cli_courriel' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none">Email {% if sort == 'cli_courriel' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
-                            <th><a href="index.php?route=admin/users&sort=cli_date_connec&order={{ sort == 'cli_date_connec' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none">Dernière connexion {% if sort == 'cli_date_connec' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% endif %}</a></th>
+                            <th class="ps-3">
+                                <a href="index.php?route=admin/users&sort=cli_num&order={{ sort == 'cli_num' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    ID 
+                                    {% if sort == 'cli_num' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_nom&order={{ sort == 'cli_nom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Nom complet 
+                                    {% if sort == 'cli_nom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_courriel&order={{ sort == 'cli_courriel' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Email 
+                                    {% if sort == 'cli_courriel' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_date_connec&order={{ sort == 'cli_date_connec' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Dernière connexion 
+                                    {% if sort == 'cli_date_connec' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
                             <th>Niveau</th>
                             <th>Statut</th>
                             <th class="text-end pe-3">Actions</th>
