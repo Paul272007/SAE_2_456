@@ -69,9 +69,11 @@ class RegisterController extends Controller
 
         $password = password_hash($password1, PASSWORD_DEFAULT);
 
+        $defaultDep = $this->model->getDefaultDepartment();
+
         $this->model->register([
             1,              // typ_num
-            1,              // dep_num
+            $defaultDep,    // dep_num
             $name,          // cli_nom
             $firstName,     // cli_prenom
             $city,          // cli_ville

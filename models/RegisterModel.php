@@ -67,4 +67,15 @@ class RegisterModel extends Model
         $result = $this->fetch($sql);
         return (int)($result['max_id'] ?? 0);
     }
+
+    /**
+     * Retourne un numéro de département valide par défaut.
+     * @throws Exception
+     */
+    public function getDefaultDepartment(): string|int|null
+    {
+        $sql = "SELECT dep_num FROM vik_departement WHERE ROWNUM <= 1";
+        $result = $this->fetch($sql);
+        return $result['dep_num'] ?? '1';
+    }
 }
