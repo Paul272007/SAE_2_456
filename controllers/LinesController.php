@@ -17,26 +17,19 @@ class LinesController extends Controller
     public function get(): void
     {
         $this->model = new LinesModel();
-        $this->data["lines"] = $this->model->getLines();
+        $lines = $this->model->getLines();
+
+        foreach ($lines as &$line) {
+            $componentData = LineComponentController::getComponentData(
+                $line['lig_num'],
+                $line['commune_depart'],
+                $line['commune_arrivee']
+            );
+            $line['stops'] = $componentData['stops'];
+        }
+        unset($line);
+
+        $this->data["lines"] = $lines;
         $this->render();
     }
-}
-
-public function get(): void
-{
-    $this->model = new LinesModel();
-    $lines = $this->model->getLines();
-
-    foreach ($lines as &$line) {
-        $componentData = LineComponentController::getComponentData(
-            $line['lig_num'],
-            $line['commune_depart'],
-            $line['commune_arrivee']
-        );
-        $line['stops'] = $componentData['stops'];
-    }
-    unset($line);
-
-    $this->data["lines"] = $lines;
-    $this->render();
 }
