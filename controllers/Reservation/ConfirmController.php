@@ -114,7 +114,7 @@ class ConfirmController extends Controller
         // 1. Vérification de disponibilité pour TOUS les trajets avant d'insérer
         foreach ($cart as $pending) {
             if (!$model->isAvailable(
-                (int)$pending['lig_num'],
+                (string)$pending['lig_num'],
                 (string)$pending['code_depart'],
                 (string)$pending['code_arrivee'],
                 (string)$pending['date']
@@ -140,7 +140,7 @@ class ConfirmController extends Controller
 
             // 3. Création de l'étape (segment réservé)
             $model->createEtape(
-                (int)$pending['lig_num'],
+                (string)$pending['lig_num'],
                 $resNum,
                 (string)$pending['code_depart'],
                 (string)$pending['code_arrivee'],

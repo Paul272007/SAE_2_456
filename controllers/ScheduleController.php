@@ -16,7 +16,7 @@ class ScheduleController extends Controller
 {
     public function get(): void
     {
-        $ligNum = isset($_GET['lig_num']) ? (int)$_GET['lig_num'] : null;
+        $ligNum = isset($_GET['lig_num']) ? (string)$_GET['lig_num'] : null;
 
         if (!$ligNum) {
             redirect('index.php?route=lines');

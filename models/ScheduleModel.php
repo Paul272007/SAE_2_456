@@ -14,7 +14,7 @@ class ScheduleModel extends Model
      * Retourne toutes les stations d'une ligne avec leurs horaires,
      * triées par heure de passage.
      */
-    public function getSchedule(int $ligNum): array
+    public function getSchedule(string $ligNum): array
     {
         $sql = "SELECT n.com_code_insee_arret,
                        c.com_nom            AS arret_nom,
@@ -32,7 +32,7 @@ class ScheduleModel extends Model
     /**
      * Retourne les informations d'une ligne (communes départ/arrivée).
      */
-    public function getLine(int $ligNum): mixed
+    public function getLine(string $ligNum): mixed
     {
         $sql = "SELECT l.lig_num,
                        c1.com_nom AS commune_depart,

@@ -16,7 +16,7 @@ class ReservationModel extends Model
     /**
      * Retourne les informations d'une ligne.
      */
-    public function getLine(int $ligNum): mixed
+    public function getLine(string $ligNum): mixed
     {
         $sql = "SELECT l.lig_num,
                        c1.com_nom AS commune_depart,
@@ -33,7 +33,7 @@ class ReservationModel extends Model
     /**
      * Retourne toutes les stations d'une ligne triées par heure de passage.
      */
-    public function getStops(int $ligNum): array
+    public function getStops(string $ligNum): array
     {
         $sql = "SELECT n.com_code_insee_arret AS code,
                        c.com_nom              AS nom,
@@ -50,7 +50,7 @@ class ReservationModel extends Model
      * La distance est la somme des noe_distance_prochain depuis le départ jusqu'à l'arrivée
      * (excluant le nœud d'arrivée lui-même, qui commence le segment suivant).
      */
-    public function getSegmentDistance(int $ligNum, string $codeDepart, string $codeArrivee): float
+    public function getSegmentDistance(string $ligNum, string $codeDepart, string $codeArrivee): float
     {
         // Récupération de tous les nœuds de la ligne dans l'ordre de passage
         $sql = "SELECT com_code_insee_arret,
@@ -98,7 +98,7 @@ class ReservationModel extends Model
      * Compte les réservations existantes sur ce segment à cette date.
      * Retourne true si des places sont disponibles.
      */
-    public function isAvailable(int $ligNum, string $codeDepart, string $codeArrivee, string $date, int $maxCapacity = 50): bool
+    public function isAvailable(string $ligNum, string $codeDepart, string $codeArrivee, string $date, int $maxCapacity = 50): bool
     {
         // Récupère les arrêts dans l'ordre
         $stops = $this->getStops($ligNum);
@@ -158,7 +158,7 @@ class ReservationModel extends Model
      * @throws Exception
      */
     public function createEtape(
-        int    $ligNum,
+        string    $ligNum,
         int    $resNum,
         string $codeDepart,
         string $codeArrivee,

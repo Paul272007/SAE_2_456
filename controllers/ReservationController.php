@@ -24,7 +24,7 @@ class ReservationController extends Controller
      */
     public function get(): void
     {
-        $ligNum = isset($_GET['lig_num']) ? (int)$_GET['lig_num'] : null;
+        $ligNum = isset($_GET['lig_num']) ? (string)$_GET['lig_num'] : null;
 
         if (!$ligNum) {
             redirect('index.php?route=lines');
@@ -59,7 +59,7 @@ class ReservationController extends Controller
         verifyCSRFToken();
         $this->checkPostFields();
 
-        $ligNum     = (int)$_POST['lig_num'];
+        $ligNum     = (string)$_POST['lig_num'];
         $codeDepart  = trim($_POST['depart']);
         $codeArrivee = trim($_POST['arrivee']);
         $date        = trim($_POST['date']);
