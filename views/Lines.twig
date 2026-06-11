@@ -9,9 +9,9 @@
     <ul class="lines-list">
         {% for line in lines %}
             {%include "Components/Line.twig" with {
-                line_number: line.lig_num,
-                line_terminus_1: line.commune_depart,
-                line_terminus_2: line.commune_arrivee,
+                line_number: line.LIG_NUM,
+                line_terminus_1: line.COMMUNE_DEPART,
+                line_terminus_2: line.COMMUNE_ARRIVEE,
                 stops: line.stops,
             }%}
         {% endfor %}

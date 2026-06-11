@@ -19,14 +19,11 @@ class LinesController extends Controller
         $this->model = new LinesModel();
         $lines = $this->model->getLines();
 
-        var_dump($lines[0] ?? 'aucune ligne');
-        die();
-
         foreach ($lines as &$line) {
             $componentData = LineComponentController::getComponentData(
-                $line['lig_num'],
-                $line['commune_depart'],
-                $line['commune_arrivee']
+                $line['LIG_NUM'],
+                $line['COMMUNE_DEPART'],
+                $line['COMMUNE_ARRIVEE']
             );
             $line['stops'] = $componentData['stops'];
         }
