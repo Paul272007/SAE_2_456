@@ -57,6 +57,9 @@ class LoginController extends Controller
         $_SESSION["email"]    = $user["cli_courriel"];
         $_SESSION["points"]   = $user["cli_nb_points_ec"];
 
+        // Mettre à jour la date de dernière connexion
+        $model->updateLastConnection((int)$user["cli_num"]);
+
         // Si un panier était en attente avant la connexion, rediriger vers la confirmation
         if (!empty($_SESSION['cart'])) {
             redirect('index.php?route=reservation/confirm');

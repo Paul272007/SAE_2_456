@@ -45,11 +45,16 @@ class ProfileEditController extends Controller
                 throw new ClientError(ClientErrorCode::BAD_REQUEST);
             }
 
+            $cleanPhone = str_replace([' ', '.', '-'], '', $phone);
+            if (!preg_match('/^[0-9]{10}$/', $cleanPhone) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $cleanPhone)) {
+                throw new ClientError(ClientErrorCode::BAD_REQUEST);
+            }
+
             $model->updateUser($cliNum, [
                 'cli_nom' => $name,
                 'cli_prenom' => $firstName,
                 'cli_ville' => $city,
-                'cli_telephone' => $phone
+                'cli_telephone' => $cleanPhone
             ]);
 
             $_SESSION['username'] = $name . ' ' . $firstName;

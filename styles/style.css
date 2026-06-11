@@ -371,3 +371,24 @@ a:hover {
         padding: 0 30px;
     }
 }
+/* Override for btn-outline-danger to prevent a:hover conflict */
+a.btn-outline-danger {
+    color: #cc0000 !important;
+    border-color: #cc0000 !important;
+}
+a.btn-outline-danger:hover {
+    color: #fff !important;
+    background-color: #cc0000 !important;
+    text-decoration: none !important;
+}
+a.btn-danger {
+    color: #fff !important;
+    background-color: #cc0000 !important;
+    border-color: #cc0000 !important;
+}
+a.btn-danger:hover {
+    color: #fff !important;
+    background-color: #a00000 !important;
+    border-color: #a00000 !important;
+    text-decoration: none !important;
+}
