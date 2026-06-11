@@ -42,7 +42,7 @@
                                     {% for stop in line.stops %}
                                         <tr>
                                             <td><strong>{{ stop.arret_nom }}</strong></td>
-                                            <td><span class="departure-time">{{ stop.noe_heure_passage|date('H:i') }}</span></td>
+                                            <td><span class="departure-time">{{ stop.heures|join(', ') }}</span></td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

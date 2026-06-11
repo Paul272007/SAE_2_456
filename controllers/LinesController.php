@@ -23,7 +23,21 @@ class LinesController extends Controller
         $scheduleModel = new \Models\ScheduleModel();
 
         foreach ($lines as &$line) {
-            $line['stops'] = $scheduleModel->getSchedule((string)$line['lig_num']);
+            $rawStops = $scheduleModel->getSchedule((string)$line['lig_num']);
+            
+            $stopsGrouped = [];
+            foreach ($rawStops as $s) {
+                $code = $s['com_code_insee_arret'];
+                if (!isset($stopsGrouped[$code])) {
+                    $stopsGrouped[$code] = [
+                        'arret_nom' => $s['arret_nom'],
+                        'heures' => []
+                    ];
+                }
+                $stopsGrouped[$code]['heures'][] = substr((string)$s['noe_heure_passage'], 0, 5); // Assuming format HH:MM:SS or HH:MM
+            }
+            
+            $line['stops'] = array_values($stopsGrouped);
         }
         
         $this->data["lines"] = $lines;
