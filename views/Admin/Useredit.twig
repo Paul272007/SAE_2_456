@@ -59,7 +59,7 @@
 
         <!-- Détails et Stats -->
         <div class="col-lg-4">
-            <div class="card shadow-sm border-0 h-100 bg-light">
+            <div class="card shadow-sm border-0 h-100 bg-white">
                 <div class="card-body">
                     <div class="text-center mb-4">
                         <div class="bg-secondary bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
@@ -81,7 +81,7 @@
                             <span class="fw-bold">{{ user.cli_nb_points_tot }}</span>
                         </li>
                         <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
-                            <span class="text-muted"><i class="bi bi-clock-history me-2"></i>Connexion</span>
+                            <span class="text-muted"><i class="bi bi-clock-history me-2"></i>Dernière connexion</span>
                             <span class="fw-bold">
                                 {% if user.cli_date_connec %}
                                     {{ user.cli_date_connec|date("d/m/Y") }}
