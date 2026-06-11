@@ -22,7 +22,8 @@ class LoginModel extends Model
                        cli_mdp,
                        cli_nb_points_ec,
                        cli_nb_points_tot,
-                       typ_num
+                       typ_num,
+                       is_admin
                 FROM vik_client
                 WHERE cli_courriel = ?";
         return $this->fetch($sql, [$email]);

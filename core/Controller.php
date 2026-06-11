@@ -101,7 +101,7 @@ abstract class Controller
           default       => $this->controllerName
         },
         "connected" => isAuthenticated(),
-        "isAdmin" => isset($_SESSION['role']) && $_SESSION['role'] === 2,
+        "isAdmin" => isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1,
         "controllerName" => $this->controllerName,
         "controllerFolder" => $this->folder,
       ];
