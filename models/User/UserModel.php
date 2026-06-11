@@ -23,6 +23,7 @@ class UserModel extends Model
                        cli_ville,
                        cli_telephone,
                        cli_courriel,
+                       cli_mdp,
                        cli_nb_points_ec,
                        cli_nb_points_tot,
                        cli_date_connec
