@@ -51,6 +51,14 @@ class LoginController extends Controller
 
         session_regenerate_id(true);
 
+        // Check if user has not connected for a year
+        $oneYearAgo = date('Y-m-d', strtotime('-1 year'));
+        if (!empty($user['cli_date_connec']) && $user['cli_date_connec'] < $oneYearAgo) {
+            $model->resetCurrentPoints((int)$user['cli_num']);
+            $user["cli_nb_points_ec"] = 0; // update local variable for session
+            $_SESSION['flash_info'] = "Vos points de fidélité ont été réinitialisés car vous ne vous étiez pas connecté depuis plus d'un an.";
+        }
+
         $_SESSION["userId"]   = $user["cli_num"];
         $_SESSION["username"] = $user["cli_prenom"] . ' ' . $user["cli_nom"];
         $_SESSION["role"]     = (int)($user["typ_num"] ?? 1);
