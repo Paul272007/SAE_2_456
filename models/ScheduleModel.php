@@ -27,8 +27,23 @@ class ScheduleModel extends Model
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
                 WHERE TRIM(n.lig_num) = TRIM(?)
-                ORDER BY n.noe_heure_passage ASC";
-        return $this->fetchAll($sql, [$ligNum]);
+
+                UNION ALL
+
+                SELECT l.com_code_insee_term,
+                       c2.com_nom,
+                       TO_CHAR(last.noe_heure_passage + (last.noe_duree_prochain / 1440), 'HH24:MI'),
+                       NULL,
+                       NULL,
+                       NULL
+                FROM vik_ligne l
+                JOIN vik_commune c2 ON l.com_code_insee_term = c2.com_code_insee
+                JOIN vik_noeud last ON last.com_code_insee_suivant = l.com_code_insee_term
+                                   AND TRIM(last.lig_num) = TRIM(l.lig_num)
+                WHERE TRIM(l.lig_num) = TRIM(?)
+
+                ORDER BY noe_heure_passage ASC";
+        return $this->fetchAll($sql, [$ligNum, $ligNum]);
     }
 
     /**
