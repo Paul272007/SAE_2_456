@@ -19,7 +19,6 @@ class LineeditController extends Controller
 {
     public function get(): void
     {
-        // On vérifie qu'on a bien l'ID de la ligne (ex: 1A) depuis la page précédente
         $ligNum = isset($_GET['id']) ? trim((string)$_GET['id']) : null;
         if (!$ligNum) {
             redirect('index.php?route=admin/lines');
@@ -32,7 +31,6 @@ class LineeditController extends Controller
         $fullSchedule = $scheduleModel->getSchedule($ligNum);
         $this->data['lig_num'] = $ligNum;
 
-        // Extraire la liste unique des arrêts pour le menu déroulant
         $uniqueStops = [];
         foreach ($fullSchedule as $stop) {
             $code = $stop['com_code_insee_arret'];
@@ -45,7 +43,6 @@ class LineeditController extends Controller
         }
         $this->data['unique_stops'] = array_values($uniqueStops);
 
-        // Filtrer le planning si un arrêt spécifique a été sélectionné dans le menu
         $selectedArret = isset($_GET['arret']) ? trim((string)$_GET['arret']) : null;
         $this->data['selected_arret'] = $selectedArret;
 
@@ -55,7 +52,6 @@ class LineeditController extends Controller
             });
             $this->data['schedule'] = $filteredSchedule;
         } else {
-            // Si aucun arrêt n'est sélectionné, on affiche tout par défaut
             $this->data['schedule'] = $fullSchedule; 
         }
 
@@ -81,7 +77,6 @@ class LineeditController extends Controller
             $oldH = $oldHeures[$i];
             $newH = $newHeures[$i];
 
-            // Mise à jour uniquement si l'horaire a été modifié
             if ($oldH !== $newH && !empty($newH)) {
                 $adminModel->updateScheduleTime($ligNum, $codeArret, $oldH, $newH);
             }
@@ -89,7 +84,6 @@ class LineeditController extends Controller
 
         $_SESSION['flash_success'] = "Les horaires ont été mis à jour avec succès.";
         
-        // On redirige en gardant l'arrêt sélectionné dans l'URL pour plus de confort
         $redirectUrl = 'index.php?route=admin/lineedit&id=' . urlencode($ligNum);
         if (!empty($selectedArret)) {
             $redirectUrl .= '&arret=' . urlencode($selectedArret);
