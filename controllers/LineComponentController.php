@@ -22,8 +22,8 @@ class LineComponentController extends Controller
 
         $stops = $model->getStopsHours($ligNum);
 
-        $this->data['stylesheet']      = '/styles/List.css';
-        $this->data['javascript']      = '/scripts/List.js';
+        $this->data['stylesheet']      = '/styles/Lines.css';
+        $this->data['javascript']      = '/scripts/Lines.js';
         $this->data['line_number']     = $ligNum;
         $this->data['line_terminus_1'] = $terminus1;
         $this->data['line_terminus_2'] = $terminus2;
