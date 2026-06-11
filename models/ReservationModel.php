@@ -12,7 +12,9 @@ class ReservationModel extends Model
     {
         $sql = 'SELECT TRIM(l.LIG_NUM) AS "lig_num",
                        c1.COM_NOM AS "commune_depart",
-                       c2.COM_NOM AS "commune_arrivee"
+                       c2.COM_NOM AS "commune_arrivee",
+                       TRIM(l.COM_CODE_INSEE_DEBU) AS "code_debu",
+                       TRIM(l.COM_CODE_INSEE_TERM) AS "code_term"
                 FROM VIK_LIGNE l
                 JOIN VIK_COMMUNE c1 ON l.COM_CODE_INSEE_DEBU = c1.COM_CODE_INSEE
                 JOIN VIK_COMMUNE c2 ON l.COM_CODE_INSEE_TERM = c2.COM_CODE_INSEE
@@ -35,8 +37,46 @@ class ReservationModel extends Model
         return $this->fetchAll($sql, [trim($ligNum)]);
     }
 
+    private function resolveToNodeCode(string $ligNum, string $code): string
+    {
+        $exists = $this->fetch(
+            "SELECT COUNT(*) AS cnt FROM VIK_NOEUD WHERE TRIM(LIG_NUM) = ? AND TRIM(COM_CODE_INSEE_ARRET) = ?",
+            [trim($ligNum), trim($code)]
+        );
+
+        if ($exists && (int)$exists['cnt'] > 0) {
+            return $code;
+        }
+
+        $line = $this->fetch(
+            "SELECT TRIM(COM_CODE_INSEE_DEBU) AS debu, TRIM(COM_CODE_INSEE_TERM) AS term FROM VIK_LIGNE WHERE TRIM(LIG_NUM) = ?",
+            [trim($ligNum)]
+        );
+
+        if ($line) {
+            if (trim($code) === $line['debu']) {
+                $first = $this->fetch(
+                    "SELECT TRIM(COM_CODE_INSEE_ARRET) AS code FROM VIK_NOEUD WHERE TRIM(LIG_NUM) = ? ORDER BY NOE_HEURE_PASSAGE ASC",
+                    [trim($ligNum)]
+                );
+                return $first ? $first['code'] : $code;
+            }
+            if (trim($code) === $line['term']) {
+                $last = $this->fetch(
+                    "SELECT TRIM(COM_CODE_INSEE_ARRET) AS code FROM VIK_NOEUD WHERE TRIM(LIG_NUM) = ? ORDER BY NOE_HEURE_PASSAGE DESC",
+                    [trim($ligNum)]
+                );
+                return $last ? $last['code'] : $code;
+            }
+        }
+
+        return $code;
+    }
+
     public function getSegmentDistance(string $ligNum, string $codeDepart, string $codeArrivee): float
     {
+        $codeDepart = $this->resolveToNodeCode($ligNum, $codeDepart);
+        $codeArrivee = $this->resolveToNodeCode($ligNum, $codeArrivee);
         $nodes = $this->getStops($ligNum);
 
         $distance = 0.0;
@@ -81,11 +121,35 @@ class ReservationModel extends Model
                 GROUP BY TRIM(n.COM_CODE_INSEE_ARRET), c.COM_NOM
                 ORDER BY MIN(n.NOE_HEURE_PASSAGE) ASC';
 
-        return $this->fetchAll($sql, [trim($ligNum)]);
+        $stops = $this->fetchAll($sql, [trim($ligNum)]);
+
+        $line = $this->getLine($ligNum);
+        if ($line) {
+            $existingCodes = array_map(fn($s) => trim($s['code']), $stops);
+
+            if (!in_array(trim($line['code_debu']), $existingCodes)) {
+                array_unshift($stops, [
+                    'code' => $line['code_debu'],
+                    'nom'  => $line['commune_depart'],
+                ]);
+            }
+
+            if (!in_array(trim($line['code_term']), $existingCodes)) {
+                $stops[] = [
+                    'code' => $line['code_term'],
+                    'nom'  => $line['commune_arrivee'],
+                ];
+            }
+        }
+
+        return $stops;
     }
 
     public function getAvailableSchedules(string $ligNum, string $codeDepart, string $codeArrivee, string $minTime): array
     {
+        $codeDepart = $this->resolveToNodeCode($ligNum, $codeDepart);
+        $codeArrivee = $this->resolveToNodeCode($ligNum, $codeArrivee);
+
         $sql = "SELECT TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') as \"heure_depart\",
                        MIN(TO_CHAR(na.NOE_HEURE_PASSAGE, 'HH24:MI')) as \"heure_arrivee\"
                 FROM VIK_NOEUD nd
