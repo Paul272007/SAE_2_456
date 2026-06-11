@@ -66,6 +66,16 @@ class AdminModel extends Model
         $this->runQuery($sql, [$cliNum]);
     }
 
+    /**
+     * Supprime les utilisateurs qui ne se sont pas connectés depuis 2 ans (730 jours).
+     */
+    public function deleteInactiveUsers(): int
+    {
+        $sql = "DELETE FROM vik_client WHERE cli_date_connec < SYSDATE - 730";
+        $stmt = $this->runQuery($sql);
+        return $stmt->rowCount();
+    }
+
     public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeure, string $newHeure): void
     {
         $sql = "UPDATE vik_noeud 

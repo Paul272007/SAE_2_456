@@ -25,4 +25,21 @@ class UsersController extends Controller
         
         $this->render();
     }
+
+    public function post(): void
+    {
+        $action = $_POST['action'] ?? '';
+
+        if ($action === 'clean_inactive') {
+            $model = new AdminModel();
+            try {
+                $deletedCount = $model->deleteInactiveUsers();
+                $_SESSION['flash_success'] = "$deletedCount utilisateur(s) inactif(s) depuis plus de 2 ans ont été supprimés avec succès.";
+            } catch (\Exception $e) {
+                $_SESSION['flash_error'] = "Impossible de supprimer certains utilisateurs. Ils ont peut-être des réservations en cours.";
+            }
+        }
+
+        redirect('index.php?route=admin/users');
+    }
 }
