@@ -23,16 +23,29 @@ class ReservationModel extends Model
 
     public function getStops(string $ligNum): array
     {
-        $sql = 'SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS "code",
-                       c.COM_NOM AS "nom",
-                       TO_CHAR(n.NOE_HEURE_PASSAGE, \'HH24:MI\') AS "heure_passage",
-                       n.NOE_DISTANCE_PROCHAIN AS "distance_prochain"
+        $sql = "SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS \"code\",
+                       c.COM_NOM AS \"nom\",
+                       TO_CHAR(n.NOE_HEURE_PASSAGE, 'HH24:MI') AS \"heure_passage\",
+                       n.NOE_DISTANCE_PROCHAIN AS \"distance_prochain\"
                 FROM VIK_NOEUD n
                 JOIN VIK_COMMUNE c ON n.COM_CODE_INSEE_ARRET = c.COM_CODE_INSEE
-                WHERE TRIM(n.LIG_NUM) = ?
-                ORDER BY n.NOE_HEURE_PASSAGE ASC';
+                WHERE TRIM(n.LIG_NUM) = TRIM(?)
 
-        return $this->fetchAll($sql, [trim($ligNum)]);
+                UNION ALL
+
+                SELECT TRIM(l.COM_CODE_INSEE_TERM),
+                       c2.COM_NOM,
+                       TO_CHAR(last.NOE_HEURE_PASSAGE + (last.NOE_DUREE_PROCHAIN / 1440), 'HH24:MI'),
+                       NULL
+                FROM VIK_LIGNE l
+                JOIN VIK_COMMUNE c2 ON l.COM_CODE_INSEE_TERM = c2.COM_CODE_INSEE
+                JOIN VIK_NOEUD last ON last.COM_CODE_INSEE_SUIVANT = l.COM_CODE_INSEE_TERM
+                                   AND TRIM(last.LIG_NUM) = TRIM(l.LIG_NUM)
+                WHERE TRIM(l.LIG_NUM) = TRIM(?)
+
+                ORDER BY \"heure_passage\" ASC";
+
+        return $this->fetchAll($sql, [trim($ligNum), trim($ligNum)]);
     }
 
     public function getSegmentDistance(string $ligNum, string $codeDepart, string $codeArrivee): float
@@ -43,16 +56,18 @@ class ReservationModel extends Model
         $counting = false;
 
         foreach ($nodes as $node) {
-            if (trim((string)$node['code']) === trim($codeDepart)) {
+            $code = trim((string)$node['code']);
+
+            if ($code === trim($codeArrivee)) {
+                break;
+            }
+
+            if ($code === trim($codeDepart)) {
                 $counting = true;
             }
 
             if ($counting) {
                 $distance += (float)($node['distance_prochain'] ?? 0);
-            }
-
-            if (trim((string)$node['code']) === trim($codeArrivee)) {
-                break;
             }
         }
 
