@@ -112,3 +112,8 @@
 .open-toggle:hover {
   color: var(--accent);
 }
+
+.hour {
+  font-size: 0.5em;
+  font-style: italic;
+}
