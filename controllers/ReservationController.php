@@ -35,7 +35,7 @@ class ReservationController extends Controller
         $codeDepart = trim((string)($_GET['depart'] ?? ''));
         $codeArrivee = trim((string)($_GET['arrivee'] ?? ''));
         $date = trim((string)($_GET['date'] ?? ''));
-        $time = trim((string)($_GET['time'] ?? '00:00'));
+        $time = trim((string)($_GET['time'] ?? ''));
 
         if ($codeDepart !== '' && $codeArrivee !== '' && $date !== '') {
             if ($codeDepart === $codeArrivee) {
@@ -67,8 +67,13 @@ class ReservationController extends Controller
         $this->data['javascript'] = 'scripts/reservation.js';
         $this->data['post_depart'] = $codeDepart;
         $this->data['post_arrivee'] = $codeArrivee;
-        $this->data['post_date'] = $date;
-        $this->data['post_time'] = $time;
+        
+        if ($date !== '') {
+            $this->data['post_date'] = $date;
+        }
+        if ($time !== '') {
+            $this->data['post_time'] = $time;
+        }
 
         $this->render();
     }
