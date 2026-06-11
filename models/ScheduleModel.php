@@ -20,7 +20,7 @@ class ScheduleModel extends Model
     {
         $sql = "SELECT n.com_code_insee_arret,
                        c.com_nom            AS arret_nom,
-                       n.noe_heure_passage,
+                       TO_CHAR(n.noe_heure_passage, 'HH24:MI') AS noe_heure_passage,
                        n.noe_distance_prochain,
                        n.noe_duree_prochain,
                        n.com_code_insee_suivant
@@ -57,7 +57,7 @@ class ScheduleModel extends Model
     {
         $sql = "SELECT n.com_code_insee_arret AS code,
                        c.com_nom              AS nom,
-                       n.noe_heure_passage
+                       TO_CHAR(n.noe_heure_passage, 'HH24:MI') AS noe_heure_passage
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
                 WHERE TRIM(n.lig_num) = TRIM(?)
