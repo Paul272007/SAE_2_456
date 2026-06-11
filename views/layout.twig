@@ -76,7 +76,7 @@
         </nav>
     </header>
 
-    <main class="container mt-4">
+    <main class="{{ title == 'Accueil' ? 'container-fluid p-0' : 'container mt-4' }}">
         {% if error %}
             <div class="alert alert-danger">{{ error }}</div>
         {% endif %}

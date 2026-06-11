@@ -51,12 +51,12 @@
                 </div>
             {% endif %}
 
-            <button type="submit" class="btn-confirm" id="btnConfirm">
+            <button type="submit" class="btn btn-success" id="btnConfirm">
                 ✓ Confirmer et payer (<span id="finalPrice">{{ total_price|number_format(2, ',', ' ') }}</span> €)
             </button>
         </form>
 
-        <a href="index.php?route=reservation/cart" class="btn-back">← Retour au panier</a>
+        <a href="index.php?route=reservation/cart" class="btn btn-secondary mt-3">← Retour au panier</a>
     </div>
 
     {% if points_available > 0 and points_to_use > 0 %}
@@ -85,11 +85,11 @@
             ⚠️ Votre réservation est bien calculée. Pour la finaliser, vous devez avoir un compte.
             <br>Vos données seront conservées pendant la création de votre compte.
         </p>
-        <div class="guest-actions">
-            <a href="index.php?route=login" class="btn-primary">Se connecter</a>
-            <a href="index.php?route=register" class="btn-secondary">Créer un compte</a>
+        <div class="guest-actions mb-3">
+            <a href="index.php?route=login" class="btn btn-primary">Se connecter</a>
+            <a href="index.php?route=register" class="btn btn-secondary">Créer un compte</a>
         </div>
-        <a href="index.php?route=reservation/cart" class="btn-back">← Retour au panier</a>
+        <a href="index.php?route=reservation/cart" class="btn btn-outline-secondary">← Retour au panier</a>
     </div>
 {% endif %}
 {% endblock %}

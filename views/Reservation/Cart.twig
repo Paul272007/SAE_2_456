@@ -5,7 +5,7 @@
 
 {% if cart is empty %}
     <p>Votre panier est vide.</p>
-    <a href="index.php?route=lines" class="btn-primary">Voir les lignes</a>
+    <a href="index.php?route=lines" class="btn btn-primary">Voir les lignes</a>
 {% else %}
     <div class="cart-container">
         <table class="cart-table">
@@ -32,7 +32,7 @@
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 <input type="hidden" name="action" value="remove">
                                 <input type="hidden" name="index" value="{{ i }}">
-                                <button type="submit" class="btn-danger btn-small">Retirer</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Retirer</button>
                             </form>
                         </td>
                     </tr>
@@ -48,13 +48,13 @@
         </table>
 
         <div class="cart-actions" style="margin-top: 20px; display: flex; gap: 10px;">
-            <a href="index.php?route=lines" class="btn-secondary">Ajouter un autre trajet</a>
+            <a href="index.php?route=lines" class="btn btn-secondary">Ajouter un autre trajet</a>
             <form action="index.php?route=reservation/cart" method="POST" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                 <input type="hidden" name="action" value="clear">
-                <button type="submit" class="btn-danger">Vider le panier</button>
+                <button type="submit" class="btn btn-danger">Vider le panier</button>
             </form>
-            <a href="index.php?route=reservation/confirm" class="btn-primary">Procéder au paiement</a>
+            <a href="index.php?route=reservation/confirm" class="btn btn-primary">Procéder au paiement</a>
         </div>
     </div>
 {% endif %}

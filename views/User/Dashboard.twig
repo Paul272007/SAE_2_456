@@ -5,7 +5,7 @@
     <h1>Tableau de bord - {{ username }}</h1>
     <form action="index.php?route=user/logout" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit" class="btn-secondary">Se déconnecter</button>
+        <button type="submit" class="btn btn-secondary">Se déconnecter</button>
     </form>
 </div>
 
@@ -19,7 +19,7 @@
         <p><strong>Ville :</strong> {{ user.cli_ville }}</p>
         
         <div style="margin-top: 15px;">
-            <a href="index.php?route=user/profile/edit" class="btn-primary btn-small">Modifier mon profil</a>
+            <a href="index.php?route=user/profile/edit" class="btn btn-primary btn-sm">Modifier mon profil</a>
         </div>
     </div>
 
@@ -39,7 +39,7 @@
     <h2>Mes Réservations</h2>
     {% if reservations is empty %}
         <p>Vous n'avez pas encore effectué de réservation.</p>
-        <a href="index.php?route=lines" class="btn-primary">Réserver un trajet</a>
+        <a href="index.php?route=lines" class="btn btn-primary">Réserver un trajet</a>
     {% else %}
         <table class="schedule-table">
             <thead>

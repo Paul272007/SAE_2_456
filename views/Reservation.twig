@@ -9,7 +9,7 @@
     <strong>{{ line.commune_arrivee }}</strong>
 </p>
 
-<a href="index.php?route=lines" class="btn-back">← Retour aux lignes</a>
+<a href="index.php?route=lines" class="btn btn-secondary mb-3">← Retour aux lignes</a>
 
 {% if not connected %}
     <p class="info-box">
@@ -48,6 +48,6 @@
         <input type="date" name="date" id="date" required min="{{ today }}">
     </div>
 
-    <button type="submit" class="btn-primary">Voir le prix & Continuer</button>
+    <button type="submit" class="btn btn-primary">Voir le prix & Continuer</button>
 </form>
 {% endblock %}
