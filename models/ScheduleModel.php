@@ -69,7 +69,7 @@ class ScheduleModel extends Model
         $sql = "SELECT n.COM_CODE_INSEE_ARRET as code,
                        c.COM_NOM as nom,
                        d.DEP_NOM as dep_nom,
-                       n.noe_heure_passage as heure
+                       TO_CHAR(n.noe_heure_passage, 'HH24') as heure
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
                 JOIN vik_departement d ON c.dep_num = d.dep_num
@@ -92,7 +92,7 @@ class ScheduleModel extends Model
                 ];
             }
 
-            $stops[$code]['hours'][] = date('G', strtotime($row['HEURE'])) . 'H';
+            $stops[$code]['hours'][] = ltrim($row['HEURE'], '0') . 'H';
         }
         return $stops;
     }
