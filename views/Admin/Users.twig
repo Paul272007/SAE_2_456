@@ -29,6 +29,7 @@
                             <th>Nom complet</th>
                             <th>Email</th>
                             <th>Dernière connexion</th>
+                            <th>Niveau</th>
                             <th>Statut</th>
                             <th class="text-end pe-3">Actions</th>
                         </tr>
@@ -47,10 +48,13 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if user.typ_num == 1 %}
-                                        <span class="badge bg-secondary">Client</span>
-                                    {% else %}
+                                    <span class="badge bg-secondary">{{ user.typ_nom|default('Inconnu') }}</span>
+                                </td>
+                                <td>
+                                    {% if user.is_admin == 1 %}
                                         <span class="badge bg-danger">Admin</span>
+                                    {% else %}
+                                        <span class="badge bg-light text-dark border">Client</span>
                                     {% endif %}
                                 </td>
                                 <td class="text-end pe-3">

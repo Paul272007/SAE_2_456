@@ -52,15 +52,16 @@ class AdminModel extends Model
      */
     public function getUsers(bool $onlyInactive = false): array
     {
-        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, TO_CHAR(cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, typ_num
-                FROM vik_client ";
+        $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, t.typ_nom
+                FROM vik_client c
+                LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num ";
                 
         // Inactif : pas connecté depuis plus de 6 mois (180 jours)
         if ($onlyInactive) {
-            $sql .= " WHERE cli_date_connec < SYSDATE - 180 ";
+            $sql .= " WHERE c.cli_date_connec < SYSDATE - 180 ";
         }
         
-        $sql .= " ORDER BY cli_num DESC";
+        $sql .= " ORDER BY c.cli_num DESC";
 
         return $this->fetchAll($sql);
     }
