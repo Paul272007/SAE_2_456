@@ -22,7 +22,7 @@
                                 <th>Ligne</th>
                                 <th>Départ</th>
                                 <th>Arrivée</th>
-                                <th>Date</th>
+                                <th>Date & Heure</th>
                                 <th>Prix</th>
                                 <th>Action</th>
                             </tr>
@@ -33,7 +33,7 @@
                                     <td><span class="badge bg-primary fs-6">{{ item.ligne_nom }}</span></td>
                                     <td><strong>{{ item.nom_depart }}</strong></td>
                                     <td><strong>{{ item.nom_arrivee }}</strong></td>
-                                    <td>{{ item.date }}</td>
+                                    <td>{{ item.date }}{% if item.heure_depart is defined %}<br><small class="text-muted">{{ item.heure_depart }}</small>{% endif %}</td>
                                     <td class="fw-bold">{{ item.prix_total|number_format(2, ',', ' ') }} €</td>
                                     <td>
                                         <form action="index.php?route=reservation/cart" method="POST" class="m-0">

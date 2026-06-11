@@ -70,6 +70,37 @@ class ReservationModel extends Model
         return $this->fetch($sql, [$distance, $distance]);
     }
 
+    public function getUniqueStops(string $ligNum): array
+    {
+        $sql = 'SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS "code",
+                       c.COM_NOM AS "nom",
+                       MIN(n.NOE_HEURE_PASSAGE) as min_heure
+                FROM VIK_NOEUD n
+                JOIN VIK_COMMUNE c ON n.COM_CODE_INSEE_ARRET = c.COM_CODE_INSEE
+                WHERE TRIM(n.LIG_NUM) = ?
+                GROUP BY TRIM(n.COM_CODE_INSEE_ARRET), c.COM_NOM
+                ORDER BY MIN(n.NOE_HEURE_PASSAGE) ASC';
+
+        return $this->fetchAll($sql, [trim($ligNum)]);
+    }
+
+    public function getAvailableSchedules(string $ligNum, string $codeDepart, string $codeArrivee, string $minTime): array
+    {
+        $sql = "SELECT TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') as \"heure_depart\",
+                       MIN(TO_CHAR(na.NOE_HEURE_PASSAGE, 'HH24:MI')) as \"heure_arrivee\"
+                FROM VIK_NOEUD nd
+                JOIN VIK_NOEUD na ON nd.LIG_NUM = na.LIG_NUM 
+                WHERE TRIM(nd.LIG_NUM) = ?
+                  AND TRIM(nd.COM_CODE_INSEE_ARRET) = ?
+                  AND TRIM(na.COM_CODE_INSEE_ARRET) = ?
+                  AND nd.NOE_HEURE_PASSAGE < na.NOE_HEURE_PASSAGE
+                  AND TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI') >= ?
+                GROUP BY TO_CHAR(nd.NOE_HEURE_PASSAGE, 'HH24:MI')
+                ORDER BY \"heure_depart\" ASC";
+                
+        return $this->fetchAll($sql, [trim($ligNum), trim($codeDepart), trim($codeArrivee), $minTime]);
+    }
+
     public function isAvailable(
         string $ligNum,
         string $codeDepart,
@@ -77,16 +108,8 @@ class ReservationModel extends Model
         string $date,
         int $maxCapacity = 50
     ): bool {
-        $stops = $this->getStops($ligNum);
-        $stopCodes = array_map('trim', array_column($stops, 'code'));
-
-        $idxDepart = array_search(trim($codeDepart), $stopCodes, true);
-        $idxArrivee = array_search(trim($codeArrivee), $stopCodes, true);
-
-        if ($idxDepart === false || $idxArrivee === false || $idxDepart >= $idxArrivee) {
-            return false;
-        }
-
-        return true;
+        // Just checking if there is at least one schedule
+        $schedules = $this->getAvailableSchedules($ligNum, $codeDepart, $codeArrivee, '00:00');
+        return count($schedules) > 0;
     }
 }
