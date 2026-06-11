@@ -26,10 +26,6 @@ class ReservationController extends Controller
     {
         $ligNum = isset($_GET['lig_num']) ? (int)$_GET['lig_num'] : null;
 
-        if (!$ligNum) {
-            redirect('index.php?route=lines');
-        }
-
         /** @var ReservationModel $model */
         $model = $this->model ?? new ReservationModel();
 
