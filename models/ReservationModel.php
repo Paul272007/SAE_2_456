@@ -23,33 +23,41 @@ class ReservationModel extends Model
 
     public function getStops(string $ligNum): array
     {
-        $sql = 'SELECT TRIM(code) AS "code",
+        $sql = 'SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS "code",
                        c.COM_NOM AS "nom",
-                       heure_passage,
-                       distance_prochain
-                FROM (
-                    SELECT n.COM_CODE_INSEE_ARRET AS code,
-                           n.NOE_HEURE_PASSAGE AS heure_passage,
-                           n.NOE_DISTANCE_PROCHAIN AS distance_prochain
-                    FROM VIK_NOEUD n
-                    WHERE TRIM(n.LIG_NUM) = ?
-                    UNION
-                    SELECT n.COM_CODE_INSEE_SUIVANT AS code,
-                           n.NOE_HEURE_PASSAGE AS heure_passage,
-                           0 AS distance_prochain
-                    FROM VIK_NOEUD n
-                    WHERE TRIM(n.LIG_NUM) = ?
-                      AND n.COM_CODE_INSEE_SUIVANT IS NOT NULL
-                      AND NOT EXISTS (
-                          SELECT 1 FROM VIK_NOEUD n2
-                          WHERE TRIM(n2.LIG_NUM) = TRIM(n.LIG_NUM)
-                            AND TRIM(n2.COM_CODE_INSEE_ARRET) = TRIM(n.COM_CODE_INSEE_SUIVANT)
-                      )
-                ) stops
-                JOIN VIK_COMMUNE c ON TRIM(stops.code) = c.COM_CODE_INSEE
-                ORDER BY heure_passage ASC';
+                       TO_CHAR(n.NOE_HEURE_PASSAGE, \'HH24:MI\') AS "heure_passage",
+                       n.NOE_DISTANCE_PROCHAIN AS "distance_prochain"
+                FROM VIK_NOEUD n
+                JOIN VIK_COMMUNE c ON n.COM_CODE_INSEE_ARRET = c.COM_CODE_INSEE
+                WHERE TRIM(n.LIG_NUM) = ?
+                ORDER BY n.NOE_HEURE_PASSAGE ASC';
 
-        return $this->fetchAll($sql, [trim($ligNum), trim($ligNum)]);
+        $stops = $this->fetchAll($sql, [trim($ligNum)]);
+
+        $terminus = $this->getTerminus($ligNum);
+        if ($terminus) {
+            $codes = array_column($stops, 'code');
+            if (!in_array($terminus['code'], $codes, true)) {
+                $stops[] = [
+                    'code' => $terminus['code'],
+                    'nom' => $terminus['nom'],
+                    'heure_passage' => $stops ? end($stops)['heure_passage'] : null,
+                    'distance_prochain' => 0,
+                ];
+            }
+        }
+
+        return $stops;
+    }
+
+    private function getTerminus(string $ligNum): ?array
+    {
+        $sql = 'SELECT TRIM(l.COM_CODE_INSEE_TERM) AS "code",
+                       c.COM_NOM AS "nom"
+                FROM VIK_LIGNE l
+                JOIN VIK_COMMUNE c ON l.COM_CODE_INSEE_TERM = c.COM_CODE_INSEE
+                WHERE TRIM(l.LIG_NUM) = ?';
+        return $this->fetch($sql, [trim($ligNum)]);
     }
 
     public function getSegmentDistance(string $ligNum, string $codeDepart, string $codeArrivee): float
@@ -89,31 +97,30 @@ class ReservationModel extends Model
 
     public function getUniqueStops(string $ligNum): array
     {
-        $sql = 'SELECT TRIM(code) AS "code",
+        $sql = 'SELECT TRIM(n.COM_CODE_INSEE_ARRET) AS "code",
                        c.COM_NOM AS "nom",
-                       MIN(heure_passage) as min_heure
-                FROM (
-                    SELECT n.COM_CODE_INSEE_ARRET AS code,
-                           n.NOE_HEURE_PASSAGE AS heure_passage
-                    FROM VIK_NOEUD n
-                    WHERE TRIM(n.LIG_NUM) = ?
-                    UNION
-                    SELECT n.COM_CODE_INSEE_SUIVANT AS code,
-                           n.NOE_HEURE_PASSAGE AS heure_passage
-                    FROM VIK_NOEUD n
-                    WHERE TRIM(n.LIG_NUM) = ?
-                      AND n.COM_CODE_INSEE_SUIVANT IS NOT NULL
-                      AND NOT EXISTS (
-                          SELECT 1 FROM VIK_NOEUD n2
-                          WHERE TRIM(n2.LIG_NUM) = TRIM(n.LIG_NUM)
-                            AND TRIM(n2.COM_CODE_INSEE_ARRET) = TRIM(n.COM_CODE_INSEE_SUIVANT)
-                      )
-                ) stops
-                JOIN VIK_COMMUNE c ON TRIM(stops.code) = c.COM_CODE_INSEE
-                GROUP BY TRIM(stops.code), c.COM_NOM
-                ORDER BY MIN(heure_passage) ASC';
+                       MIN(n.NOE_HEURE_PASSAGE) as min_heure
+                FROM VIK_NOEUD n
+                JOIN VIK_COMMUNE c ON n.COM_CODE_INSEE_ARRET = c.COM_CODE_INSEE
+                WHERE TRIM(n.LIG_NUM) = ?
+                GROUP BY TRIM(n.COM_CODE_INSEE_ARRET), c.COM_NOM
+                ORDER BY MIN(n.NOE_HEURE_PASSAGE) ASC';
 
-        return $this->fetchAll($sql, [trim($ligNum), trim($ligNum)]);
+        $stops = $this->fetchAll($sql, [trim($ligNum)]);
+
+        $terminus = $this->getTerminus($ligNum);
+        if ($terminus) {
+            $codes = array_column($stops, 'code');
+            if (!in_array($terminus['code'], $codes, true)) {
+                $stops[] = [
+                    'code' => $terminus['code'],
+                    'nom' => $terminus['nom'],
+                    'min_heure' => null,
+                ];
+            }
+        }
+
+        return $stops;
     }
 
     public function getAvailableSchedules(string $ligNum, string $codeDepart, string $codeArrivee, string $minTime): array
