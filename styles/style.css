@@ -318,3 +318,19 @@ body {
     border-radius: 4px;
     display: inline-block;
 }
+
+/* Restoring Red Buttons after merge */
+.btn-primary, .bg-primary {
+    background-color: #cc0000 !important;
+    border-color: #cc0000 !important;
+    color: #fff !important;
+}
+
+.btn-primary:hover {
+    background-color: #a00000 !important;
+    border-color: #a00000 !important;
+}
+
+.text-primary {
+    color: #cc0000 !important;
+}
