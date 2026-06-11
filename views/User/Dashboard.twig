@@ -1,68 +1,90 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<div class="dashboard-header">
-    <h1>Tableau de bord - {{ username }}</h1>
-    <form action="index.php?route=user/logout" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-        <button type="submit" class="btn btn-secondary">Se déconnecter</button>
-    </form>
-</div>
+<section class="page-section">
 
-<div class="dashboard-grid">
-    <!-- Profil Section -->
-    <div class="card">
-        <h2>Mes Informations</h2>
-        <p><strong>Nom :</strong> {{ user.cli_nom }} {{ user.cli_prenom }}</p>
-        <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
-        <p><strong>Téléphone :</strong> {{ user.cli_telephone }}</p>
-        <p><strong>Ville :</strong> {{ user.cli_ville }}</p>
-        
-        <div style="margin-top: 15px;">
-            <a href="index.php?route=user/profile/edit" class="btn btn-primary btn-sm">Modifier mon profil</a>
+    <div class="d-flex justify-content-between align-items-center mb-4 page-title">
+        <div>
+            <h1>Tableau de bord</h1>
+            <p>Bienvenue, <span class="home-accent">{{ username }}</span></p>
+        </div>
+        <form action="index.php?route=user/logout" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
+        </form>
+    </div>
+
+    <div class="row mb-4">
+        <!-- Profil Section -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="summary-box h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <h3 class="mb-4">Mes Informations</h3>
+                    <p><strong>Nom :</strong> {{ user.cli_nom }} {{ user.cli_prenom }}</p>
+                    <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
+                    <p><strong>Téléphone :</strong> {{ user.cli_telephone }}</p>
+                    <p><strong>Ville :</strong> {{ user.cli_ville }}</p>
+                    
+                    <div class="mt-4">
+                        <a href="index.php?route=user/profile/edit" class="btn btn-dark">Modifier mon profil</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fidélité Section -->
+        <div class="col-md-6">
+            <div class="summary-box h-100 shadow-sm border-0" style="background-color: #fcebeb;">
+                <div class="card-body">
+                    <h3 class="mb-4" style="color: #cc0000;">Programme de Fidélité</h3>
+                    <div class="text-center mb-3">
+                        <span class="display-4 fw-bold" style="color: #cc0000;">{{ user.cli_nb_points_ec }}</span>
+                        <p class="text-muted text-uppercase fw-bold" style="letter-spacing: 0.1em; font-size: 0.9rem;">points disponibles</p>
+                    </div>
+                    <hr>
+                    <p class="mb-1 text-center"><em>Total des points gagnés : {{ user.cli_nb_points_tot }}</em></p>
+                    <p class="text-center small text-muted">10 points = 1€ de réduction sur vos prochains trajets !</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Fidélité Section -->
-    <div class="card">
-        <h2>Programme de Fidélité</h2>
-        <p class="loyalty-points">
-            <span class="points-value">{{ user.cli_nb_points_ec }}</span>
-            <span class="points-label">points disponibles</span>
-        </p>
-        <p><em>Total des points gagnés : {{ user.cli_nb_points_tot }}</em></p>
-        <p>10 points = 1€ de réduction sur vos prochains trajets !</p>
+    <div class="summary-box shadow-sm border-0">
+        <div class="card-body">
+            <h3 class="mb-4">Mes Réservations</h3>
+            {% if reservations is empty %}
+                <div class="text-center py-4">
+                    <p class="text-muted mb-3">Vous n'avez pas encore effectué de réservation.</p>
+                    <a href="index.php?route=lines" class="btn btn-danger">Réserver un trajet</a>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="schedule-table">
+                        <thead>
+                            <tr>
+                                <th>N°</th>
+                                <th>Date</th>
+                                <th>Trajet(s)</th>
+                                <th>Prix</th>
+                                <th>Points gagnés</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for res in reservations %}
+                                <tr>
+                                    <td><strong>#{{ res.res_num }}</strong></td>
+                                    <td>{{ res.res_date|date("d/m/Y") }}</td>
+                                    <td>{{ res.trajets }}</td>
+                                    <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
+                                    <td style="color: #cc0000;"><strong>+{{ res.res_nb_points }}</strong></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
     </div>
-</div>
 
-<div class="card" style="margin-top: 20px;">
-    <h2>Mes Réservations</h2>
-    {% if reservations is empty %}
-        <p>Vous n'avez pas encore effectué de réservation.</p>
-        <a href="index.php?route=lines" class="btn btn-primary">Réserver un trajet</a>
-    {% else %}
-        <table class="schedule-table">
-            <thead>
-                <tr>
-                    <th>N°</th>
-                    <th>Date</th>
-                    <th>Trajet(s)</th>
-                    <th>Prix</th>
-                    <th>Points gagnés</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for res in reservations %}
-                    <tr>
-                        <td>{{ res.res_num }}</td>
-                        <td>{{ res.res_date|date("d/m/Y") }}</td>
-                        <td>{{ res.trajets }}</td>
-                        <td>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</td>
-                        <td>+{{ res.res_nb_points }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-</div>
+</section>
 {% endblock %}
