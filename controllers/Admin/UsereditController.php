@@ -52,6 +52,12 @@ class UsereditController extends Controller
             $model->deleteUser($cliNum);
             $_SESSION['flash_success'] = "Utilisateur supprimé.";
             redirect('index.php?route=admin/users');
+        } elseif ($action === 'toggle_admin') {
+            $model = new AdminModel();
+            $isAdmin = !empty($_POST['is_admin']);
+            $model->toggleAdmin($cliNum, $isAdmin);
+            $_SESSION['flash_success'] = $isAdmin ? "Utilisateur promu administrateur." : "Rôle admin révoqué.";
+            redirect('index.php?route=admin/useredit&id=' . $cliNum);
         } elseif ($action === 'update') {
             require_once 'models/User/UserModel.php';
             $userModel = new \Models\UserModel();

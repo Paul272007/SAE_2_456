@@ -73,6 +73,17 @@
 
                     <ul class="list-group list-group-flush bg-transparent">
                         <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                            <span class="text-muted"><i class="bi bi-shield-lock-fill me-2"></i>Administrateur</span>
+                            <form action="index.php?route=admin/useredit" method="POST" class="m-0">
+                                <input type="hidden" name="action" value="toggle_admin">
+                                <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                                <input type="hidden" name="is_admin" value="{{ user.is_admin ? 0 : 1 }}">
+                                <button type="submit" class="btn btn-sm {{ user.is_admin ? 'btn-danger' : 'btn-outline-secondary' }}">
+                                    {{ user.is_admin ? 'Oui' : 'Non' }}
+                                </button>
+                            </form>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
                             <span class="text-muted"><i class="bi bi-star-fill text-warning me-2"></i>Points en cours</span>
                             <span class="fw-bold fs-5 text-danger">{{ user.cli_nb_points_ec }}</span>
                         </li>

@@ -25,7 +25,8 @@ class UserModel extends Model
                        cli_courriel,
                        cli_nb_points_ec,
                        cli_nb_points_tot,
-                       cli_date_connec
+                       cli_date_connec,
+                       is_admin
                 FROM vik_client
                 WHERE cli_num = ?";
         return $this->fetch($sql, [$cliNum]);

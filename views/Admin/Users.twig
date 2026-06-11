@@ -38,10 +38,10 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if user.typ_num == 1 %}
-                                        <span class="badge bg-secondary">Client</span>
-                                    {% else %}
+                                    {% if user.is_admin %}
                                         <span class="badge bg-danger">Admin</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Client</span>
                                     {% endif %}
                                 </td>
                                 <td class="text-end pe-3">

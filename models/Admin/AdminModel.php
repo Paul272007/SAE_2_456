@@ -44,7 +44,7 @@ class AdminModel extends Model
      */
     public function getUsers(bool $onlyInactive = false): array
     {
-        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, TO_CHAR(cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, typ_num
+        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, TO_CHAR(cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, is_admin
                 FROM vik_client ";
                 
         // Inactif : pas connecté depuis plus de 6 mois (180 jours)
@@ -64,6 +64,12 @@ class AdminModel extends Model
     {
         $sql = "DELETE FROM vik_client WHERE cli_num = ?";
         $this->runQuery($sql, [$cliNum]);
+    }
+
+    public function toggleAdmin(int $cliNum, bool $isAdmin): void
+    {
+        $sql = "UPDATE vik_client SET is_admin = ? WHERE cli_num = ?";
+        $this->runQuery($sql, [$isAdmin ? 1 : 0, $cliNum]);
     }
 
     public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeure, string $newHeure): void
