@@ -65,7 +65,7 @@ class SearchController extends Controller
                 foreach ($segments as $segment) {
                     $_SESSION['cart'][] = [
                         'lig_num'        => $segment['lig_num'],
-                        'ligne_nom'      => 'Ligne ' . $segment['lig_num'], // Simplified
+                        'ligne_nom'      => $segment['lig_num'],
                         'code_depart'    => $segment['code_depart'],
                         'code_arrivee'   => $segment['code_arrivee'],
                         'nom_depart'     => $segment['nom_depart'],

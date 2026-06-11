@@ -95,7 +95,7 @@ class ReservationController extends Controller
 
         $_SESSION['cart'][] = [
             'lig_num' => $ligNum,
-            'ligne_nom' => ($line['commune_depart'] ?? '') . ' → ' . ($line['commune_arrivee'] ?? ''),
+            'ligne_nom' => $line['lig_num'] ?? $ligNum,
             'code_depart' => $codeDepart,
             'code_arrivee' => $codeArrivee,
             'nom_depart' => $stopMap[$codeDepart] ?? $codeDepart,
