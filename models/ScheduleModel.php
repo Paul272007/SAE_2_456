@@ -70,7 +70,7 @@ class ScheduleModel extends Model
                        n.COM_CODE_INSEE_ARRET as code,
                        c.COM_NOM as nom,
                        d.DEP_NOM as dep_nom,
-                       TO_CHAR(n.noe_heure_passage, 'HH24') as heure
+                        TO_CHAR(n.noe_heure_passage, 'HH24:MI') as heure
                 FROM vik_noeud n
                 JOIN vik_commune c ON n.com_code_insee_arret = c.com_code_insee
                 JOIN vik_departement d ON c.dep_num = d.dep_num
@@ -93,7 +93,8 @@ class ScheduleModel extends Model
                 ];
             }
 
-            $stops[$code]['hours'][] = ltrim($row['HEURE'], '0') . 'H';
+            $parts = explode(':', $row['HEURE']);
+            $stops[$code]['hours'][] = (int)$parts[0] . 'H' . $parts[1];
         }
         return $stops;
     }
