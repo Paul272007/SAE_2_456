@@ -24,7 +24,6 @@ class LinesController extends Controller
 
         foreach ($lines as &$line) {
             $rawStops = $scheduleModel->getSchedule((string)$line['lig_num']);
-            
             $stopsGrouped = [];
             foreach ($rawStops as $s) {
                 $code = $s['com_code_insee_arret'];
