@@ -1,64 +1,76 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<h1>Modifier mon profil</h1>
-
-<a href="index.php?route=user/dashboard" class="btn-back">← Retour au tableau de bord</a>
-
-<div class="dashboard-grid" style="margin-top: 20px;">
-    <!-- Modifier les infos -->
-    <div class="card">
-        <h2>Mes Informations</h2>
-        <form action="index.php?route=user/profileEdit" method="POST">
-                        <input type="hidden" name="update_info" value="1">
-            
-            <div class="form-group">
-                <label for="cli_nom">Nom</label>
-                <input type="text" id="cli_nom" name="cli_nom" value="{{ user.cli_nom }}" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="cli_prenom">Prénom</label>
-                <input type="text" id="cli_prenom" name="cli_prenom" value="{{ user.cli_prenom }}" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="cli_ville">Ville</label>
-                <input type="text" id="cli_ville" name="cli_ville" value="{{ user.cli_ville }}" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="cli_telephone">Téléphone</label>
-                <input type="text" id="cli_telephone" name="cli_telephone" value="{{ user.cli_telephone }}" required>
-            </div>
-            
-            <button type="submit" class="btn-primary">Enregistrer les modifications</button>
-        </form>
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <a href="index.php?route=user/dashboard" class="btn btn-outline-secondary me-3">← Retour</a>
+        <h1 class="mb-0">Modifier mon profil</h1>
     </div>
 
-    <!-- Modifier le mot de passe -->
-    <div class="card">
-        <h2>Mot de passe</h2>
-        <form action="index.php?route=user/profileEdit" method="POST">
+    <div class="row">
+        <!-- Modifier les infos -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-primary">Mes Informations</h3>
+                    <form action="index.php?route=user/profileEdit" method="POST">
+                        <input type="hidden" name="update_info" value="1">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cli_prenom" class="form-label fw-bold">Prénom</label>
+                                <input type="text" id="cli_prenom" name="cli_prenom" class="form-control" value="{{ user.cli_prenom }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cli_nom" class="form-label fw-bold">Nom</label>
+                                <input type="text" id="cli_nom" name="cli_nom" class="form-control" value="{{ user.cli_nom }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cli_ville" class="form-label fw-bold">Ville</label>
+                            <input type="text" id="cli_ville" name="cli_ville" class="form-control" value="{{ user.cli_ville }}" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="cli_telephone" class="form-label fw-bold">Téléphone</label>
+                            <input type="text" id="cli_telephone" name="cli_telephone" class="form-control" value="{{ user.cli_telephone }}" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Enregistrer les modifications</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modifier le mot de passe -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-primary">Sécurité</h3>
+                    <form action="index.php?route=user/profileEdit" method="POST">
                         <input type="hidden" name="update_password" value="1">
-            
-            <div class="form-group">
-                <label for="current_password">Mot de passe actuel</label>
-                <input type="password" id="current_password" name="current_password" required>
+                        
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label fw-bold">Mot de passe actuel</label>
+                            <input type="password" id="current_password" name="current_password" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label fw-bold">Nouveau mot de passe</label>
+                            <input type="password" id="new_password" name="new_password" class="form-control" required minlength="8">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="confirm_password" class="form-label fw-bold">Confirmer le nouveau mot de passe</label>
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required minlength="8">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Mettre à jour le mot de passe</button>
+                    </form>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="new_password">Nouveau mot de passe</label>
-                <input type="password" id="new_password" name="new_password" required minlength="8">
-            </div>
-            
-            <div class="form-group">
-                <label for="confirm_password">Confirmer le nouveau mot de passe</label>
-                <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
-            </div>
-            
-            <button type="submit" class="btn-primary">Mettre à jour le mot de passe</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}
