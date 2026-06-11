@@ -1,45 +1,65 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<div class="admin-header">
-    <h1>Tableau de bord Administrateur</h1>
-    <nav class="admin-nav">
-        <a href="index.php?route=admin/dashboard" class="btn-primary">Statistiques</a>
-        <a href="index.php?route=admin/users" class="btn-secondary">Gérer les clients</a>
-        <a href="index.php?route=admin/lines" class="btn-secondary">Gérer les lignes</a>
-    </nav>
-</div>
+    <div class="admin-header">
+        <h1>Tableau de bord Administrateur</h1>
 
-<div class="dashboard-grid" style="margin-top: 20px;">
-    <div class="card">
-        <h2>Total Clients</h2>
-        <p class="stat-number">{{ stats.total_clients }}</p>
+        <nav class="admin-nav">
+            <a href="index.php?route=admin/dashboard" class="btn-primary">Statistiques</a>
+            <a href="index.php?route=admin/users" class="btn-secondary">GÃ©rer les clients</a>
+            <a href="index.php?route=admin/lines" class="btn-secondary">GÃ©rer les lignes</a>
+        </nav>
     </div>
-    <div class="card">
-        <h2>Réservations</h2>
-        <p class="stat-number">{{ stats.total_reservations }}</p>
-    </div>
-    <div class="card">
-        <h2>Chiffre d'Affaires</h2>
-        <p class="stat-number">{{ stats.chiffre_affaires|number_format(2, ',', ' ') }} €</p>
-    </div>
-</div>
 
-<div class="card" style="margin-top: 20px;">
-    <h2>Lignes les plus populaires (Top 5)</h2>
-    {% if stats.top_lines is empty %}
-        <p>Aucune donnée disponible.</p>
-    {% else %}
-        <table class="schedule-table">
-            <thead>
+    <div class="stats-cards">
+        <div class="stat-card">
+            <h2>Total Clients</h2>
+            <p>{{ stats.total_clients }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>Réservations</h2>
+            <p>{{ stats.total_reservations }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>Chiffre d'affaires</h2>
+            <p>{{ stats.chiffre_affaires|number_format(2, ',', ' ') }} â‚¬</p>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <h2>Lignes les plus populaires</h2>
+
+        {% if stats.top_lines is empty %}
+            <p>Aucune donnée disponible.</p>
+        {% else %}
+            <div class="chart-wrapper">
+                <canvas
+                        id="topLinesChart"
+                        data-labels='[
+                    {% for line in stats.top_lines %}
+                        "Ligne {{ line.lig_num }}"{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]'
+                        data-values='[
+                    {% for line in stats.top_lines %}
+                        {{ line.nb_trajets }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]'
+                ></canvas>
+            </div>
+
+            <table class="stats-table">
+                <thead>
                 <tr>
                     <th>Ligne</th>
                     <th>Départ</th>
                     <th>Arrivée</th>
-                    <th>Nombre de trajets</th>
+                    <th>Trajets</th>
                 </tr>
-            </thead>
-            <tbody>
+                </thead>
+                <tbody>
                 {% for line in stats.top_lines %}
                     <tr>
                         <td>{{ line.lig_num }}</td>
@@ -48,8 +68,10 @@
                         <td>{{ line.nb_trajets }}</td>
                     </tr>
                 {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-</div>
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
