@@ -14,6 +14,41 @@
     </div>
 
     <div class="row mb-4">
+    
+    {% if isAdmin %}
+    <div class="col-12 mb-4">
+        <div class="card border-danger shadow-sm">
+            <div class="card-header bg-danger text-white py-3">
+                <h4 class="mb-0"><i class="bi bi-shield-lock"></i> Panneau d'Administration</h4>
+            </div>
+            <div class="card-body bg-light">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <a href="index.php?route=admin/users" class="btn btn-outline-danger w-100 h-100 py-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-people-fill fs-2 mb-2"></i>
+                            <span>Gérer les clients</span>
+                            <small class="text-muted mt-1">(Visualiser, modifier, supprimer)</small>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="index.php?route=admin/users/inactive" class="btn btn-outline-danger w-100 h-100 py-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-person-dash-fill fs-2 mb-2"></i>
+                            <span>Clients inactifs</span>
+                            <small class="text-muted mt-1">(Voir les comptes sans activité)</small>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="index.php?route=admin/stats" class="btn btn-outline-danger w-100 h-100 py-3 d-flex flex-column align-items-center justify-content-center">
+                            <i class="bi bi-bar-chart-fill fs-2 mb-2"></i>
+                            <span>Statistiques</span>
+                            <small class="text-muted mt-1">(Chiffre d'affaires, etc.)</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
         <!-- Profil Section -->
         <div class="col-md-6 mb-4 mb-md-0">
             <div class="summary-box h-100 shadow-sm border-0">
