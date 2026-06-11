@@ -66,8 +66,18 @@ class ReservationModel extends Model
                 FROM VIK_TARIF
                 WHERE TAR_MIN_DIST <= ? AND TAR_MAX_DIST >= ?
                 ORDER BY TAR_NUM_TRANCHE ASC';
+        $tarif = $this->fetch($sql, [$distance, $distance]);
 
-        return $this->fetch($sql, [$distance, $distance]);
+        if (!$tarif) {
+            $sql = 'SELECT TAR_NUM_TRANCHE AS "tar_num_tranche",
+                           TAR_PRIX AS "tar_prix"
+                    FROM VIK_TARIF
+                    ORDER BY TAR_MAX_DIST DESC
+                    FETCH FIRST 1 ROW ONLY';
+            $tarif = $this->fetch($sql);
+        }
+
+        return $tarif;
     }
 
     public function getUniqueStops(string $ligNum): array
