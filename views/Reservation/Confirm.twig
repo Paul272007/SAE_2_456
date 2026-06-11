@@ -1,105 +1,124 @@
 {% extends "layout.twig" %}
 
 {% block content %}
-<h1>Confirmation de réservation</h1>
+<div class="container py-4">
+    <h1 class="mb-4 text-center">Confirmation de réservation</h1>
 
-<div class="confirm-card">
-    <h2>Récapitulatif</h2>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="bi bi-card-checklist"></i> Récapitulatif de votre commande</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart %}
+                            <li class="list-group-item p-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-primary me-2 fs-6">{{ item.ligne_nom }}</span>
+                                    <span class="fw-bold">{{ item.nom_depart }}</span> <span class="mx-1 text-muted">→</span> <span class="fw-bold">{{ item.nom_arrivee }}</span>
+                                </div>
+                                <span class="text-muted small"><i class="bi bi-calendar-event"></i> {{ item.date|date('d/m/Y') }}{% if item.heure_depart is defined %} - {{ item.heure_depart }}{% endif %}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
 
-    <table class="recap-table">
-        <tr>
-            <th>Trajets</th>
-            <td>
-                <ul>
-                    {% for item in cart %}
-                        <li>{{ item.ligne_nom }} ({{ item.nom_depart }} → {{ item.nom_arrivee }} le {{ item.date|date('d/m/Y') }})</li>
-                    {% endfor %}
-                </ul>
-            </td>
-        </tr>
-        <tr>
-            <th>Distance totale</th>
-            <td>{{ total_distance|round(2) }} km</td>
-        </tr>
-        <tr>
-            <th>Points de fidélité gagnés</th>
-            <td>+ {{ total_points_earned }} points</td>
-        </tr>
-        <tr class="total-row">
-            <th>Prix total</th>
-            <td><strong>{{ total_price|number_format(2, ',', ' ') }} €</strong></td>
-        </tr>
-    </table>
+                    <div class="p-4 bg-light">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted">Distance totale</td>
+                                    <td class="text-end fw-medium">{{ total_distance|round(2) }} km</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Points de fidélité gagnés</td>
+                                    <td class="text-end text-success fw-bold">+ {{ total_points_earned }} points</td>
+                                </tr>
+                                <tr class="border-top">
+                                    <td class="pt-3"><strong class="fs-5">Prix total</strong></td>
+                                    <td class="text-end pt-3"><strong class="fs-4">{{ total_price|number_format(2, ',', ' ') }} €</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title h5 mb-4">Paiement</h3>
+                    
+                    {% if connected %}
+                        <p class="text-muted mb-4">En cliquant sur "Confirmer et payer", vous validez votre réservation.</p>
+
+                        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
+                            {% if points_available > 0 and points_to_use > 0 %}
+                                <div class="alert alert-light border mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong>Points de fidélité</strong>
+                                        <span class="badge bg-secondary">{{ points_available }} disponibles</span>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" name="use_points" value="yes" id="usePointsCheckbox">
+                                        <label class="form-check-label" for="usePointsCheckbox">
+                                            Utiliser {{ points_to_use }} points pour une réduction de <strong class="text-success">- {{ points_discount_value|number_format(2, ',', ' ') }} €</strong>
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg fw-bold py-3" id="btnConfirm">
+                                    Confirmer et payer (<span id="finalPrice">{{ total_price|number_format(2, ',', ' ') }}</span> €)
+                                </button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-secondary mb-4 border-0">
+                            <h6 class="alert-heading">Programme de fidélité</h6>
+                            <p class="mb-0 small text-muted">
+                                Ce trajet vous rapporte <strong>{{ total_points_earned }} points</strong>. 
+                                <br>
+                                <a href="index.php?route=login" class="alert-link fw-bold">Connectez-vous</a> ou <a href="index.php?route=register" class="alert-link fw-bold">créez un compte</a> pour les cumuler et profiter de réductions.
+                            </p>
+                        </div>
+
+                        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg fw-bold py-3" id="btnConfirm">
+                                    Payer en tant qu'invité ({{ total_price|number_format(2, ',', ' ') }} €)
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+
+                    <div class="text-center mt-4">
+                        <a href="index.php?route=reservation/cart" class="text-decoration-none text-muted">← Retour au panier</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-{% if connected %}
-    {# Utilisateur connecté : proposition de paiement/confirmation #}
-    <div class="payment-section">
-        <h2>Paiement</h2>
-        <p>En cliquant sur "Confirmer et payer", vous validez votre réservation.</p>
+{% if connected and points_available > 0 and points_to_use > 0 %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('usePointsCheckbox');
+        const priceSpan = document.getElementById('finalPrice');
+        const originalPrice = {{ total_price|number_format(2, '.', '') }};
+        const discount = {{ points_discount_value|number_format(2, '.', '') }};
 
-        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
-                        
-            {% if points_available > 0 and points_to_use > 0 %}
-                <div class="points-section" style="margin-bottom: 15px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                    <p>Vous avez <strong>{{ points_available }} points</strong> de fidélité disponibles.</p>
-                    <label>
-                        <input type="checkbox" name="use_points" value="yes" id="usePointsCheckbox">
-                        Utiliser {{ points_to_use }} points pour une réduction de {{ points_discount_value|number_format(2, ',', ' ') }} €
-                    </label>
-                </div>
-            {% endif %}
-
-            <button type="submit" class="btn btn-success" id="btnConfirm">
-                ✓ Confirmer et payer (<span id="finalPrice">{{ total_price|number_format(2, ',', ' ') }}</span> €)
-            </button>
-        </form>
-
-        <a href="index.php?route=reservation/cart" class="btn btn-secondary mt-3">← Retour au panier</a>
-    </div>
-
-    {% if points_available > 0 and points_to_use > 0 %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const checkbox = document.getElementById('usePointsCheckbox');
-            const priceSpan = document.getElementById('finalPrice');
-            const originalPrice = {{ total_price|number_format(2, '.', '') }};
-            const discount = {{ points_discount_value|number_format(2, '.', '') }};
-
+        if (checkbox && priceSpan) {
             checkbox.addEventListener('change', function() {
                 let currentPrice = originalPrice;
                 if (this.checked) {
                     currentPrice -= discount;
                 }
-                // Format to French locale
                 priceSpan.textContent = currentPrice.toFixed(2).replace('.', ',');
             });
-        });
-    </script>
-    {% endif %}
-{% else %}
-    {# Client non inscrit : possibilité de payer ou invitation à se connecter #}
-    <div class="payment-section">
-        <h2>Paiement</h2>
-        
-        <div class="alert alert-secondary shadow-sm">
-            <h5 class="alert-heading">Programme de fidélité</h5>
-            <p class="mb-0">
-                Saviez-vous que ce trajet vous rapporte <strong>{{ total_points_earned }} points</strong> ?<br>
-                <a href="index.php?route=login" class="fw-bold">Connectez-vous</a> ou <a href="index.php?route=register" class="fw-bold">créez un compte</a> dès maintenant pour les cumuler et profiter de réductions sur vos prochains trajets !
-            </p>
-        </div>
-
-        <p class="text-muted">Ou continuez sans compte :</p>
-        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
-            <button type="submit" class="btn btn-success btn-lg px-4" id="btnConfirm">
-                ✓ Payer en tant qu'invité ({{ total_price|number_format(2, ',', ' ') }} €)
-            </button>
-        </form>
-
-        <div class="mt-4">
-            <a href="index.php?route=reservation/cart" class="btn btn-outline-secondary">← Retour au panier</a>
-        </div>
-    </div>
+        }
+    });
+</script>
 {% endif %}
 {% endblock %}
