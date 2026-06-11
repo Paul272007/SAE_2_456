@@ -6,7 +6,7 @@
 {% if lines is empty %}
     <p>Aucune ligne disponible pour le moment.</p>
 {% else %}
-    <ul class="lines-list">
+    <ul class="d-fled flex-column gap-3">
         {% for line in lines %}
             {%include "Components/Line.twig" with {
                 line_number: line.LIG_NUM,
