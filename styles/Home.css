@@ -20,23 +20,7 @@
     z-index: 0;
 }
 
-.home::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url('../images/background_flou.png');
-    background-size: cover;
-    background-position: center;
-    transition: opacity 0.6s ease;
-    opacity: 0;
-    z-index: 0;
-}
 
-.home:hover::before { opacity: 1; }
-.home:hover::after {
-    transition: 500ms;
-    filter: blur(5px);
-}
 
 /* Overlay sombre pour lisibilité */
 .home-content {
