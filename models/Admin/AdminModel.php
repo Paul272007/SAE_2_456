@@ -65,4 +65,21 @@ class AdminModel extends Model
         $sql = "DELETE FROM vik_client WHERE cli_num = ?";
         $this->runQuery($sql, [$cliNum]);
     }
+
+    public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeure, string $newHeure): void
+    {
+        $sql = "UPDATE vik_noeud 
+                SET noe_heure_passage = TO_DATE(:new_heure, 'HH24:MI:SS') 
+                WHERE lig_num = :lig_num 
+                AND com_code_insee_arret = :arret 
+                AND TO_CHAR(noe_heure_passage, 'HH24:MI:SS') = :old_heure";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'new_heure' => $newHeure,
+            'lig_num'   => $ligNum,
+            'arret'     => $codeArret,
+            'old_heure' => $oldHeure
+        ]);
+    }
 }
