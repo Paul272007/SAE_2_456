@@ -46,18 +46,35 @@ class ConfirmController extends Controller
         $this->data['connected']   = isset($_SESSION['userId']);
 
         if ($this->data['connected']) {
-            // Include UserModel to get current points
             require_once 'models/User/UserModel.php';
             $userModel = new \Models\UserModel();
             $user = $userModel->getUserById((int)$_SESSION['userId']);
-            $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
             
+            // On récupère le solde de points du client
+            $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
             $this->data['points_available'] = $pointsAvailable;
-            // Conversion: 10 points = 1 euro discount. Max discount = total price.
-            $maxDiscountPoints = (int)floor($totalPrice * 10);
-            $pointsToUse = min($pointsAvailable, $maxDiscountPoints);
-            $this->data['points_discount_value'] = $pointsToUse / 10.0;
-            $this->data['points_to_use'] = $pointsToUse;
+            
+            // Implémentation des paliers de réduction (0%, 1%, 7%, 15%)
+            $discountPercent = 0;
+            if ($pointsAvailable >= 1000) {
+                $discountPercent = 15;
+            } elseif ($pointsAvailable >= 500) {
+                $discountPercent = 7;
+            } elseif ($pointsAvailable >= 100) {
+                $discountPercent = 1;
+            }
+
+            // Calcul de la valeur de la réduction et du prix final
+            $discountValue = $totalPrice * ($discountPercent / 100.0);
+            
+            $this->data['discount_percent'] = $discountPercent;
+            $this->data['points_discount_value'] = $discountValue;
+            $this->data['final_price'] = $totalPrice - $discountValue;
+        } else {
+            // Utilisateur non connecté : pas de réduction
+            $this->data['discount_percent'] = 0;
+            $this->data['points_discount_value'] = 0;
+            $this->data['final_price'] = $totalPrice;
         }
 
         $this->render();
@@ -65,14 +82,11 @@ class ConfirmController extends Controller
 
     /**
      * Finalise la réservation (POST).
-     * - Si l'utilisateur est connecté : crée les enregistrements en BDD et met à jour ses points.
-     * - Si l'utilisateur est un guest : redirige vers l'inscription avec message flash.
      * @throws ClientError
      * @throws Exception
      */
     public function post(): void
     {
-        
         if (empty($_SESSION['cart'])) {
             redirect('index.php?route=lines');
         }
@@ -86,10 +100,6 @@ class ConfirmController extends Controller
         $cliNum = (int)$_SESSION['userId'];
         $model  = new ReservationModel();
         
-        // Handle points usage
-        $usePoints = isset($_POST['use_points']) && $_POST['use_points'] === 'yes';
-        $pointsUsed = 0;
-        
         $totalPrice = 0.0;
         $totalPointsEarned = 0;
         foreach ($_SESSION['cart'] as $item) {
@@ -97,14 +107,19 @@ class ConfirmController extends Controller
             $totalPointsEarned += $item['nb_points'];
         }
 
-        if ($usePoints) {
-            require_once 'models/User/UserModel.php';
-            $userModel = new \Models\UserModel();
-            $user = $userModel->getUserById($cliNum);
-            $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
-            
-            $maxDiscountPoints = (int)floor($totalPrice * 10);
-            $pointsUsed = min($pointsAvailable, $maxDiscountPoints);
+        // On recalcule le pourcentage pour appliquer la bonne remise en base (sécurité côté serveur)
+        require_once 'models/User/UserModel.php';
+        $userModel = new \Models\UserModel();
+        $user = $userModel->getUserById($cliNum);
+        $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
+        
+        $discountPercent = 0;
+        if ($pointsAvailable >= 1000) {
+            $discountPercent = 15;
+        } elseif ($pointsAvailable >= 500) {
+            $discountPercent = 7;
+        } elseif ($pointsAvailable >= 100) {
+            $discountPercent = 1;
         }
 
         $cart = $_SESSION['cart'];
@@ -117,23 +132,23 @@ class ConfirmController extends Controller
                 (string)$pending['code_arrivee'],
                 (string)$pending['date']
             )) {
-                // One of the journeys is not available
                 throw new ClientError(ClientErrorCode::BAD_REQUEST);
             }
         }
 
-        // Apply discount proportionally or just set it on the first reservation? 
-        // For simplicity, we create reservations with original prices, and we deduct points globally.
-        // If the system requires discount per reservation, it's more complex. We will just deduct points from user profile.
-
         // 2. Création des réservations
         foreach ($cart as $pending) {
+            // On calcule le prix final du trajet avec le pourcentage de réduction
+            $itemOriginalPrice = (float)$pending['prix_total'];
+            $itemDiscountValue = $itemOriginalPrice * ($discountPercent / 100.0);
+            $itemFinalPrice = $itemOriginalPrice - $itemDiscountValue;
+
             $resNum = $model->createReservation(
                 $cliNum,
                 (int)$pending['tar_num_tranche'],
                 (string)$pending['date'],
                 (int)$pending['nb_points'],
-                (float)$pending['prix_total']
+                $itemFinalPrice // Insertion du prix réduit en BDD
             );
 
             // 3. Création de l'étape (segment réservé)
@@ -148,12 +163,9 @@ class ConfirmController extends Controller
         }
 
         // 4. Mise à jour des points de fidélité du client
-        // Points gagnés - points utilisés
-        $netPoints = $totalPointsEarned - $pointsUsed;
-        
-        if ($netPoints !== 0 || $totalPointsEarned !== 0) {
-            // We use addClientPoints which adds to ec and tot. 
-            // Wait, points used should only deduct from ec, not tot.
+        // Avec ce système de paliers, le client NE PERD PAS de points (pointsUsed = 0), il gagne juste ceux du trajet actuel.
+        $pointsUsed = 0;
+        if ($totalPointsEarned !== 0) {
             $model->updatePointsAfterReservation($cliNum, $totalPointsEarned, $pointsUsed);
         }
 
