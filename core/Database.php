@@ -11,7 +11,7 @@ use PDO;
 class Database
 {
     private static ?Database $instance = null;
-    private PDO $pdo;
+    private ?PDO $pdo;
 
     private function __construct()
     {
@@ -26,7 +26,7 @@ class Database
         }
         return self::$instance;
     }
-    public function getConnection(): PDO
+    public function getConnection(): ?PDO
     {
         return $this->pdo;
     }
