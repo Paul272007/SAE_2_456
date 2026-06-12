@@ -90,7 +90,7 @@
                     </thead>
                     <tbody>
                         {% for user in users %}
-                            <tr class="{% if user.is_deleted == 1 %}table-secondary text-muted opacity-75{% endif %}">
+                            <tr class="{% if user.is_deleted == 1 %}table-secondary text-muted{% endif %}">
                                 <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
                                 <td>
                                     {{ user.cli_nom|upper }}

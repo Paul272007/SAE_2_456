@@ -49,6 +49,7 @@ class AdminModel extends Model
 
     /**
      * Liste tous les utilisateurs (F13). Peut filtrer les inactifs (F15).
+     * @throws \Exception
      */
     public function getLevels(): array
     {
