@@ -91,6 +91,17 @@
                             </span>
                         </li>
                     </ul>
+
+                    <hr>
+                    <div class="mt-3">
+                        <form action="index.php?route=admin/useredit" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir rendre cet utilisateur administrateur ? Il aura alors accès à toute l\'administration.');">
+                            <input type="hidden" name="action" value="make_admin">
+                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                            <button type="submit" class="btn btn-outline-danger w-100 fw-bold">
+                                <i class="bi bi-shield-lock-fill me-2"></i>Rendre administrateur
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

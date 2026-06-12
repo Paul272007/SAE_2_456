@@ -65,6 +65,12 @@ class UsereditController extends Controller
             $model->deleteUser($cliNum);
             $_SESSION['flash_success'] = "Utilisateur supprimé.";
             redirect('index.php?route=admin/users');
+        } elseif ($action === 'make_admin') {
+            $model = new AdminModel();
+            $model->makeAdmin($cliNum);
+            $_SESSION['flash_success'] = "L'utilisateur a été promu administrateur.";
+            // Since they are now an admin, we can no longer edit them here
+            redirect('index.php?route=admin/users');
         } elseif ($action === 'update') {
             $phone = $_POST['cli_telephone'] ?? '';
             $cleanPhone = str_replace([' ', '.', '-'], '', $phone);

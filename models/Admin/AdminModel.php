@@ -109,6 +109,15 @@ class AdminModel extends Model
     }
 
     /**
+     * Promeut un utilisateur au rang d'administrateur.
+     */
+    public function makeAdmin(int $cliNum): void
+    {
+        $sql = "UPDATE vik_client SET is_admin = 1 WHERE cli_num = ?";
+        $this->runQuery($sql, [$cliNum]);
+    }
+
+    /**
      * Supprime les utilisateurs qui ne se sont pas connectés depuis 2 ans (730 jours).
      */
     public function deleteInactiveUsers(): int
