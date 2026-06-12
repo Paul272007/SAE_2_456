@@ -66,7 +66,6 @@
                                 <th>Trajet(s)</th>
                                 <th>Prix</th>
                                 <th>Points gagnés</th>
-                                <th>Points dépensés</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,7 +76,6 @@
                                     <td>{{ res.trajets }}</td>
                                     <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
                                     <td style="color: #cc0000;"><strong>+{{ res.res_nb_points }}</strong></td>
-                                    <td style="color: #6c757d;"><strong>-{{ res.nb_points_depenser }}</strong></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
