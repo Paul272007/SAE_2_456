@@ -98,7 +98,7 @@ class ConfirmController extends Controller
             $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
             
             $maxDiscountPoints = (int)floor($totalPrice * 10);
-            $pointsUsed = min($pointsAvailable, $maxDiscountPoints);
+            $pointsUsed = (int)min($pointsAvailable, $maxDiscountPoints);
         }
 
         $cart = $_SESSION['cart'];

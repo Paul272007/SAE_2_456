@@ -188,10 +188,10 @@ class ReservationModel extends Model
 
         $clientId = $cliNum ?? 0; // Guest ID si null
 
-        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_deb, res_prix_tot)
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_dep, res_prix_tot)
                 VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?)";
         
-        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixTotal]);
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $nbPointsDep, $prixTotal]);
         
         return $nextId;
     }
