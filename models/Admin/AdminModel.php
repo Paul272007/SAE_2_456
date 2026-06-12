@@ -62,7 +62,7 @@ class AdminModel extends Model
      */
     public function getUsers(string $filterActivity = 'all', string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null, string $search = ''): array
     {
-        $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, c.is_deleted, t.typ_nom
+        $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.cli_nb_points_tot, c.typ_num, c.is_admin, c.is_deleted, t.typ_nom
                 FROM vik_client c
                 LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num 
                 WHERE 1=1 ";
@@ -107,7 +107,8 @@ class AdminModel extends Model
             'cli_nom' => 'c.cli_nom',
             'cli_prenom' => 'c.cli_prenom',
             'cli_courriel' => 'c.cli_courriel',
-            'cli_date_connec' => 'c.cli_date_connec'
+            'cli_date_connec' => 'c.cli_date_connec',
+            'cli_nb_points_tot' => 'c.cli_nb_points_tot'
         ];
         
         $sortColumn = $validSorts[$sort] ?? 'c.cli_num';
