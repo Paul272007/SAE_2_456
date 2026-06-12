@@ -99,6 +99,12 @@ class ReservationModel extends Model
         return $distance;
     }
 
+    public function getReductions(): array
+    {
+        $sql = "SELECT RED_NB_POINTS, RED_VALEUR FROM VIK_REDUCTION ORDER BY RED_NB_POINTS DESC";
+        return $this->fetchAll($sql);
+    }
+
     public function getTarif(float $distance): mixed
     {
         $sql = 'SELECT TAR_NUM_TRANCHE AS "tar_num_tranche",

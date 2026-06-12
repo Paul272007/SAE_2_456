@@ -13,7 +13,7 @@ use Core\Privilege;
 use Core\RequirePrivilege;
 use Exception;
 use Models\ReservationModel;
-use Models\User\UserModel; // Assuming we'll create this
+use Models\User\UserModel;
 
 #[RequirePrivilege(Privilege::GUEST)]
 class ConfirmController extends Controller
@@ -44,21 +44,56 @@ class ConfirmController extends Controller
         $this->data['total_distance'] = $totalDistance;
         $this->data['total_points_earned'] = $totalPointsEarned;
         $this->data['connected']   = isset($_SESSION['userId']);
+        
+        $discountedPrice = $totalPrice;
+        $gradeDiscountValue = 0.0;
+        $gradeDiscountPercent = 0;
 
         if ($this->data['connected']) {
-            // Include UserModel to get current points
-            require_once 'models/User/UserModel.php';
-            $userModel = new \Models\UserModel();
+            $userModel = new UserModel();
+            $reservationModel = new ReservationModel();
+            
             $user = $userModel->getUserById((int)$_SESSION['userId']);
             $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
+
+            $typReduc = (int)($user['typ_reduc'] ?? 0);
+            if ($typReduc > 0) {
+                $gradeDiscountPercent = $typReduc;
+                $gradeDiscountValue = $totalPrice * ($typReduc / 100.0);
+                $discountedPrice -= $gradeDiscountValue;
+            }
+
+            $reductions = $reservationModel->getReductions();
+            $bestReduction = null;
             
+            foreach ($reductions as $red) {
+                if ($pointsAvailable >= (int)$red['red_nb_points']) {
+                    $bestReduction = $red;
+                    break;
+                }
+            }
+
             $this->data['points_available'] = $pointsAvailable;
-            // Conversion: 10 points = 1 euro discount. Max discount = total price.
-            $maxDiscountPoints = (int)floor($totalPrice * 10);
-            $pointsToUse = min($pointsAvailable, $maxDiscountPoints);
-            $this->data['points_discount_value'] = $pointsToUse / 10.0;
-            $this->data['points_to_use'] = $pointsToUse;
+            
+            if ($bestReduction) {
+                $pointsToUse = (int)$bestReduction['red_nb_points'];
+                $discountValue = (float)$bestReduction['red_valeur'];
+                
+                if ($discountValue > $discountedPrice) {
+                    $discountValue = $discountedPrice;
+                }
+                
+                $this->data['points_discount_value'] = $discountValue;
+                $this->data['points_to_use'] = $pointsToUse;
+            } else {
+                $this->data['points_discount_value'] = 0;
+                $this->data['points_to_use'] = 0;
+            }
         }
+
+        $this->data['grade_discount_percent'] = $gradeDiscountPercent;
+        $this->data['grade_discount_value'] = $gradeDiscountValue;
+        $this->data['final_price'] = $discountedPrice; // Before points
 
         $this->render();
     }
@@ -72,7 +107,6 @@ class ConfirmController extends Controller
      */
     public function post(): void
     {
-        
         if (empty($_SESSION['cart'])) {
             redirect('index.php?route=lines');
         }
@@ -80,25 +114,42 @@ class ConfirmController extends Controller
         $cliNum = isset($_SESSION['userId']) ? (int)$_SESSION['userId'] : null;
         $model  = new ReservationModel();
         
-        // Handle points usage
-        $usePoints = isset($_POST['use_points']) && $_POST['use_points'] === 'yes';
-        $pointsUsed = 0;
-        
         $totalPrice = 0.0;
         $totalPointsEarned = 0;
         foreach ($_SESSION['cart'] as $item) {
             $totalPrice += $item['prix_total'];
             $totalPointsEarned += $item['nb_points'];
         }
-
-        if ($usePoints && $cliNum !== null) {
-            require_once 'models/User/UserModel.php';
-            $userModel = new \Models\UserModel();
+        
+        $discountedPrice = $totalPrice;
+        $pointsUsed = 0;
+        
+        if ($cliNum !== null) {
+            $userModel = new UserModel();
             $user = $userModel->getUserById($cliNum);
-            $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
             
-            $maxDiscountPoints = (int)floor($totalPrice * 10);
-            $pointsUsed = min($pointsAvailable, $maxDiscountPoints);
+            $typReduc = (int)($user['typ_reduc'] ?? 0);
+            if ($typReduc > 0) {
+                $discountedPrice -= $totalPrice * ($typReduc / 100.0);
+            }
+
+            $usePoints = isset($_POST['use_points']) && $_POST['use_points'] === 'yes';
+            if ($usePoints) {
+                $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
+                $reductions = $model->getReductions();
+                
+                foreach ($reductions as $red) {
+                    if ($pointsAvailable >= (int)$red['red_nb_points']) {
+                        $pointsUsed = (int)$red['red_nb_points'];
+                        $discountValue = (float)$red['red_valeur'];
+                        if ($discountValue > $discountedPrice) {
+                            $discountValue = $discountedPrice;
+                        }
+                        $discountedPrice -= $discountValue;
+                        break;
+                    }
+                }
+            }
         }
 
         $cart = $_SESSION['cart'];
@@ -111,7 +162,6 @@ class ConfirmController extends Controller
                 (string)$pending['code_arrivee'],
                 (string)$pending['date']
             )) {
-                // One of the journeys is not available
                 throw new ClientError(ClientErrorCode::BAD_REQUEST);
             }
         }
