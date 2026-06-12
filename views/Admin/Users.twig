@@ -4,98 +4,88 @@
 	<nav class="navbar navbar-expand-lg">
 		<div class="container-fluid">
 			<ul class="navbar-nav ms-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="index.php?route=reservation/cart">
-						Panier
-						{% if session.cart|length > 0 %}
-							<span class="badge bg-primary">{{ session.cart|length }}</span>
-						{% endif %}
-					</a>
-				</li>
-				{% if connected %}
+				{% if isAdmin %}
 					<li class="nav-item">
-						<a class="nav-link" href="index.php?route=user/dashboard">Mon Compte</a>
+						<a class="nav-link" href="index.php?route=admin/stats">Admin</a>
 					</li>
-					{% if isAdmin %}
-						<li class="nav-item">
-							<a class="nav-link" href="index.php?route=admin/stats">Admin</a>
-						</li>
-					{% endif %}
-				</ul>
+				{% endif %}
+			</ul>
+		</div>
+	</nav>
+</header>
+
+	{% block content %}
+		<div
+			class="container py-4">
+
+			<!-- Filters -->
+			<div class="mb-4">
+				<a href="index.php?route=admin/users" class="btn {{ filter == 'all' ? 'btn-danger' : 'btn-outline-danger' }}">Tous les clients</a>
+				<a href="index.php?route=admin/users&filter=inactive" class="btn {{ filter == 'inactive' ? 'btn-danger' : 'btn-outline-danger' }} ms-2">Clients inactifs (> 6 mois)</a>
 			</div>
-		</nav>
-	</header>
 
-{% block content %}
-<div class="container py-4">
-
-    <!-- Filters -->
-    <div class="mb-4">
-        <a href="index.php?route=admin/users" class="btn {{ filter == 'all' ? 'btn-danger' : 'btn-outline-danger' }}">Tous les clients</a>
-        <a href="index.php?route=admin/users&filter=inactive" class="btn {{ filter == 'inactive' ? 'btn-danger' : 'btn-outline-danger' }} ms-2">Clients inactifs (> 6 mois)</a>
-    </div>
-
-    <!-- Table -->
-    <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-3">ID</th>
-                            <th>Nom complet</th>
-                            <th>Email</th>
-                            <th>Dernière connexion</th>
-                            <th>Statut</th>
-                            <th class="text-end pe-3">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for user in users %}
-                            <tr>
-                                <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
-                                <td>{{ user.cli_prenom }} {{ user.cli_nom }}</td>
-                                <td>{{ user.cli_courriel }}</td>
-                                <td>
-                                    {% if user.cli_date_connec %}
-                                        {{ user.cli_date_connec|date("d/m/Y") }}
-                                    {% else %}
-                                        <span class="text-muted fst-italic">Jamais</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if user.typ_num == 1 %}
-                                        <span class="badge bg-secondary">Client</span>
-                                    {% else %}
-                                        <span class="badge bg-danger">Admin</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-end pe-3">
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
-                                            Éditer
-                                        </a>
-                                        <form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    Aucun client trouvé.
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+			<!-- Table -->
+			<div class="card shadow-sm border-0">
+				<div class="card-body p-0">
+					<div class="table-responsive">
+						<table class="table table-hover align-middle mb-0">
+							<thead class="table-light">
+								<tr>
+									<th class="ps-3">ID</th>
+									<th>Nom complet</th>
+									<th>Email</th>
+									<th>Dernière connexion</th>
+									<th>Statut</th>
+									<th class="text-end pe-3">Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for user in users %}
+									<tr>
+										<td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
+										<td>{{ user.cli_prenom }}
+											{{ user.cli_nom }}</td>
+										<td>{{ user.cli_courriel }}</td>
+										<td>
+											{% if user.cli_date_connec %}
+												{{ user.cli_date_connec|date("d/m/Y") }}
+											{% else %}
+												<span class="text-muted fst-italic">Jamais</span>
+											{% endif %}
+										</td>
+										<td>
+											{% if user.typ_num == 1 %}
+												<span class="badge bg-secondary">Client</span>
+											{% else %}
+												<span class="badge bg-danger">Admin</span>
+											{% endif %}
+										</td>
+										<td class="text-end pe-3">
+											<div class="d-flex justify-content-end gap-2">
+												<a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
+													Éditer
+												</a>
+												<form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
+													<input type="hidden" name="action" value="delete">
+													<input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+													<button type="submit" class="btn btn-sm btn-danger">
+														Supprimer
+													</button>
+												</form>
+											</div>
+										</td>
+									</tr>
+								{% else %}
+									<tr>
+										<td colspan="6" class="text-center py-4 text-muted">
+											Aucun client trouvé.
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endblock %}

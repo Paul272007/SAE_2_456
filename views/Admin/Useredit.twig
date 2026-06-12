@@ -4,27 +4,15 @@
 	<nav class="navbar navbar-expand-lg">
 		<div class="container-fluid">
 			<ul class="navbar-nav ms-auto">
-				<li class="nav-item">
-					<a class="nav-link" href="index.php?route=reservation/cart">
-						Panier
-						{% if session.cart|length > 0 %}
-							<span class="badge bg-primary">{{ session.cart|length }}</span>
-						{% endif %}
-					</a>
-				</li>
-				{% if connected %}
+				{% if isAdmin %}
 					<li class="nav-item">
-						<a class="nav-link" href="index.php?route=user/dashboard">Mon Compte</a>
+						<a class="nav-link" href="index.php?route=admin/stats">Admin</a>
 					</li>
-					{% if isAdmin %}
-						<li class="nav-item">
-							<a class="nav-link" href="index.php?route=admin/stats">Admin</a>
-						</li>
-					{% endif %}
-				</ul>
-			</div>
-		</nav>
-	</header>
+				{% endif %}
+			</ul>
+		</div>
+	</nav>
+</header>
 {% block content %}
 <div class="container py-4">
     <!-- Header -->

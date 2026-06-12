@@ -44,15 +44,28 @@
 									<button type="submit" class="nav-link text-danger btn btn-link" style="text-decoration: none;">Déconnexion</button>
 								</form>
 							</li>
-						{% else %}
-							<li class="nav-item">
-								<a class="nav-link" href="index.php?route=login">Connexion</a>
-							</li>
-						{% endif %}
-					</ul>
+							{% if connected %}
+								<li class="nav-item">
+									<a class="nav-link" href="index.php?route=user/dashboard">Mon Compte</a>
+								</li>
+								<li class="nav-item">
+									<a class="nav-link" href="index.php?route=reservation/cart">
+										Panier
+										{% if session.cart|length > 0 %}
+											<span class="badge bg-primary">{{ session.cart|length }}</span>
+										{% endif %}
+									</a>
+								</li>
+							{% else %}
+								<li class="nav-item">
+									<a class="nav-link" href="index.php?route=login">Connexion</a>
+								</li>
+							{% endif %}
+						</ul>
+					</div>
 				</div>
-			</div>
-		</nav>
+			</nav>
+		</body>
 	</body>
 </html></header>{% if isAdmin %}
 <div class="bg-dark py-2 shadow-sm" style="border-bottom: 2px solid #cc0000;">
@@ -87,8 +100,8 @@
 			<h5 class="text-uppercase mb-4 fw-bold footer-heading">{{ site }}</h5>
 			<p>
 				Votre réseau de cars normands reliant toutes les communes de la région. 
-				                    Voyagez en toute sérénité, cumulez des points et profitez de nos réductions !
-				                    Pour moins de retard sur nos lignes de bus nous ajoutons l'heure en direct !
+								                    Voyagez en toute sérénité, cumulez des points et profitez de nos réductions !
+								                    Pour moins de retard sur nos lignes de bus nous ajoutons l'heure en direct !
 			</p>
 		</div>
 
