@@ -42,14 +42,14 @@ class CartController extends Controller
 
             if ($typReduc > 0 && $typReduc < 100) {
                 $gradeDiscountPercent = 100 - $typReduc;
-                $gradeDiscountValue = $totalPrice * ($gradeDiscountPercent / 100.0);
-                $finalPrice -= $gradeDiscountValue;
+                $finalPrice = round($totalPrice * ($typReduc / 100.0));
+                $gradeDiscountValue = $totalPrice - $finalPrice;
             }
         }
 
         $this->data['grade_discount_percent'] = $gradeDiscountPercent;
         $this->data['grade_discount_value'] = $gradeDiscountValue;
-        $this->data['final_price'] = $finalPrice;
+        $this->data['final_price'] = round($finalPrice);
 
         $this->render();
     }

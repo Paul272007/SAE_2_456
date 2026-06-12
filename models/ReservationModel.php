@@ -194,12 +194,12 @@ class ReservationModel extends Model
         $clientId = $cliNum ?? 0; // Guest ID si null
 
         $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, TO_NUMBER(?, '999999990D99', 'NLS_NUMERIC_CHARACTERS=''.,'''))";
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
         
-        // Force le format avec un point
-        $prixFormatte = number_format((float)$prixTotal, 2, '.', '');
+        // Arrondi à l'entier (NUMBER(5) en BDD)
+        $prixEntier = (int)round($prixTotal);
         
-        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixFormatte]);
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixEntier]);
         
         return $nextId;
     }

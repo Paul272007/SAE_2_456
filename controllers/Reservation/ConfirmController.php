@@ -61,8 +61,8 @@ class ConfirmController extends Controller
             
             if ($typReduc > 0 && $typReduc < 100) {
                 $gradeDiscountPercent = 100 - $typReduc;
-                $gradeDiscountValue = $totalPrice * ($gradeDiscountPercent / 100.0);
-                $discountedPrice -= $gradeDiscountValue;
+                $discountedPrice = round($totalPrice * ($typReduc / 100.0));
+                $gradeDiscountValue = $totalPrice - $discountedPrice;
             }
 
             $reductions = $reservationModel->getReductions();
@@ -95,7 +95,7 @@ class ConfirmController extends Controller
 
         $this->data['grade_discount_percent'] = $gradeDiscountPercent;
         $this->data['grade_discount_value'] = $gradeDiscountValue;
-        $this->data['final_price'] = $discountedPrice; // Before points
+        $this->data['final_price'] = round($discountedPrice); // Before points
 
         $this->render();
     }
@@ -134,7 +134,7 @@ class ConfirmController extends Controller
             if ($typReduc === 0) $typReduc = 100;
             
             if ($typReduc > 0 && $typReduc < 100) {
-                $discountedPrice -= $totalPrice * ((100 - $typReduc) / 100.0);
+                $discountedPrice = round($totalPrice * ($typReduc / 100.0));
             }
 
             $usePoints = isset($_POST['use_points']) && $_POST['use_points'] === 'yes';
@@ -175,7 +175,7 @@ class ConfirmController extends Controller
 
         // 2. Création des réservations
         foreach ($cart as $pending) {
-            $itemFinalPrice = round((float)$pending['prix_total'] * $discountRatio, 2);
+            $itemFinalPrice = round((float)$pending['prix_total'] * $discountRatio);
             $resNum = $model->createReservation(
                 $cliNum,
                 (int)$pending['tar_num_tranche'],
