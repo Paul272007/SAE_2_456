@@ -67,6 +67,38 @@
     color: #1d1717;
 }
 
+.realisation-section .realisation-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.realisation-section .realisation-logo {
+    flex-shrink: 0;
+}
+
+.calvacode-logo {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #e8e4e4;
+    border: 2px dashed #b8b0b0;
+    display: block;
+}
+
+.realisation-section p {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .realisation-section .realisation-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
 @media (max-width: 768px) {
     .about-page {
         padding: 2rem 1rem;
