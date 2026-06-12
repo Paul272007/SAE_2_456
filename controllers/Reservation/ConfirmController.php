@@ -123,6 +123,7 @@ class ConfirmController extends Controller
                 (int)$pending['tar_num_tranche'],
                 (string)$pending['date'],
                 (int)$pending['nb_points'],
+                (int)$pointsUsed,
                 (float)$pending['prix_total']
             );
 

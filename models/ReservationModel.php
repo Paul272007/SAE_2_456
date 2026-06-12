@@ -179,6 +179,7 @@ class ReservationModel extends Model
         int $tarNumTranche,
         string $date,
         int $nbPoints,
+        int $nbPointsDep,
         float $prixTotal
     ): int {
         // Obtenir le prochain ID de réservation (si on n'a pas de séquence)
@@ -187,8 +188,8 @@ class ReservationModel extends Model
 
         $clientId = $cliNum ?? 0; // Guest ID si null
 
-        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_deb, res_prix_tot)
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?)";
         
         $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixTotal]);
         
