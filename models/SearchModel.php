@@ -115,7 +115,7 @@ class SearchModel extends Model
         $lineData = [];
         foreach ($segments as $seg) {
             if (!isset($lineData[$seg['lig_num']])) {
-                $sql = "SELECT com_code_insee_arret, com_code_insee_suivant, noe_heure_passage, noe_duree_prochain, noe_distance_prochain 
+                $sql = "SELECT com_code_insee_arret, com_code_insee_suivant, TO_CHAR(noe_heure_passage, 'HH24:MI') as noe_heure_passage, noe_duree_prochain, noe_distance_prochain 
                         FROM vik_noeud WHERE TRIM(lig_num) = ?";
                 $lineData[$seg['lig_num']] = $this->fetchAll($sql, [$seg['lig_num']]);
             }
