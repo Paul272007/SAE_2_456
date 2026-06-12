@@ -59,11 +59,11 @@ class UserModel extends Model
         $soldeCourant = $user['cli_nb_points_ec'] - $tableData[0]['res_nb_points'];
 
         for ($i = 1; $i < count($tableData); $i++) {
-            $tableData[$i]['res_nb_points_dep'] = (
-                $soldeCourant
-                + $tableData[$i - 1]['res_nb_points_dep']
-                - $tableData[$i - 1]['res_nb_points']
-            );
+            $pointsGagnesPrec = 0;
+            for ($j = 1; $j < $i; $j++) {
+                $pointsGagnesPrec += $tableData[$j]['res_nb_points'];
+            }
+            $tableData[$i]['res_nb_points_dep'] = $soldeCourant - $pointsGagnesPrec;
         }
 
         return $tableData;
