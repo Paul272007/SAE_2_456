@@ -83,7 +83,7 @@ CREATE TABLE VIK_CLIENT
     CLI_TELEPHONE VARCHAR2( 16)  NULL,
     CLI_COURRIEL VARCHAR2(32)  NULL,
     CLI_MDP VARCHAR2(255) NULL,
-    CLI_NB_POINTS_EC NUMBER(4)  NULL,
+    CLI_NB_POINTS_EC NUMBER(6)  NULL,
     CLI_NB_POINTS_TOT NUMBER(6)  NULL,
     CLI_DATE_CONNEC DATE  NULL,
     IS_ADMIN NUMBER(1) DEFAULT 0 NOT NULL,
@@ -293,6 +293,7 @@ insert into vik_client values ( '107' , '1' , '14' , 'PETIT'        , 'Antoine' 
 insert into vik_client values ( '108' , '1' , '61' , 'GIRARD'       , 'Camille'   , 'Argentan'   , '0600000008'    , 'camille.girard@mail.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '1'   , '25'    , to_date('05/03/2026','dd/mm/yyyy') );
 insert into vik_client values ( '109' , '2' , '50' , 'ROUSSEAU'     , 'Nicolas'   , 'Cherbourg'  , '0600000009'    , 'nicolas.rousseau@mail.fr' , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '7'   , '150'   , to_date('13/03/2026','dd/mm/yyyy') );
 insert into vik_client values ( '110' , '2' , '50' , 'MOREAU'       , 'Emma'      , 'Avranches'  , '0600000010'    , 'emma.moreau@mail.fr'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '6'  , '140'    , to_date('12/03/2026','dd/mm/yyyy') );
+insert into vik_client values ('111', '5', '14', 'ADD', 'Mine', 'Ifs', '0231006728', 'admin@viking-transport.fr', '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG', '999999', '999999', to_date('13/06/2026','dd/mm/yyyy'));
 
 insert into vik_tarif values ( 1  ,  0  , 10  , 5  );
 insert into vik_tarif values ( 2  , 11  , 20  , 7  );
