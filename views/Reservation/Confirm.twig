@@ -60,7 +60,7 @@
                         <p class="text-muted mb-4">En cliquant sur "Confirmer et payer", vous validez votre réservation.</p>
 
                         <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
-                            {% if points_available > 0 and points_to_use > 0 %}
+                            {% if points_to_use > 0 %}
                                 <div class="alert alert-light border mb-4">
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <strong>Points de fidélité</strong>
@@ -72,6 +72,16 @@
                                             Utiliser {{ points_to_use }} points pour une réduction supplémentaire de <strong class="text-success">- {{ points_discount_value|number_format(2, ',', ' ') }} €</strong>
                                         </label>
                                     </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-light border mb-4 text-muted">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong class="text-dark">Points de fidélité</strong>
+                                        <span class="badge bg-secondary">{{ points_available }} disponibles</span>
+                                    </div>
+                                    <p class="mb-0 small">
+                                        Vous n'avez pas assez de points (ou le montant du panier est trop faible) pour appliquer une réduction supplémentaire sur cette commande.
+                                    </p>
                                 </div>
                             {% endif %}
 
