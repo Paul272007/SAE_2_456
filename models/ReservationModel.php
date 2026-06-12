@@ -77,23 +77,37 @@ class ReservationModel extends Model
     {
         $codeDepart = $this->resolveToNodeCode($ligNum, $codeDepart);
         $codeArrivee = $this->resolveToNodeCode($ligNum, $codeArrivee);
-        $nodes = $this->getStops($ligNum);
+
+        // Récupérer tous les segments (arêtes) de la ligne en déduisant les distances
+        $sql = "SELECT TRIM(COM_CODE_INSEE_ARRET) AS \"depart\",
+                       TRIM(COM_CODE_INSEE_SUIVANT) AS \"arrivee\",
+                       MAX(NOE_DISTANCE_PROCHAIN) AS \"distance\"
+                FROM VIK_NOEUD
+                WHERE TRIM(LIG_NUM) = ?
+                  AND COM_CODE_INSEE_SUIVANT IS NOT NULL
+                GROUP BY TRIM(COM_CODE_INSEE_ARRET), TRIM(COM_CODE_INSEE_SUIVANT)";
+        
+        $edges = $this->fetchAll($sql, [trim($ligNum)]);
+        
+        $graph = [];
+        foreach ($edges as $edge) {
+            $graph[$edge['depart']] = [
+                'next' => $edge['arrivee'],
+                'dist' => (float)$edge['distance']
+            ];
+        }
 
         $distance = 0.0;
-        $counting = false;
+        $current = $codeDepart;
+        $maxIterations = 100; // Sécurité anti-boucle infinie
 
-        foreach ($nodes as $node) {
-            if (trim((string)$node['code']) === trim($codeDepart)) {
-                $counting = true;
+        while ($current !== $codeArrivee && $maxIterations > 0) {
+            if (!isset($graph[$current])) {
+                break; // Chemin cassé ou fin de ligne
             }
-
-            if ($counting) {
-                $distance += (float)($node['distance_prochain'] ?? 0);
-            }
-
-            if (trim((string)$node['code']) === trim($codeArrivee)) {
-                break;
-            }
+            $distance += $graph[$current]['dist'];
+            $current = $graph[$current]['next'];
+            $maxIterations--;
         }
 
         return $distance;
