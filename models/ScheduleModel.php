@@ -45,11 +45,12 @@ class ScheduleModel extends Model
                 ORDER BY noe_heure_passage ASC";
         $tableData= $this->fetchAll($sql, [$ligNum, $ligNum]);
 
-        foreach($tableData as $data){
-            echo $data['arret_nom'];
-            echo "|";
+        if($ligNum === '15A'){
+            foreach($tableData as $data){
+                echo $data['arret_nom'];
+                echo "|";
+            }
         }
-        echo "-----------------------";
         return $tableData;
     }
 
