@@ -104,6 +104,7 @@
                             <th>Trajet(s)</th>
                             <th>Prix</th>
                             <th>Points gagnés</th>
+                            <th>Points dépensés</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -205,6 +206,7 @@
                                 <th>Trajet(s)</th>
                                 <th>Prix</th>
                                 <th>Points gagnés</th>
+                                <th>Points dépensés</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -214,8 +216,12 @@
                                     <td>{{ res.res_date|date("d/m/Y") }}</td>
                                     <td>{{ res.trajets }}</td>
                                     <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
-                                    <td style="color: #cc0000;"><strong>+{{ res.res_nb_points }}</strong></td>
-                                    <td style="color: #cc0000;"><strong>+{{ res.res_nb_points_dep }}</strong></td>
+                                    <td style="color: #00cc22;"><strong>+{{ res.res_nb_points }}</strong></td>
+                                    <td style="color: #cc0000;">
+                                    {% if res.res_nb_points_dep is not empty and res.res_nb_points_dep != 0 %}
+                                        <strong>-{{ res.res_nb_points_dep }}</strong>
+                                    {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
