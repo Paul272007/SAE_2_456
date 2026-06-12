@@ -15,7 +15,11 @@ class UserModel extends Model
      */
     public function getUserById(int $cliNum): mixed
     {
-        $sql = "SELECT * FROM vik_client c
+        $sql = "SELECT c.cli_num, c.typ_num, c.cli_nom, c.cli_prenom, c.cli_courriel, c.cli_mdp, 
+                       TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') AS cli_date_connec, 
+                       c.cli_ville, c.cli_telephone, c.cli_nb_points_ec, c.cli_nb_points_tot, 
+                       c.is_admin, c.is_deleted, t.* 
+                FROM vik_client c
                 LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num
                 WHERE c.cli_num = ?";
         return $this->fetch($sql, [$cliNum]);

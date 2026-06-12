@@ -160,6 +160,7 @@ class AdminModel extends Model
                 AND TO_CHAR(noe_heure_passage, 'HH24:MI') = :old_heure";
                 
         $stmt = $this->db->prepare($sql);
+        
         $stmt->execute([
             'new_heure' => $newHeure,
             'lig_num'   => $ligNum,
