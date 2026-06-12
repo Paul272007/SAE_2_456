@@ -50,6 +50,7 @@ class ReservationController extends Controller
                     $this->data['schedules'] = $schedules;
                     
                     $distance = $model->getSegmentDistance($ligNum, $codeDepart, $codeArrivee);
+                    $this->data['distance'] = $distance;
                     $tarif = $model->getTarif($distance);
                     if ($tarif) {
                         $this->data['prix'] = (float)$tarif['tar_prix'];

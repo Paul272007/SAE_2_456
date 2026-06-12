@@ -28,6 +28,7 @@
     <div class="card p-4">
         <h2>Horaires disponibles</h2>
         <p>Prix pour ce trajet : <strong>{{ prix|number_format(2, ',', ' ') }} €</strong></p>
+        <p>Distance pour ce trajet : <strong>{{ distance|number_format(1, ',', ' ') }} km</strong></p>
         
         <div class="list-group">
             {% for schedule in schedules %}

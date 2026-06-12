@@ -75,42 +75,65 @@ class ReservationModel extends Model
 
     public function getSegmentDistance(string $ligNum, string $codeDepart, string $codeArrivee): float
     {
-        $codeDepart = $this->resolveToNodeCode($ligNum, $codeDepart);
-        $codeArrivee = $this->resolveToNodeCode($ligNum, $codeArrivee);
-        $nodes = $this->getStops($ligNum);
+        $ligNum = trim($ligNum);
+        $start = trim((string)$codeDepart);
+        $end = trim((string)$codeArrivee);
 
-        $distance = 0.0;
+        if ($start === $end) {
+            return 0.0;
+        }
+
+        // Use the same logic as SearchModel which is reported to work correctly
+        // We fetch unique stops for this line in order of their first appearance
+        $sql = "SELECT TRIM(com_code_insee_arret) as code, 
+                       MAX(noe_distance_prochain) as dist
+                FROM vik_noeud 
+                WHERE TRIM(lig_num) = ? 
+                GROUP BY com_code_insee_arret
+                ORDER BY MIN(noe_heure_passage) ASC";
+        $nodes = $this->fetchAll($sql, [$ligNum]);
+        
+        // Add the terminus stop
+        $sqlTerm = "SELECT TRIM(l.com_code_insee_term) as term 
+                    FROM vik_ligne l 
+                    WHERE TRIM(l.lig_num) = ?";
+        $term = $this->fetch($sqlTerm, [$ligNum]);
+        if ($term) {
+            $nodes[] = ['code' => $term['term'], 'dist' => 0.0];
+        }
+
+        $totalDist = 0.0;
         $counting = false;
 
-        foreach ($nodes as $node) {
-            $currentCode = trim((string)$node['code']);
-
-            if ($currentCode === trim($codeDepart)) {
+        foreach ($nodes as $n) {
+            $current = $n['code'];
+            
+            if ($current === $start) {
                 $counting = true;
             }
-
-            if ($currentCode === trim($codeArrivee)) {
-                break;
+            
+            if ($current === $end) {
+                return $totalDist;
             }
 
             if ($counting) {
-                $distance += (float)($node['distance_prochain'] ?? 0);
+                $totalDist += (float)($n['dist'] ?? 0);
             }
         }
 
-        return $distance;
+        return $totalDist;
     }
+public function getTarif(float $distance): mixed
+{
+    $sql = 'SELECT TAR_NUM_TRANCHE AS "tar_num_tranche",
+                   TAR_PRIX AS "tar_prix"
+            FROM VIK_TARIF
+            WHERE TAR_MIN_DIST <= ? AND TAR_MAX_DIST >= ?
+            ORDER BY TAR_NUM_TRANCHE ASC
+            FETCH FIRST 1 ROWS ONLY';
 
-    public function getTarif(float $distance): mixed
-    {
-        $sql = 'SELECT TAR_NUM_TRANCHE AS "tar_num_tranche",
-                       TAR_PRIX AS "tar_prix"
-                FROM VIK_TARIF
-                WHERE TAR_MIN_DIST <= ? AND TAR_MAX_DIST >= ?
-                ORDER BY TAR_NUM_TRANCHE ASC';
-
-        return $this->fetch($sql, [$distance, $distance]);
-    }
+    return $this->fetch($sql, [$distance, $distance]);
+}
 
     public function getUniqueStops(string $ligNum): array
     {
