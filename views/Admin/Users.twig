@@ -11,6 +11,11 @@
                 <input type="hidden" name="sort" value="{{ sort }}">
                 <input type="hidden" name="order" value="{{ order }}">
 
+                <div class="input-group" style="width: 250px;">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0 ps-0" placeholder="Rechercher un utilisateur..." value="{{ search }}">
+                </div>
+
                 <select name="filter" class="form-select" onchange="this.form.submit()" style="width: auto;">
                     <option value="all" {{ filter == 'all' ? 'selected' : '' }}>Toutes activités</option>
                     <option value="active" {{ filter == 'active' ? 'selected' : '' }}>Actifs</option>
@@ -29,6 +34,8 @@
                     <option value="0" {{ filterStatut is same as(0) ? 'selected' : '' }}>Client</option>
                     <option value="1" {{ filterStatut is same as(1) ? 'selected' : '' }}>Admin</option>
                 </select>
+                
+                <button type="submit" class="btn btn-dark d-none d-md-inline-block">Filtrer</button>
             </form>
         </div>
 
@@ -48,7 +55,7 @@
                     <thead class="table-light">
                         <tr>
                             {% set orderUrl = order == 'ASC' ? 'DESC' : 'ASC' %}
-                            {% set filterParams = '&filter=' ~ filter ~ (filterNiveau is not null ? '&niveau=' ~ filterNiveau : '') ~ (filterStatut is not null ? '&statut=' ~ filterStatut : '') %}
+                            {% set filterParams = '&filter=' ~ filter ~ (filterNiveau is not null ? '&niveau=' ~ filterNiveau : '') ~ (filterStatut is not null ? '&statut=' ~ filterStatut : '') ~ (search is not empty ? '&search=' ~ search : '') %}
 
                             <th class="ps-3">
                                 <a href="index.php?route=admin/users&sort=cli_num&order={{ sort == 'cli_num' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
@@ -82,7 +89,7 @@
                             </th>
                             <th>Niveau</th>
                             <th>Statut</th>
-                            <th class="text-end pe-3">Actions</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>

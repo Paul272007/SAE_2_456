@@ -23,8 +23,9 @@ class UsersController extends Controller
         $order = $_GET['order'] ?? 'DESC';
         $filterNiveau = isset($_GET['niveau']) && $_GET['niveau'] !== '' ? (int)$_GET['niveau'] : null;
         $filterStatut = isset($_GET['statut']) && $_GET['statut'] !== '' ? (int)$_GET['statut'] : null;
+        $search = $_GET['search'] ?? '';
         
-        $this->data['users'] = $model->getUsers($filterActivity, $sort, $order, $filterNiveau, $filterStatut);
+        $this->data['users'] = $model->getUsers($filterActivity, $sort, $order, $filterNiveau, $filterStatut, $search);
         $this->data['levels'] = $model->getLevels();
         
         $this->data['filter'] = $filterActivity;
@@ -32,6 +33,7 @@ class UsersController extends Controller
         $this->data['order'] = $order;
         $this->data['filterNiveau'] = $filterNiveau;
         $this->data['filterStatut'] = $filterStatut;
+        $this->data['search'] = $search;
         
         $this->render();
     }

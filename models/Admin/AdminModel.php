@@ -59,7 +59,7 @@ class AdminModel extends Model
     /**
      * Liste tous les utilisateurs avec filtres et tris.
      */
-    public function getUsers(string $filterActivity = 'all', string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null): array
+    public function getUsers(string $filterActivity = 'all', string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null, string $search = ''): array
     {
         $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, t.typ_nom
                 FROM vik_client c
@@ -81,6 +81,15 @@ class AdminModel extends Model
         if ($filterStatut !== null) {
             $sql .= " AND c.is_admin = ? ";
             $params[] = $filterStatut;
+        }
+
+        if ($search !== '') {
+            $sql .= " AND (LOWER(c.cli_nom) LIKE ? OR LOWER(c.cli_prenom) LIKE ? OR LOWER(c.cli_courriel) LIKE ? OR TO_CHAR(c.cli_num) = ?) ";
+            $searchParam = '%' . strtolower($search) . '%';
+            $params[] = $searchParam;
+            $params[] = $searchParam;
+            $params[] = $searchParam;
+            $params[] = $search; // Pour la recherche par ID exact
         }
 
         $validSorts = [
