@@ -73,11 +73,11 @@ class UserModel extends Model
     }
 
     /**
-     * Supprime le compte de l'utilisateur.
+     * Marque le compte de l'utilisateur comme supprimé (Soft Delete).
      */
     public function deleteUser(int $cliNum): void
     {
-        $sql = "DELETE FROM vik_client WHERE cli_num = ?";
+        $sql = "UPDATE vik_client SET is_deleted = 1 WHERE cli_num = ?";
         $this->runQuery($sql, [$cliNum]);
     }
 }

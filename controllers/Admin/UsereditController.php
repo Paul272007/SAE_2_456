@@ -13,27 +13,38 @@ use Core\Privilege;
 use Core\RequirePrivilege;
 use Models\Admin\AdminModel;
 use Models\User\UserModel;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 #[RequirePrivilege(Privilege::ADMIN)]
 class UsereditController extends Controller
 {
+    /**
+     * @throws SyntaxError
+     * @throws ClientError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
     public function get(): void
     {
         $cliNum = (int)($_GET['id'] ?? 0);
+
         if ($cliNum <= 0) {
+            $_SESSION["flash_error"] = "Mauvais numéro de client donné";
             redirect('index.php?route=admin/users');
         }
 
         $userModel = new UserModel();
         
         $this->data['user'] = $userModel->getUserById($cliNum);
+
         if (!$this->data['user']) {
-            redirect('index.php?route=admin/users');
+            throw new ClientError(ClientErrorCode::USER_NOT_FOUND);
         }
         
         if ($this->data['user']['is_admin'] == 1) {
-            $_SESSION['flash_error'] = "Impossible de modifier le profil d'un administrateur.";
-            redirect('index.php?route=admin/users');
+            throw new ClientError(ClientErrorCode::IMPOSSIBLE_TO_MODIFY_ADMIN);
         }
         
         $this->data['reservations'] = $userModel->getUserReservations($cliNum);

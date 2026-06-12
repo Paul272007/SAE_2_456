@@ -61,7 +61,7 @@ class AdminModel extends Model
      */
     public function getUsers(string $filterActivity = 'all', string $sort = 'cli_num', string $order = 'DESC', ?int $filterNiveau = null, ?int $filterStatut = null, string $search = ''): array
     {
-        $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, t.typ_nom
+        $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.typ_num, c.is_admin, c.is_deleted, t.typ_nom
                 FROM vik_client c
                 LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num 
                 WHERE 1=1 ";
@@ -116,11 +116,11 @@ class AdminModel extends Model
     }
 
     /**
-     * Supprime un compte utilisateur (F14).
+     * Marque un compte utilisateur comme supprimé (Soft Delete).
      */
     public function deleteUser(int $cliNum): void
     {
-        $sql = "DELETE FROM vik_client WHERE cli_num = ?";
+        $sql = "UPDATE vik_client SET is_deleted = 1 WHERE cli_num = ?";
         $this->runQuery($sql, [$cliNum]);
     }
 
@@ -134,11 +134,11 @@ class AdminModel extends Model
     }
 
     /**
-     * Supprime les utilisateurs qui ne se sont pas connectés depuis 2 ans (730 jours).
+     * Marque comme supprimés les utilisateurs qui ne se sont pas connectés depuis 2 ans (730 jours).
      */
     public function deleteInactiveUsers(): int
     {
-        $sql = "DELETE FROM vik_client WHERE cli_date_connec < SYSDATE - 730";
+        $sql = "UPDATE vik_client SET is_deleted = 1 WHERE cli_date_connec < SYSDATE - 730 AND (is_deleted = 0 OR is_deleted IS NULL)";
         $stmt = $this->runQuery($sql);
         return $stmt->rowCount();
     }

@@ -91,7 +91,12 @@
                         {% for user in users %}
                             <tr>
                                 <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
-                                <td>{{ user.cli_nom|upper }}</td>
+                                <td>
+                                    {{ user.cli_nom|upper }}
+                                    {% if user.is_deleted == 1 %}
+                                        <span class="badge bg-danger ms-2">Supprimé</span>
+                                    {% endif %}
+                                </td>
                                 <td>{{ user.cli_prenom }}</td>
                                 <td>{{ user.cli_courriel }}</td>
                                 <td>
@@ -112,7 +117,7 @@
                                     {% endif %}
                                 </td>
                                 <td class="text-end pe-3">
-                                    {% if user.is_admin == 0 %}
+                                    {% if user.is_admin == 0 and user.is_deleted != 1 %}
                                         <div class="d-flex justify-content-end gap-2">
                                             <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
                                                 Éditer
@@ -125,6 +130,8 @@
                                                 </button>
                                             </form>
                                         </div>
+                                    {% elseif user.is_deleted == 1 %}
+                                        <span class="text-danger fw-bold small">Compte supprimé</span>
                                     {% else %}
                                         <span class="text-muted fst-italic small">Impossible de modifier</span>
                                     {% endif %}
