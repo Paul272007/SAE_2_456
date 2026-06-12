@@ -173,7 +173,7 @@ class ConfirmController extends Controller
                 (int)$pending['tar_num_tranche'],
                 (string)$pending['date'],
                 (int)$pending['nb_points'],
-                (int)$pointsToDeductForThisItem,
+                (int)$pointsUsed,
                 $itemFinalPrice
             );
             $firstReservation = false;

@@ -214,7 +214,7 @@ class ReservationModel extends Model
         // Arrondi à l'entier (NUMBER(5) en BDD)
         $prixEntier = (int)round($prixTotal);
         
-        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $nbPointsDep, $prixEntier]);
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints,  $nbPointsDep, $prixEntier]);
         
         return $nextId;
     }
@@ -244,5 +244,23 @@ class ReservationModel extends Model
                 WHERE cli_num = ?";
         
         $this->runQuery($sql, [$pointsEarned, $pointsUsed, $pointsEarned, $cliNum]);
+        $this->updateClientType($cliNum);
+    }
+
+    public function updateClientType(int $cliNum): void
+    {
+        $sql = "UPDATE vik_client
+            SET typ_num = (
+                SELECT typ_num
+                FROM vik_type_client
+                WHERE typ_pt_limite <= (
+                    SELECT cli_nb_points_tot FROM vik_client WHERE cli_num = ?
+                )
+                ORDER BY typ_pt_limite DESC
+                FETCH FIRST 1 ROWS ONLY
+            )
+            WHERE cli_num = ?";
+
+        $this->runQuery($sql, [$cliNum, $cliNum]);
     }
 }

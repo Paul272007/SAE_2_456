@@ -1,11 +1,23 @@
 {% extends "layout.twig" %}
 
 {% block content %}
+
 <link rel="stylesheet" href="styles/Dashboard.css">
 
 {% set isOr = user.typ_nom|lower == 'or' %}
 
 {% if isOr %}
+
+{% if isAdmin %}
+    <div class="bg-dark py-2 shadow-sm" style="border-bottom: 2px solid #cc0000;">
+        <div class="container d-flex justify-content-center gap-4">
+            <a href="index.php?route=user/dashboard" class="text-decoration-none py-1 {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? '#cc0000' : 'transparent' }};">Dashboard</a>
+            <a href="index.php?route=admin/users" class="text-decoration-none py-1 {{ controllerName == 'Users' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Users' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Clients</a>
+            <a href="index.php?route=admin/lines" class="text-decoration-none py-1 {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Lignes</a>
+            <a href="index.php?route=admin/stats" class="text-decoration-none py-1 {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Statistiques</a>
+        </div>
+    </div>
+{% endif %}
 
 <script>document.body.classList.add('grade-or');</script>
 
@@ -58,26 +70,12 @@
         <!-- Avantages Or -->
         <div class="col-md-4">
             <div class="or-card">
-                <h3>Vos avantages exclusifs</h3>
+                <h3>Votre (seul) avantage exclusif</h3>
                 <div class="or-avantage">
                     <div class="or-avantage-icon">%</div>
                     <div class="or-avantage-text">
                         <strong>Réduction maximale</strong>
                         Bénéficiez du taux de réduction le plus élevé sur tous vos trajets.
-                    </div>
-                </div>
-                <div class="or-avantage">
-                    <div class="or-avantage-icon">★</div>
-                    <div class="or-avantage-text">
-                        <strong>Points doublés</strong>
-                        Chaque trajet vous rapporte des points bonifiés.
-                    </div>
-                </div>
-                <div class="or-avantage">
-                    <div class="or-avantage-icon">✦</div>
-                    <div class="or-avantage-text">
-                        <strong>Accès prioritaire</strong>
-                        Réservations confirmées en priorité sur les lignes à forte demande.
                     </div>
                 </div>
             </div>
@@ -109,16 +107,14 @@
                     <tbody>
                         {% for res in reservations %}
                         <tr>
-                            <td><strong class="or-res-num">#{{ res.res_num }}</strong></td>
-                            <td>{{ res.res_date|date("d/m/Y") }}</td>
-                            <td>{{ res.trajets }}</td>
-                            <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
-                            <td class="or-points-gain">+{{ res.res_nb_points }}</td>
-                            <td style="color: #cc0000;">
-                            {% if res.res_nb_points_dep is not empty and res.res_nb_points_dep != 0 %}
-                                <strong>-{{ res.res_nb_points_dep }}</strong>
-                            {% endif %}
-                            </td>
+                            <td><strong>#{{ res.res_num }}</strong></td>
+                                    <td>{{ res.res_date|date("d/m/Y") }}</td>
+                                    <td>{{ res.trajets }}</td>
+                                    <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
+                                    <td style="color: #00cc22;"><strong>+{{ res.res_nb_points }}</strong></td>
+                                    <td style="color: #cc0000;">
+                                    <strong>-{{ res.res_nb_points_dep }}</strong>
+                                    </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -131,6 +127,19 @@
 
 {% else %}
 
+{# ── Dashboard standard (inchangé) ── #}
+
+{% if isAdmin %}
+    <div class="bg-dark py-2 shadow-sm" style="border-bottom: 2px solid #cc0000;">
+        <div class="container d-flex justify-content-center gap-4">
+            <a href="index.php?route=user/dashboard" class="text-decoration-none py-1 {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? '#cc0000' : 'transparent' }};">Dashboard</a>
+            <a href="index.php?route=admin/users" class="text-decoration-none py-1 {{ controllerName == 'Users' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Users' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Clients</a>
+            <a href="index.php?route=admin/lines" class="text-decoration-none py-1 {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Lignes</a>
+            <a href="index.php?route=admin/stats" class="text-decoration-none py-1 {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Statistiques</a>
+        </div>
+    </div>
+{% endif %}
+
 <section class="page-section">
 
     <div class="d-flex justify-content-between align-items-center mb-4 page-title">
@@ -139,12 +148,11 @@
             <p>Bienvenue, <span class="home-accent">{{ username }}</span></p>
         </div>
         <form action="index.php?route=user/logout" method="POST">
-                        <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
+            <button type="submit" class="btn btn-outline-danger">Se déconnecter</button>
         </form>
     </div>
 
     <div class="row mb-4">
-        <!-- Profil Section -->
         <div class="col-md-6 mb-4 mb-md-0">
             <div class="summary-box h-100 shadow-sm border-0">
                 <div class="card-body">
@@ -186,7 +194,6 @@
                     <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
                     <p><strong>Téléphone :</strong> {{ user.cli_telephone }}</p>
                     <p><strong>Ville :</strong> {{ user.cli_ville }}</p>
-                    
                     <div class="mt-4">
                         <a href="index.php?route=user/profileEdit" class="btn btn-dark">Modifier mon profil</a>
                     </div>
@@ -194,7 +201,6 @@
             </div>
         </div>
 
-        <!-- Fidélité Section -->
         <div class="col-md-6">
             <div class="summary-box h-100 shadow-sm border-0" style="background-color: #fcebeb;">
                 <div class="card-body">
@@ -241,9 +247,7 @@
                                     <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
                                     <td style="color: #00cc22;"><strong>+{{ res.res_nb_points }}</strong></td>
                                     <td style="color: #cc0000;">
-                                    {% if res.res_nb_points_dep is not empty and res.res_nb_points_dep != 0 %}
-                                        <strong>-{{ res.res_nb_points_dep }}</strong>
-                                    {% endif %}
+                                    <strong>-{{ res.res_nb_points_dep }}</strong>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -257,4 +261,5 @@
 </section>
 
 {% endif %}
+
 {% endblock %}
