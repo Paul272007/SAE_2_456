@@ -86,8 +86,6 @@ CREATE TABLE VIK_CLIENT
     CLI_NB_POINTS_EC NUMBER(6)  NULL,
     CLI_NB_POINTS_TOT NUMBER(6)  NULL,
     CLI_DATE_CONNEC DATE  NULL,
-    IS_ADMIN NUMBER(1) DEFAULT 0 NOT NULL,
-    IS_DELETED NUMBER(1) DEFAULT 0 NOT NULL,
 	CONSTRAINT PK_VIK_CLIENT PRIMARY KEY (CLI_NUM)  
 );
 
@@ -111,7 +109,6 @@ CREATE TABLE vik_reservation
     TAR_NUM_TRANCHE NUMBER(2)  NOT NULL,
     RES_DATE DATE  NULL,
     RES_NB_POINTS NUMBER(3)  NULL,
-    RES_NB_POINTS_DEP NUMBER(3) DEFAULT 0 NOT NULL,
     RES_PRIX_TOT NUMBER(5)  NULL,
 	CONSTRAINT PK_vik_reservation PRIMARY KEY (CLI_NUM, RES_NUM)  
 );
@@ -293,7 +290,6 @@ insert into vik_client values ( '107' , '1' , '14' , 'PETIT'        , 'Antoine' 
 insert into vik_client values ( '108' , '1' , '61' , 'GIRARD'       , 'Camille'   , 'Argentan'   , '0600000008'    , 'camille.girard@mail.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '1'   , '25'    , to_date('05/03/2026','dd/mm/yyyy') );
 insert into vik_client values ( '109' , '2' , '50' , 'ROUSSEAU'     , 'Nicolas'   , 'Cherbourg'  , '0600000009'    , 'nicolas.rousseau@mail.fr' , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '7'   , '150'   , to_date('13/03/2026','dd/mm/yyyy') );
 insert into vik_client values ( '110' , '2' , '50' , 'MOREAU'       , 'Emma'      , 'Avranches'  , '0600000010'    , 'emma.moreau@mail.fr'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '6'  , '140'    , to_date('12/03/2026','dd/mm/yyyy') );
-insert into vik_client values ('111', '5', '14', 'ADD', 'Mine', 'Ifs', '0231006728', 'admin@viking-transport.fr', '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG', '999999', '999999', to_date('13/06/2026','dd/mm/yyyy'));
 
 insert into vik_tarif values ( 1  ,  0  , 10  , 5  );
 insert into vik_tarif values ( 2  , 11  , 20  , 7  );
@@ -5807,6 +5803,40 @@ insert into vik_noeud values('19B','61483','61169',to_date('17:44:00','hh24:mi:s
 insert into vik_noeud values('19B','61169','14174',to_date('18:25:00','hh24:mi:ss'),'13,5','23');
 insert into vik_noeud values('19B','14174','14456',to_date('18:48:00','hh24:mi:ss'),'46','59');
 insert into vik_noeud values('19B','14456','14220',to_date('19:47:00','hh24:mi:ss'),'46','55');
+
+ALTER TABLE vik_client
+ADD IS_ADMIN NUMBER(1) DEFAULT 0 NOT NULL;
+ALTER TABLE vik_client
+ADD IS_DELETED NUMBER(1) DEFAULT 0 NOT NULL;
+
+ALTER TABLE vik_reservation
+ADD RES_NB_POINTS_DEP NUMBER(3) DEFAULT 0 NOT NULL;
+
+update vik_client
+set IS_ADMIN = 0;
+
+update vik_client
+set IS_DELETED = 0;
+
+INSERT INTO VIK_CLIENT VALUES (
+    111,          -- CLI_NUM (NUMBER)
+    5,            -- TYP_NUM (NUMBER)
+    '14',         -- DEP_NUM (CHAR)
+    'ADD',        -- CLI_NOM (VARCHAR2)
+    'Mine',       -- CLI_PRENOM (VARCHAR2)
+    'Ifs',        -- CLI_VILLE (VARCHAR2)
+    '0231006728', -- CLI_TELEPHONE (VARCHAR2)
+    'admin@viking-transport.fr', -- CLI_COURRIEL (VARCHAR2)
+    '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG', -- CLI_MDP (VARCHAR2)
+    999999,       -- CLI_NB_POINTS_EC (NUMBER)
+    999999,       -- CLI_NB_POINTS_TOT (NUMBER)
+    TO_DATE('13/06/2026', 'dd/mm/yyyy'), -- CLI_DATE_CONNEC (DATE)
+    1,
+    0
+);
+
+update vik_reservation
+set RES_NB_POINTS_DEP = 0;
 
 commit;
 
