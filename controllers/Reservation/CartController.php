@@ -33,11 +33,16 @@ class CartController extends Controller
             // Include UserModel logic here, but we need the namespace
             $userModel = new \Models\User\UserModel();
             $user = $userModel->getUserById((int)$_SESSION['userId']);
-            $typReduc = (int)($user['typ_reduc'] ?? 0);
+            $typReduc = (int)($user['typ_reduc'] ?? 100);
             
-            if ($typReduc > 0) {
-                $gradeDiscountPercent = $typReduc;
-                $gradeDiscountValue = $totalPrice * ($typReduc / 100.0);
+            // typ_reduc est la part à payer (ex: 95 = on paie 95% = 5% de réduction)
+            if ($typReduc === 0) {
+                $typReduc = 100; // Sécurité si NULL ou 0
+            }
+
+            if ($typReduc > 0 && $typReduc < 100) {
+                $gradeDiscountPercent = 100 - $typReduc;
+                $gradeDiscountValue = $totalPrice * ($gradeDiscountPercent / 100.0);
                 $finalPrice -= $gradeDiscountValue;
             }
         }

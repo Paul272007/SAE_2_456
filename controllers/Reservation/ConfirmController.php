@@ -56,10 +56,12 @@ class ConfirmController extends Controller
             $user = $userModel->getUserById((int)$_SESSION['userId']);
             $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
 
-            $typReduc = (int)($user['typ_reduc'] ?? 0);
-            if ($typReduc > 0) {
-                $gradeDiscountPercent = $typReduc;
-                $gradeDiscountValue = $totalPrice * ($typReduc / 100.0);
+            $typReduc = (int)($user['typ_reduc'] ?? 100);
+            if ($typReduc === 0) $typReduc = 100;
+            
+            if ($typReduc > 0 && $typReduc < 100) {
+                $gradeDiscountPercent = 100 - $typReduc;
+                $gradeDiscountValue = $totalPrice * ($gradeDiscountPercent / 100.0);
                 $discountedPrice -= $gradeDiscountValue;
             }
 
@@ -128,9 +130,11 @@ class ConfirmController extends Controller
             $userModel = new UserModel();
             $user = $userModel->getUserById($cliNum);
             
-            $typReduc = (int)($user['typ_reduc'] ?? 0);
-            if ($typReduc > 0) {
-                $discountedPrice -= $totalPrice * ($typReduc / 100.0);
+            $typReduc = (int)($user['typ_reduc'] ?? 100);
+            if ($typReduc === 0) $typReduc = 100;
+            
+            if ($typReduc > 0 && $typReduc < 100) {
+                $discountedPrice -= $totalPrice * ((100 - $typReduc) / 100.0);
             }
 
             $usePoints = isset($_POST['use_points']) && $_POST['use_points'] === 'yes';
