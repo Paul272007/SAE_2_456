@@ -2,6 +2,8 @@
 
 // core/Model.php
 
+// Je suis un bg n'empêche
+
 declare(strict_types=1);
 
 

@@ -240,6 +240,7 @@ body {
 
 .nav-link {
     color: #cccccc !important;
+    text-decoration: none;
     font-family: 'Oswald', sans-serif;
     font-size: 0.95rem;
     letter-spacing: 0.05em;
@@ -250,6 +251,7 @@ body {
 
 .nav-link:hover {
     color: #cc0000 !important;
+    text-decoration: none;
 }
 
 .nav-connect {

@@ -81,7 +81,7 @@
     {% endif %}
 
     <main class="{{ title == 'Accueil' ? 'container-fluid p-0 position-relative' : 'container mt-4' }}">
-        
+
         {% if error or info or success or warning %}
             <div class="{{ title == 'Accueil' ? 'position-absolute w-100' : 'mb-4' }}" style="{{ title == 'Accueil' ? 'top: 20px; z-index: 1050;' : '' }}">
                 <div class="container">

@@ -44,7 +44,7 @@ class ConfirmController extends Controller
         $this->data['total_distance'] = $totalDistance;
         $this->data['total_points_earned'] = $totalPointsEarned;
         $this->data['connected']   = isset($_SESSION['userId']);
-        
+
         $discountedPrice = $totalPrice;
         $gradeDiscountValue = 0.0;
         $gradeDiscountPercent = 0;
@@ -52,7 +52,7 @@ class ConfirmController extends Controller
         if ($this->data['connected']) {
             $userModel = new UserModel();
             $reservationModel = new ReservationModel();
-            
+
             $user = $userModel->getUserById((int)$_SESSION['userId']);
             $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
 
@@ -67,7 +67,7 @@ class ConfirmController extends Controller
 
             $reductions = $reservationModel->getReductions();
             $bestReduction = null;
-            
+
             foreach ($reductions as $red) {
                 if ($pointsAvailable >= (int)$red['red_nb_points'] && $discountedPrice >= (float)$red['red_valeur']) {
                     $bestReduction = $red;
@@ -76,7 +76,7 @@ class ConfirmController extends Controller
             }
 
             $this->data['points_available'] = $pointsAvailable;
-            
+
             if ($bestReduction) {
                 $this->data['points_discount_value'] = (float)$bestReduction['red_valeur'];
                 $this->data['points_to_use'] = (int)$bestReduction['red_nb_points'];
@@ -108,24 +108,24 @@ class ConfirmController extends Controller
 
         $cliNum = isset($_SESSION['userId']) ? (int)$_SESSION['userId'] : null;
         $model  = new ReservationModel();
-        
+
         $totalPrice = 0.0;
         $totalPointsEarned = 0;
         foreach ($_SESSION['cart'] as $item) {
             $totalPrice += $item['prix_total'];
             $totalPointsEarned += $item['nb_points'];
         }
-        
+
         $discountedPrice = $totalPrice;
         $pointsUsed = 0;
-        
+
         if ($cliNum !== null) {
             $userModel = new UserModel();
             $user = $userModel->getUserById($cliNum);
-            
+
             $typReduc = (int)($user['typ_reduc'] ?? 100);
             if ($typReduc === 0) $typReduc = 100;
-            
+
             if ($typReduc > 0 && $typReduc < 100) {
                 $discountedPrice = round($totalPrice * ($typReduc / 100.0));
             }
@@ -134,7 +134,7 @@ class ConfirmController extends Controller
             if ($usePoints) {
                 $pointsAvailable = (int)($user['cli_nb_points_ec'] ?? 0);
                 $reductions = $model->getReductions();
-                
+
                 foreach ($reductions as $red) {
                     if ($pointsAvailable >= (int)$red['red_nb_points'] && $discountedPrice >= (float)$red['red_valeur']) {
                         $pointsUsed = (int)$red['red_nb_points'];
@@ -155,6 +155,7 @@ class ConfirmController extends Controller
                 (string)$pending['code_arrivee'],
                 (string)$pending['date']
             )) {
+                // One of the journeys is not available
                 throw new ClientError(ClientErrorCode::BAD_REQUEST);
             }
         }
