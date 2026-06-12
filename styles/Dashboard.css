@@ -1,0 +1,268 @@
+/* ============================================================
+   styles/User/Dashboard.css — Dashboard premium Or
+   Chargé automatiquement par le Controller si le fichier existe
+   ============================================================ */
+
+/* ── Tokens Or ── */
+:root {
+    --or-gold:       #C9A84C;
+    --or-gold-light: #E8C96A;
+    --or-gold-dim:   #8A6A20;
+    --or-bg:         #0E0C09;
+    --or-surface:    #161209;
+    --or-border:     #2E2410;
+    --or-text:       #F0E6CC;
+    --or-muted:      #7A6A4A;
+}
+
+/* ── Override body uniquement pour les membres Or ── */
+body.grade-or {
+    background: var(--or-bg) !important;
+    color: var(--or-text) !important;
+}
+
+/* ── Bandeau shimmer ── */
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+}
+
+.or-crown-bar {
+    background: linear-gradient(90deg, var(--or-bg), var(--or-gold-dim), var(--or-gold), var(--or-gold-dim), var(--or-bg));
+    background-size: 200% auto;
+    animation: shimmer 4s linear infinite;
+    text-align: center;
+    padding: 0.4rem 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--or-bg);
+}
+
+/* ── Header ── */
+.or-header {
+    padding: 2.5rem 0 1.5rem;
+    border-bottom: 1px solid var(--or-border);
+    margin-bottom: 2rem;
+}
+
+.or-header h1 {
+    font-size: 1.8rem;
+    font-weight: 300;
+    letter-spacing: 0.06em;
+    color: var(--or-text);
+    margin-bottom: 0.2rem;
+}
+
+.or-header .accent {
+    color: var(--or-gold);
+    font-weight: 700;
+}
+
+/* ── Badge Or ── */
+.or-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, var(--or-gold-dim), var(--or-gold));
+    color: var(--or-bg);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.8rem;
+    border-radius: 20px;
+    margin-top: 0.5rem;
+}
+
+.or-badge.or-badge-sm {
+    font-size: 0.65rem;
+}
+
+/* ── Cartes ── */
+.or-card {
+    background: var(--or-surface);
+    border: 1px solid var(--or-border);
+    border-radius: 10px;
+    padding: 1.6rem;
+    height: 100%;
+}
+
+.or-card h3 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--or-gold);
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--or-border);
+}
+
+.or-card p {
+    color: var(--or-text);
+    margin-bottom: 0.5rem;
+    font-size: 0.93rem;
+}
+
+.or-card strong {
+    color: var(--or-gold-light);
+}
+
+/* ── Points ── */
+.or-points-big {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--or-gold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.or-points-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--or-muted);
+    margin-top: 0.3rem;
+}
+
+.or-points-total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--or-gold-light);
+}
+
+.or-points-hint {
+    font-size: 0.78rem;
+    color: var(--or-muted);
+}
+
+.or-divider {
+    border: none;
+    border-top: 1px solid var(--or-border);
+    margin: 1rem 0;
+}
+
+/* ── Avantages ── */
+.or-avantage {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--or-border);
+}
+
+.or-avantage:last-child {
+    border-bottom: none;
+}
+
+.or-avantage-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--or-gold-dim), var(--or-gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    color: var(--or-bg);
+}
+
+.or-avantage-text {
+    font-size: 0.88rem;
+    color: var(--or-text);
+}
+
+.or-avantage-text strong {
+    color: var(--or-gold-light);
+    display: block;
+    font-size: 0.82rem;
+}
+
+/* ── Tableau réservations ── */
+.or-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+.or-table thead th {
+    background: #1A1508;
+    color: var(--or-gold);
+    text-align: left;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.or-table tbody tr:nth-child(even) {
+    background: #120F07;
+}
+
+.or-table tbody tr:hover {
+    background: #1E1A0E;
+}
+
+.or-table td {
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--or-border);
+    color: var(--or-text);
+}
+
+.or-table .or-res-num {
+    color: var(--or-gold-light);
+    font-weight: 700;
+}
+
+.or-points-gain {
+    color: var(--or-gold);
+    font-weight: 700;
+}
+
+/* ── Boutons ── */
+.btn-or {
+    background: linear-gradient(135deg, var(--or-gold-dim), var(--or-gold));
+    color: var(--or-bg);
+    border: none;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.2s;
+    cursor: pointer;
+}
+
+.btn-or:hover {
+    opacity: 0.85;
+    color: var(--or-bg);
+}
+
+.btn-or-outline {
+    background: transparent;
+    color: var(--or-gold);
+    border: 1px solid var(--or-gold-dim);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.45rem 1.1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-or-outline:hover {
+    background: var(--or-border);
+}
+
+/* ── Vide (no reservations) ── */
+.or-empty {
+    color: var(--or-muted);
+    margin-bottom: 1rem;
+}
