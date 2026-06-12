@@ -59,26 +59,12 @@
         <!-- Avantages Or -->
         <div class="col-md-4">
             <div class="or-card">
-                <h3>Vos avantages exclusifs</h3>
+                <h3>Votre (seul) avantage exclusif</h3>
                 <div class="or-avantage">
                     <div class="or-avantage-icon">%</div>
                     <div class="or-avantage-text">
                         <strong>Réduction maximale</strong>
                         Bénéficiez du taux de réduction le plus élevé sur tous vos trajets.
-                    </div>
-                </div>
-                <div class="or-avantage">
-                    <div class="or-avantage-icon">★</div>
-                    <div class="or-avantage-text">
-                        <strong>Points doublés</strong>
-                        Chaque trajet vous rapporte des points bonifiés.
-                    </div>
-                </div>
-                <div class="or-avantage">
-                    <div class="or-avantage-icon">✦</div>
-                    <div class="or-avantage-text">
-                        <strong>Accès prioritaire</strong>
-                        Réservations confirmées en priorité sur les lignes à forte demande.
                     </div>
                 </div>
             </div>
@@ -247,9 +233,7 @@
                                     <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
                                     <td style="color: #00cc22;"><strong>+{{ res.res_nb_points }}</strong></td>
                                     <td style="color: #cc0000;">
-                                    {% if res.res_nb_points_dep is not empty and res.res_nb_points_dep != 0 %}
-                                        <strong>-{{ res.res_nb_points_dep }}</strong>
-                                    {% endif %}
+                                    <strong>-{{ res.res_nb_points_dep }}</strong>
                                     </td>
                                 </tr>
                             {% endfor %}

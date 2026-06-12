@@ -95,11 +95,6 @@ html, body {
     transition: background 0.3s, color 0.3s;
 }
 
-.btn-hero:hover {
-    background-color: transparent;
-    color: #cc0000;
-}
-
 /* Flèche scroll */
 .home-scroll-hint {
     position: absolute;
@@ -206,9 +201,9 @@ html, body {
     margin-top: auto;
 }
 
-.btn-card:hover {
-    background-color: transparent;
-    color: #cc0000;
+.btn:hover {
+    background-color: #aa0000; /* Rouge transparent uniquement sur le fond */
+    text-decoration: none;
 }
 
 /* =====================
