@@ -56,7 +56,7 @@ class UserModel extends Model
         }
 
         $user = $this->getUserById($cliNum);
-        $soldeCourant = $user['cli_nb_points_ec'];
+        $soldeCourant = $user['cli_nb_points_ec'] - $tableData[0]['res_nb_points'];
 
         for ($i = 1; $i < count($tableData); $i++) {
             $tableData[$i]['res_nb_points_dep'] = (
@@ -67,7 +67,7 @@ class UserModel extends Model
         }
 
         return $tableData;
-    } 
+    }
     /**
      * Met à jour les informations de l'utilisateur.
      */
