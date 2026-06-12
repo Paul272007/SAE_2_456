@@ -210,6 +210,8 @@ class ReservationModel extends Model
 
         $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_dep, res_prix_tot)
                 VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?)";
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_dep, res_prix_tot)
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?)";
         
         // Arrondi à l'entier (NUMBER(5) en BDD)
         $prixEntier = (int)round($prixTotal);

@@ -12,14 +12,6 @@
 
 <a href="index.php?route=lines" class="btn btn-secondary mb-3">← Retour aux lignes</a>
 
-{% if not connected %}
-    <p class="info-box">
-        Vous pouvez consulter les tarifs sans compte. La finalisation de votre réservation
-        nécessitera de <a href="index.php?route=login">vous connecter</a> ou de
-        <a href="index.php?route=register">créer un compte</a>.
-    </p>
-{% endif %}
-
 {% if error %}
     <div class="alert alert-danger">{{ error }}</div>
 {% endif %}

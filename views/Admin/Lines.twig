@@ -2,15 +2,6 @@
 
 {% block content %}
 
-<div class="bg-dark py-2 shadow-sm" style="border-bottom: 2px solid #cc0000;">
-            <div class="container d-flex justify-content-center gap-4">
-                <a href="index.php?route=user/dashboard" class="text-decoration-none py-1 {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? '#cc0000' : 'transparent' }};">Dashboard</a>
-                <a href="index.php?route=admin/users" class="text-decoration-none py-1 {{ controllerName == 'Users' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Users' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Clients</a>
-                <a href="index.php?route=admin/lines" class="text-decoration-none py-1 {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Lignes</a>
-                <a href="index.php?route=admin/stats" class="text-decoration-none py-1 {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Statistiques</a>
-            </div>
-    </div>
-
 {% if lines is empty %}
     <div class="alert alert-info mt-4">Aucune ligne trouvée.</div>
     
