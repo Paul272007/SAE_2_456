@@ -17,7 +17,7 @@ class AdminModel extends Model
     {
         $stats = [];
         
-        $sql = "SELECT COUNT(*) as nb FROM vik_client";
+        $sql = "SELECT COUNT(*) as nb FROM vik_client WHERE cli_num != 0";
         $stats['total_clients'] = $this->fetch($sql)['nb'] ?? 0;
 
         $sql = "SELECT COUNT(*) as nb FROM vik_reservation";
@@ -39,6 +39,7 @@ class AdminModel extends Model
         $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, COUNT(r.res_num) as nb_reservations, SUM(r.res_prix_tot) as total_depense
                 FROM vik_client c
                 JOIN vik_reservation r ON c.cli_num = r.cli_num
+                WHERE c.cli_num != 0
                 GROUP BY c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel
                 ORDER BY total_depense DESC, nb_reservations DESC
                 FETCH FIRST 5 ROWS ONLY";
@@ -65,7 +66,7 @@ class AdminModel extends Model
         $sql = "SELECT c.cli_num, c.cli_nom, c.cli_prenom, c.cli_courriel, TO_CHAR(c.cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, c.cli_nb_points_tot, c.typ_num, c.is_admin, c.is_deleted, t.typ_nom
                 FROM vik_client c
                 LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num 
-                WHERE 1=1 ";
+                WHERE c.cli_num != 0 ";
         $params = [];
 
         if ($filterActivity === 'inactive') {

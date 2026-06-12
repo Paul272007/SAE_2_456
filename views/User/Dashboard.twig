@@ -40,7 +40,7 @@
                             {% set textColor = 'text-dark' %}
                         {% endif %}
                         
-                        {% if not user.typ_nom or (user.cli_nb_points_tot < 10 and user.typ_nom|lower == 'nouveau') %}
+                        {% if not user.typ_nom %}
                             <span class="badge bg-secondary">Aucun</span>
                         {% else %}
                             <span class="badge {{ textColor }}" style="background-color: {{ badgeColor }};">{{ user.typ_nom }}</span>
