@@ -166,14 +166,18 @@ class ConfirmController extends Controller
             }
         }
 
+        // Calcul du ratio de réduction pour répartir équitablement sur chaque trajet
+        $discountRatio = $totalPrice > 0 ? $discountedPrice / $totalPrice : 1;
+
         // 2. Création des réservations
         foreach ($cart as $pending) {
+            $itemFinalPrice = round((float)$pending['prix_total'] * $discountRatio, 2);
             $resNum = $model->createReservation(
                 $cliNum,
                 (int)$pending['tar_num_tranche'],
                 (string)$pending['date'],
                 (int)$pending['nb_points'],
-                (float)$pending['prix_total']
+                $itemFinalPrice
             );
 
             // 3. Création de l'étape (segment réservé)

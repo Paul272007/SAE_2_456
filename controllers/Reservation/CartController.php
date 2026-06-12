@@ -25,6 +25,27 @@ class CartController extends Controller
         $this->data['total_price'] = $totalPrice;
         $this->data['connected'] = isset($_SESSION['userId']);
 
+        $gradeDiscountPercent = 0;
+        $gradeDiscountValue = 0.0;
+        $finalPrice = $totalPrice;
+
+        if ($this->data['connected']) {
+            // Include UserModel logic here, but we need the namespace
+            $userModel = new \Models\User\UserModel();
+            $user = $userModel->getUserById((int)$_SESSION['userId']);
+            $typReduc = (int)($user['typ_reduc'] ?? 0);
+            
+            if ($typReduc > 0) {
+                $gradeDiscountPercent = $typReduc;
+                $gradeDiscountValue = $totalPrice * ($typReduc / 100.0);
+                $finalPrice -= $gradeDiscountValue;
+            }
+        }
+
+        $this->data['grade_discount_percent'] = $gradeDiscountPercent;
+        $this->data['grade_discount_value'] = $gradeDiscountValue;
+        $this->data['final_price'] = $finalPrice;
+
         $this->render();
     }
 

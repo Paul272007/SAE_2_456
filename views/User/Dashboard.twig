@@ -26,6 +26,12 @@
                         {% if user.typ_nom|lower == 'nouveau' %}
                             {% set badgeColor = '#0dcaf0' %}
                             {% set textColor = 'text-dark' %}
+                        {% elseif user.typ_nom|lower == 'poussin' %}
+                            {% set badgeColor = '#ffc107' %}
+                            {% set textColor = 'text-dark' %}
+                        {% elseif user.typ_nom|lower == 'junior' %}
+                            {% set badgeColor = '#20c997' %}
+                            {% set textColor = 'text-white' %}
                         {% elseif user.typ_nom|lower == 'bronze' %}
                             {% set badgeColor = '#cd7f32' %}
                             {% set textColor = 'text-white' %}
