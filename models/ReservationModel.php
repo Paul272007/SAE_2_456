@@ -196,7 +196,10 @@ class ReservationModel extends Model
         $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
                 VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
         
-        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixTotal]);
+        // Force le format avec un point pour éviter les erreurs Oracle dues à la locale
+        $prixFormatte = number_format($prixTotal, 2, '.', '');
+        
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixFormatte]);
         
         return $nextId;
     }
