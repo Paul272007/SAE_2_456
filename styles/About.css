@@ -69,17 +69,14 @@
 
 .realisation-section .realisation-content {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 2rem;
-}
-
-.realisation-section .realisation-logo {
-    flex-shrink: 0;
+    gap: 1.5rem;
 }
 
 .calvacode-logo {
-    width: 120px;
-    height: 120px;
+    width: 180px;
+    height: 180px;
     object-fit: contain;
     border-radius: 8px;
     background: #e8e4e4;
@@ -88,15 +85,9 @@
 }
 
 .realisation-section p {
-    flex: 1;
-    margin-bottom: 0;
-}
-
-@media (max-width: 768px) {
-    .realisation-section .realisation-content {
-        flex-direction: column;
-        text-align: center;
-    }
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 @media (max-width: 768px) {
