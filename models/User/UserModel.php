@@ -34,7 +34,7 @@ class UserModel extends Model
     /**
      * Récupère l'historique des réservations d'un utilisateur.
      */
-  public function getUserReservations(int $cliNum): array
+    public function getUserReservations(int $cliNum): array
     {
         $sql = "SELECT r.res_num,
                     TO_CHAR(r.res_date, 'YYYY-MM-DD') as res_date,
@@ -51,7 +51,6 @@ class UserModel extends Model
 
         $tableData = $this->fetchAll($sql, [$cliNum]);
 
-        // Initialise tous les points dépensés à 0
         for ($i = 0; $i < count($tableData); $i++) {
             $tableData[$i]['res_nb_points_dep'] = 0;
         }
@@ -59,14 +58,12 @@ class UserModel extends Model
         $user = $this->getUserById($cliNum);
         $soldeCourant = $user['cli_nb_points_ec'];
 
-        // On commence à 1 car index 0 (la plus récente) est à 0 par défaut
         for ($i = 1; $i < count($tableData); $i++) {
-            $tableData[$i]['res_nb_points_dep'] = -(
+            $tableData[$i]['res_nb_points_dep'] = (
                 $soldeCourant
                 + $tableData[$i - 1]['res_nb_points_dep']
                 - $tableData[$i - 1]['res_nb_points']
             );
-            $soldeCourant = $tableData[$i]['res_nb_points_dep']; // ← met à jour pour la prochaine itération
         }
 
         return $tableData;
