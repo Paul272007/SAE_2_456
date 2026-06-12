@@ -11,15 +11,14 @@ use Core\Exceptions\ClientError;
 use Core\Exceptions\ClientErrorCode;
 use Core\Privilege;
 use Core\RequirePrivilege;
-use Models\UserModel;
+use Models\User\UserModel;
 
 #[RequirePrivilege(Privilege::USER)]
 class ProfileEditController extends Controller
 {
     public function get(): void
     {
-        require_once 'models/User/UserModel.php';
-        $model = new \Models\UserModel();
+        $model = new UserModel();
         $cliNum = (int)$_SESSION['userId'];
 
         $this->data['user'] = $model->getUserById($cliNum);
@@ -30,8 +29,7 @@ class ProfileEditController extends Controller
     public function post(): void
     {
         
-        require_once 'models/User/UserModel.php';
-        $model = new \Models\UserModel();
+        $model = new UserModel();
         $cliNum = (int)$_SESSION['userId'];
 
         // Info update
@@ -89,7 +87,6 @@ class ProfileEditController extends Controller
             $model->deleteUser($cliNum);
             session_destroy();
             redirect('index.php?route=home');
-            return;
         }
 
         redirect('index.php?route=user/dashboard');

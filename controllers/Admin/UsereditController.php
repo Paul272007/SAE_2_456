@@ -12,7 +12,7 @@ use Core\Exceptions\ClientErrorCode;
 use Core\Privilege;
 use Core\RequirePrivilege;
 use Models\Admin\AdminModel;
-use Models\UserModel; // For user details
+use Models\User\UserModel;
 
 #[RequirePrivilege(Privilege::ADMIN)]
 class UsereditController extends Controller
@@ -24,8 +24,7 @@ class UsereditController extends Controller
             redirect('index.php?route=admin/users');
         }
 
-        require_once 'models/User/UserModel.php';
-        $userModel = new \Models\UserModel();
+        $userModel = new UserModel();
         
         $this->data['user'] = $userModel->getUserById($cliNum);
         if (!$this->data['user']) {
@@ -52,8 +51,7 @@ class UsereditController extends Controller
             throw new ClientError(ClientErrorCode::BAD_REQUEST);
         }
 
-        require_once 'models/User/UserModel.php';
-        $userModel = new \Models\UserModel();
+        $userModel = new UserModel();
         $targetUser = $userModel->getUserById($cliNum);
         
         if ($targetUser && $targetUser['is_admin'] == 1) {
