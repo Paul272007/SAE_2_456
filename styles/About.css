@@ -79,8 +79,6 @@
     height: 180px;
     object-fit: contain;
     border-radius: 8px;
-    background: #e8e4e4;
-    border: 2px dashed #b8b0b0;
     display: block;
 }
 
