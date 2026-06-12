@@ -199,21 +199,22 @@ class ReservationModel extends Model
         int $tarNumTranche,
         string $date,
         int $nbPoints,
+        int $nbPointsDep,
         float $prixTotal
     ): int {
         // Obtenir le prochain ID de réservation (si on n'a pas de séquence)
-        $sqlId = "SELECT NVL(MAX(res_num), 0) + 1 AS next_id FROM vik_reservation";
-        $nextId = (int)$this->fetch($sqlId)['next_id'];
+        $result = $this->fetch("SELECT COALESCE(MAX(res_num), 0) + 1 AS next_id FROM vik_reservation");
+        $nextId = (int)$result['next_id'];
 
         $clientId = $cliNum ?? 0; // Guest ID si null
 
-        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_dep, res_prix_tot)
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?)";
         
         // Arrondi à l'entier (NUMBER(5) en BDD)
         $prixEntier = (int)round($prixTotal);
         
-        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixEntier]);
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $nbPointsDep, $prixEntier]);
         
         return $nextId;
     }
