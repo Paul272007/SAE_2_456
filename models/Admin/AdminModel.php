@@ -84,12 +84,19 @@ class AdminModel extends Model
         }
 
         if ($search !== '') {
-            $sql .= " AND (LOWER(c.cli_nom) LIKE ? OR LOWER(c.cli_prenom) LIKE ? OR LOWER(c.cli_courriel) LIKE ? OR TO_CHAR(c.cli_num) = ?) ";
-            $searchParam = '%' . strtolower($search) . '%';
+            $sql .= " AND (LOWER(c.cli_nom) LIKE ? 
+                        OR LOWER(c.cli_prenom) LIKE ? 
+                        OR LOWER(c.cli_prenom || ' ' || c.cli_nom) LIKE ? 
+                        OR LOWER(c.cli_nom || ' ' || c.cli_prenom) LIKE ? 
+                        OR LOWER(c.cli_courriel) LIKE ? 
+                        OR TRIM(TO_CHAR(c.cli_num)) = ?) ";
+            $searchParam = '%' . strtolower(trim($search)) . '%';
             $params[] = $searchParam;
             $params[] = $searchParam;
             $params[] = $searchParam;
-            $params[] = $search; // Pour la recherche par ID exact
+            $params[] = $searchParam;
+            $params[] = $searchParam;
+            $params[] = trim($search); // Pour la recherche par ID exact
         }
 
         $validSorts = [
