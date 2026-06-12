@@ -43,6 +43,8 @@ class SearchController extends Controller
                     foreach ($this->data['path']['segments'] as &$segment) {
                         $segment['date'] = $date;
                     }
+                } else {
+                    $this->data['error'] = "Aucun itinéraire trouvé pour ce trajet avec le critère sélectionné.";
                 }
             } else {
                 $this->data['error'] = "Les lieux de départ et d'arrivée doivent être différents.";

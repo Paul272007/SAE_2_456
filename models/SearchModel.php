@@ -15,10 +15,10 @@ class SearchModel extends Model
      */
     public function getCommunes(): array
     {
-        $sql = "SELECT DISTINCT c.com_code_insee, c.com_nom
+        $sql = "SELECT DISTINCT TRIM(c.com_code_insee) as com_code_insee, TRIM(c.com_nom) as com_nom
                 FROM vik_commune c
-                JOIN vik_noeud n ON n.com_code_insee_arret = c.com_code_insee
-                ORDER BY c.com_nom ASC";
+                JOIN vik_noeud n ON TRIM(n.com_code_insee_arret) = TRIM(c.com_code_insee)
+                ORDER BY com_nom ASC";
         return $this->fetchAll($sql);
     }
 
@@ -127,14 +127,16 @@ class SearchModel extends Model
             
             $weight = ($criterion === 'duration') ? (float)$edge['noe_duree_prochain'] : (float)$edge['noe_distance_prochain'];
             
-            // On ajoute l'arête (les données vik_noeud semblent représenter des segments orientés)
             if (isset($graph[$u])) {
                 $graph[$u][$v] = $weight;
             }
             
-            // S'il s'agit d'un réseau de bus classique, les trajets sont souvent bidirectionnels
-            // mais stockés comme des lignes différentes ou des nœuds séparés.
-            // On garde l'orientation telle quelle pour respecter les horaires de passage.
+            // Pour maximiser les chances de trouver un chemin sur un réseau parfois 
+            // partiellement renseigné, on peut autoriser le retour sur le même segment 
+            // (bidirectionnel) si la ligne le permet.
+            if (isset($graph[$v])) {
+                $graph[$v][$u] = $weight;
+            }
         }
 
         // 3. Ajouter les correspondances (Transferts entre lignes dans la même ville)
