@@ -307,4 +307,15 @@ class SearchModel extends Model
 
         return $graph;
     }
+
+    private function getNodesForCommune(string $codeInsee): array
+    {
+        $sql = "SELECT lig_num, com_code_insee_arret FROM vik_noeud WHERE com_code_insee_arret = ?";
+        $nodes = $this->fetchAll($sql, [$codeInsee]);
+        $result = [];
+        foreach ($nodes as $n) {
+            $result[] = $n['lig_num'] . '_' . $n['com_code_insee_arret'];
+        }
+        return $result;
+    }
 }
