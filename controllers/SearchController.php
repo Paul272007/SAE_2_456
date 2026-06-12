@@ -56,13 +56,12 @@ class SearchController extends Controller
 
     public function post(): void
     {
-        
         // Ajout du trajet trouvé au panier
         if (isset($_POST['add_to_cart'])) {
             $segmentsJson = $_POST['segments'] ?? '[]';
             $segments = json_decode($segmentsJson, true);
             $date = $_POST['date'] ?? date('Y-m-d');
-            
+
             if (is_array($segments) && !empty($segments)) {
                 if (!isset($_SESSION['cart'])) {
                     $_SESSION['cart'] = [];
@@ -78,17 +77,17 @@ class SearchController extends Controller
                         'nom_arrivee'    => $segment['nom_arrivee'],
                         'date'           => $date,
                         'distance'       => $segment['distance'],
-                        'tar_num_tranche'=> $segment['tar_num_tranche'],
+                        'tar_num_tranche'=> $segment['tar_num_tranche'] ?? 1,
                         'prix_total'     => $segment['prix'],
-                        'nb_points'      => (int)floor($segment['distance'] / 10), // 1 point per 10km
+                        'nb_points'      => (int)floor((float)$segment['distance'] / 10), // 1 point per 10km
                     ];
                 }
-                
+
                 $_SESSION['flash_success'] = "Itinéraire ajouté au panier.";
                 redirect('index.php?route=reservation/cart');
             }
         }
-        
+
         redirect('index.php?route=search');
     }
 }

@@ -18,6 +18,10 @@ class Database
         $dbConfig = Config::get('db');
         $this->pdo = new PDO("oci:dbname={$dbConfig['dbname']};charset={$dbConfig['charset']}", $dbConfig['user'], $dbConfig['passwd']);
         $this->pdo->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
+        // Forcer le point comme séparateur décimal pour éviter ORA-01722
+        $this->pdo->exec("ALTER SESSION SET NLS_NUMERIC_CHARACTERS = '. '");
     }
     public static function getInstance(): Database
     {
