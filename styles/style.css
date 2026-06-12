@@ -273,6 +273,7 @@ body {
     padding-top: 3rem;
     padding-bottom: 2rem;
     border-top: 4px solid #e53e3e;
+    margin-bottom: 0%;
 }
 
 .footer-heading {
@@ -317,7 +318,8 @@ body {
 }
 
 /* Restoring Red Buttons after merge */
-.btn-primary, .bg-primary {
+.btn-primary,
+.bg-primary {
     background-color: #cc0000 !important;
     border-color: #cc0000 !important;
     color: #fff !important;
@@ -368,21 +370,25 @@ a:hover {
         padding: 0 30px;
     }
 }
+
 /* Override for btn-outline-danger to prevent a:hover conflict */
 a.btn-outline-danger {
     color: #cc0000 !important;
     border-color: #cc0000 !important;
 }
+
 a.btn-outline-danger:hover {
     color: #fff !important;
     background-color: #cc0000 !important;
     text-decoration: none !important;
 }
+
 a.btn-danger {
     color: #fff !important;
     background-color: #cc0000 !important;
     border-color: #cc0000 !important;
 }
+
 a.btn-danger:hover {
     color: #fff !important;
     background-color: #a00000 !important;
