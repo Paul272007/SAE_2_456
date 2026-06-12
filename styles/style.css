@@ -340,7 +340,7 @@ a {
 
 a:hover {
     color: #a00000;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 /* =====================
