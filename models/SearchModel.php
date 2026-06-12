@@ -236,7 +236,11 @@ class SearchModel extends Model
             $totalDuration += $dur;
 
             // Fetch tarif info
-            $sql = "SELECT tar_num_tranche, tar_prix FROM vik_tarif WHERE tar_min_dist <= ? AND tar_max_dist >= ? FETCH FIRST 1 ROWS ONLY";
+            $sql = 'SELECT TAR_NUM_TRANCHE AS "tar_num_tranche",
+                           TAR_PRIX AS "tar_prix"
+                    FROM VIK_TARIF
+                    WHERE TAR_MIN_DIST <= ? AND TAR_MAX_DIST >= ?
+                    ORDER BY TAR_NUM_TRANCHE ASC';
             $tarif = $this->fetch($sql, [$dist, $dist]);
 
             $detailedSegments[] = [
@@ -247,8 +251,8 @@ class SearchModel extends Model
                 'nom_arrivee' => $names['end_name'] ?? $end,
                 'distance' => $dist,
                 'duration' => $dur,
-                'prix' => $tarif['tar_prix'] ?? 0,
-                'tar_num_tranche' => $tarif['tar_num_tranche'] ?? 1
+                'prix' => $tarif ? (float)$tarif['tar_prix'] : 0.0,
+                'tar_num_tranche' => $tarif ? (int)$tarif['tar_num_tranche'] : 1
             ];
         }
 

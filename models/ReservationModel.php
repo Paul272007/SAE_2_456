@@ -83,16 +83,18 @@ class ReservationModel extends Model
         $counting = false;
 
         foreach ($nodes as $node) {
-            if (trim((string)$node['code']) === trim($codeDepart)) {
+            $currentCode = trim((string)$node['code']);
+
+            if ($currentCode === trim($codeDepart)) {
                 $counting = true;
+            }
+
+            if ($currentCode === trim($codeArrivee)) {
+                break;
             }
 
             if ($counting) {
                 $distance += (float)($node['distance_prochain'] ?? 0);
-            }
-
-            if (trim((string)$node['code']) === trim($codeArrivee)) {
-                break;
             }
         }
 
