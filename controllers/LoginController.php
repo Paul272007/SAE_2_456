@@ -63,6 +63,39 @@ class LoginController extends Controller
             $_SESSION['flash_info'] = "Vos points de fidélité ont été réinitialisés car vous ne vous étiez pas connecté depuis plus d'un an.";
         }
 
+        // Check for grade upgrade
+        $types = $model->getClientTypes();
+        $currentTypeNum = (int)$user['typ_num'];
+        $pointsTot = (int)($user['cli_nb_points_tot'] ?? 0);
+        
+        // Trouver la limite du grade actuel
+        $currentLimit = -1;
+        foreach ($types as $t) {
+            if ((int)$t['typ_num'] === $currentTypeNum) {
+                $currentLimit = (int)$t['typ_pt_limite'];
+                break;
+            }
+        }
+
+        $newType = $currentTypeNum;
+        $newTypeName = '';
+
+        foreach ($types as $type) {
+            if ($pointsTot >= (int)$type['typ_pt_limite']) {
+                if ((int)$type['typ_num'] !== $currentTypeNum && (int)$type['typ_pt_limite'] > $currentLimit) {
+                    $newType = (int)$type['typ_num'];
+                    $newTypeName = $type['typ_nom'];
+                }
+                break; // Because it's DESC, the first match >= is the max grade they qualify for based on points
+            }
+        }
+
+        if ($newType !== $currentTypeNum && $newTypeName !== '') {
+            $model->updateUserType((int)$user['cli_num'], $newType);
+            $_SESSION['flash_success'] = "Félicitations ! Vous avez atteint le grade supérieur : $newTypeName.";
+            $user['typ_num'] = $newType;
+        }
+
         $_SESSION["userId"]   = $user["cli_num"];
         $_SESSION["username"] = $user["cli_prenom"] . ' ' . $user["cli_nom"];
         $_SESSION["role"]     = (int)($user["typ_num"] ?? 1);

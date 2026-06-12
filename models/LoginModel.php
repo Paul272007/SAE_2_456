@@ -48,4 +48,22 @@ class LoginModel extends Model
         $sql = "UPDATE vik_client SET cli_nb_points_ec = 0 WHERE cli_num = ?";
         $this->runQuery($sql, [$cliNum]);
     }
+
+    /**
+     * Récupère tous les types de clients triés par points limites décroissants.
+     */
+    public function getClientTypes(): array
+    {
+        $sql = "SELECT typ_num, typ_nom, typ_pt_limite FROM vik_type_client WHERE typ_pt_limite IS NOT NULL ORDER BY typ_pt_limite DESC";
+        return $this->fetchAll($sql);
+    }
+
+    /**
+     * Met à jour le grade d'un client.
+     */
+    public function updateUserType(int $cliNum, int $typNum): void
+    {
+        $sql = "UPDATE vik_client SET typ_num = ? WHERE cli_num = ?";
+        $this->runQuery($sql, [$typNum, $cliNum]);
+    }
 }
