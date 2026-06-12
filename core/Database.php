@@ -11,7 +11,7 @@ use PDO;
 class Database
 {
     private static ?Database $instance = null;
-    private PDO $pdo;
+    private ?PDO $pdo = null;
 
     private function __construct()
     {

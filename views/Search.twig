@@ -44,6 +44,7 @@
                     <select class="form-select" name="criterion" id="criterion">
                         <option value="duration" {{ search_criterion == 'duration' ? 'selected' : '' }}>Le plus rapide (Temps)</option>
                         <option value="distance" {{ search_criterion == 'distance' ? 'selected' : '' }}>Le plus court (Distance)</option>
+                        <option value="price" {{ search_criterion == 'price' ? 'selected' : '' }}>Le moins cher (Prix)</option>
                     </select>
                 </div>
 
@@ -63,7 +64,15 @@
     {% if path %}
         <div class="card shadow-sm border-0 mt-5">
             <div class="card-header bg-dark text-white py-3">
-                <h5 class="mb-0"><i class="bi bi-map"></i> Résultat : Trajet {{ path.criterion == 'duration' ? 'le plus rapide' : 'le plus court' }}</h5>
+                <h5 class="mb-0"><i class="bi bi-map"></i> Résultat : Trajet 
+                    {% if path.criterion == 'duration' %}
+                        le plus rapide
+                    {% elseif path.criterion == 'distance' %}
+                        le plus court
+                    {% else %}
+                        le moins cher
+                    {% endif %}
+                </h5>
             </div>
             <div class="card-body p-0">
                 <div class="row g-0">
