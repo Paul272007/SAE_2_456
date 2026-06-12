@@ -83,6 +83,8 @@ class SearchModel extends Model
         usort($allResults, function ($a, $b) use ($criterion) {
             if ($criterion === 'distance') {
                 return $a['total_distance'] <=> $b['total_distance'] ?: $a['total_duration'] <=> $b['total_duration'];
+            } elseif ($criterion === 'price') {
+                return $a['total_price'] <=> $b['total_price'] ?: $a['total_duration'] <=> $b['total_duration'];
             }
             return $a['total_duration'] <=> $b['total_duration'] ?: $a['total_distance'] <=> $b['total_distance'];
         });
