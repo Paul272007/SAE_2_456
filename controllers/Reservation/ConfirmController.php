@@ -198,6 +198,7 @@ class ConfirmController extends Controller
         unset($_SESSION['cart']);
 
         $_SESSION['flash_success'] = 'Réservation confirmée avec succès !';
-        redirect($cliNum !== null ? 'index.php?route=user/dashboard' : 'index.php');
+        // Si connecté -> dashboard. Si invité (non inscrit) -> lines.
+        redirect($cliNum !== null ? 'index.php?route=user/dashboard' : 'index.php?route=lines');
     }
 }
