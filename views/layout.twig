@@ -85,37 +85,41 @@
         </div>
     {% endif %}
 
-    <div class="container mt-3">
-        {% if error %}
-            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                {{ error }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <main class="{{ title == 'Accueil' ? 'container-fluid p-0 position-relative' : 'container mt-4' }}">
+        
+        {% if error or info or success or warning %}
+            <div class="{{ title == 'Accueil' ? 'position-absolute w-100' : 'mb-4' }}" style="{{ title == 'Accueil' ? 'top: 20px; z-index: 1050;' : '' }}">
+                <div class="container">
+                    {% if error %}
+                        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                            {{ error }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    {% if info %}
+                        <div class="alert alert-info alert-dismissible fade show shadow-sm" role="alert">
+                            {{ info }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    {% if success %}
+                        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                            {{ success }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+
+                    {% if warning %}
+                        <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+                            {{ warning }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         {% endif %}
-
-        {% if info %}
-            <div class="alert alert-info alert-dismissible fade show shadow-sm" role="alert">
-                {{ info }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-
-        {% if success %}
-            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                {{ success }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-
-        {% if warning %}
-            <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-                {{ warning }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-    </div>
-
-    <main class="{{ title == 'Accueil' ? 'container-fluid p-0' : 'container mt-4' }}">
 
         {% block content %}{% endblock %}
     </main>
