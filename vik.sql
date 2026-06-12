@@ -1,12 +1,12 @@
 -- -----------------------------------------------------------------------------
---             Génération d'une base de données pour
+--             Gï¿½nï¿½ration d'une base de donnï¿½es pour
 --                      Oracle Version '10g
 --                     ( 14/3/2026 16:12:07)
 -- -----------------------------------------------------------------------------
 --      Nom de la base : MLR1
 --      Projet : VikingTransport
 --      Auteur : EricPorcq
---      Date de dernière modification : 13/3/2026 18:07:49
+--      Date de derniï¿½re modification : 13/3/2026 18:07:49
 -- -----------------------------------------------------------------------------
 
 DROP TABLE VIK_DEPARTEMENT CASCADE CONSTRAINTS;
@@ -86,6 +86,8 @@ CREATE TABLE VIK_CLIENT
     CLI_NB_POINTS_EC NUMBER(4)  NULL,
     CLI_NB_POINTS_TOT NUMBER(6)  NULL,
     CLI_DATE_CONNEC DATE  NULL,
+    IS_ADMIN NUMBER(1) DEFAULT 0 NOT NULL,
+    IS_DELETED NUMBER(1) DEFAULT 0 NOT NULL,
 	CONSTRAINT PK_VIK_CLIENT PRIMARY KEY (CLI_NUM)  
 );
 
@@ -109,6 +111,7 @@ CREATE TABLE vik_reservation
     TAR_NUM_TRANCHE NUMBER(2)  NOT NULL,
     RES_DATE DATE  NULL,
     RES_NB_POINTS NUMBER(3)  NULL,
+    RES_NB_POINTS_DEP NUMBER(3) NULL,
     RES_PRIX_TOT NUMBER(5)  NULL,
 	CONSTRAINT PK_vik_reservation PRIMARY KEY (CLI_NUM, RES_NUM)  
 );
@@ -265,7 +268,7 @@ insert into vik_client values ( '7'   , '2' , '14' , 'MARIE'        , 'Josiane' 
 insert into vik_client values ( '8'   , '2' , '14' , 'DURAND'       , 'Paul'      , 'Ifs'        , '0033231202020' , 'paul.durand@wanadoo.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '38'  , '58'    , to_date('28/03/2023','dd/mm/yyyy') );
 insert into vik_client values ( '9'   , '2' , '61' , 'POULEQ'       , 'Patrick'   , 'Flers'      , '0033612202021' , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '106' , '306'   , to_date('16/03/2023','dd/mm/yyyy') );
 insert into vik_client values ( '10'  , '3' , '61' , 'NEIGE'        , 'Blanche'   , 'Flers'      , '0033612202022' , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '9'   , '3410'  , to_date('10/03/2023','dd/mm/yyyy') );
-insert into vik_client values ( '11'  , '3' , '61' , 'ESCARRE'      , 'Stéphane'  , 'Flers'      , ''              , 'sescarre@wanadogou.ke'    , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '95'  , '3795'  , to_date('09/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '11'  , '3' , '61' , 'ESCARRE'      , 'Stï¿½phane'  , 'Flers'      , ''              , 'sescarre@wanadogou.ke'    , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '95'  , '3795'  , to_date('09/04/2023','dd/mm/yyyy') );
 insert into vik_client values ( '13'  , '1' , '50' , 'SUPORMOI'     , 'Sylvie'    , 'Cherbourg'  , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '8'   , '8'     , to_date('14/08/2022','dd/mm/yyyy') );
 insert into vik_client values ( '16'  , '2' , '14' , 'LITON'        , 'Samir'     , 'Ifs'        , '0033123888456' , 'samirliton@orage.fr'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '24'  , '44'    , to_date('15/10/2022','dd/mm/yyyy') );
 insert into vik_client values ( '18'  , '2' , '14' , 'DURAND'       , 'Simone'    , 'Ifs'        , '0033729113115' , 'simone.durand@gmal.com'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '65'  , '65'    , to_date('13/02/2023','dd/mm/yyyy') );
@@ -275,10 +278,10 @@ insert into vik_client values ( '26'  , '3' , '14' , 'GZAGUEE'      , 'Suzie'   
 insert into vik_client values ( '27'  , '4' , '76' , 'NAGE'         , 'Icare'     , 'Rouen'      , '0033619003100' , 'icarenage@gmal.com'       , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '46'  , '13506' , to_date('05/04/2023','dd/mm/yyyy') );
 insert into vik_client values ( '31'  , '1' , '14' , 'SUPLONG'      , 'Arthur'    , 'Boulon'     , '0033666004007' , 'supdeboulon@gmal.com'     , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '2'   , '2'     , to_date('05/04/2023','dd/mm/yyyy') );
 insert into vik_client values ( '33'  , '2' , '50' , 'TALUT'        , 'Jean'      , 'Cherbourg'  , ''              , '4jeantalut@gmal.com'      , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '81'  , '198'   , to_date('13/04/2023','dd/mm/yyyy') );
-insert into vik_client values ( '35'  , '3' , '50' , 'DEWAERE'      , 'Marlène'   , 'Valognes'   , ''              , 'marlenedewaere@gmal.com'  , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '95'  , '3505'  , to_date('12/04/2023','dd/mm/yyyy') );
+insert into vik_client values ( '35'  , '3' , '50' , 'DEWAERE'      , 'Marlï¿½ne'   , 'Valognes'   , ''              , 'marlenedewaere@gmal.com'  , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '95'  , '3505'  , to_date('12/04/2023','dd/mm/yyyy') );
 insert into vik_client values ( '38'  , '5' , '50' , 'RIVES'        , 'Chiquita'  , 'Taillepied' , '0033688241309' , 'ChiquitaRives@gmal.com'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '58000' , to_date('15/10/2022','dd/mm/yyyy') );
 insert into vik_client values ( '40'  , '1' , '61' , 'POIGNON'      , 'Vincent'   , 'Flers'      , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/05/2022','dd/mm/yyyy') );
-insert into vik_client values ( '41'  , '1' , '61' , 'DE THUNE'     , 'Aplu'      , 'Alençon'    , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/04/2022','dd/mm/yyyy') );
+insert into vik_client values ( '41'  , '1' , '61' , 'DE THUNE'     , 'Aplu'      , 'Alenï¿½on'    , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/04/2022','dd/mm/yyyy') );
 insert into vik_client values ( '42'  , '1' , '14' , 'CANTE'        , 'Hermine'   , 'Caen'       , ''              , ''                         , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '0'   , '0'     , to_date('01/09/2022','dd/mm/yyyy') );
 insert into vik_client values ( '101' , '1' , '14' , 'DUPONT'       , 'Luc'       , 'Caen'       , '0600000001'    , 'luc.dupont@mail.fr'       , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '5'   , '120'   , to_date('10/03/2026','dd/mm/yyyy') );
 insert into vik_client values ( '102' , '2' , '76' , 'LEMAIRE'      , 'Sophie'    , 'Rouen'      , '0600000002'    , 'sophie.lemaire@mail.fr'   , '$2y$12$9bROGRWf0a8O3JxnqvOqM.Aga1eKMLZM1KyFbTH99JPOqWxK1VhGG' , '10'  , '210'   , to_date('12/03/2026','dd/mm/yyyy') );
@@ -305,7 +308,7 @@ insert into vik_tarif values ( 11 , 161 , 200 , 70 );
 insert into vik_tarif values ( 12 , 201 , 300 , 80 );
 insert into vik_tarif values ( 13 , 301 , 500 , 90 );
 
-insert into vik_commune values ( '61001' , '61' , 'Alençon'                        , '25744'  );
+insert into vik_commune values ( '61001' , '61' , 'Alenï¿½on'                        , '25744'  );
 insert into vik_commune values ( '61006' , '61' , 'Argentan'                       , '13401'  );
 insert into vik_commune values ( '14027' , '14' , 'Aunay-sur-Odon'                 , '3192'   );
 insert into vik_commune values ( '50025' , '50' , 'Avranches'                      , '10277'  );
@@ -313,17 +316,17 @@ insert into vik_commune values ( '61483' , '61' , 'Bagnoles de l''Orne Normandie
 insert into vik_commune values ( '50031' , '50' , 'Barneville-Carteret'            , '2214'   );
 insert into vik_commune values ( '14047' , '14' , 'Bayeux'                         , '12640'  );
 insert into vik_commune values ( '27051' , '27' , 'Beaumont-le-Roger'              , '2791'   );
-insert into vik_commune values ( '61038' , '61' , 'Bellême'                        , '2371'   );
+insert into vik_commune values ( '61038' , '61' , 'Bellï¿½me'                        , '2371'   );
 insert into vik_commune values ( '27056' , '27' , 'Bernay'                         , '9654'   );
 insert into vik_commune values ( '76114' , '76' , 'Bolbec'                         , '11551'  );
-insert into vik_commune values ( '78107' , '78' , 'Bréval'                         , '1901'   );
+insert into vik_commune values ( '78107' , '78' , 'Brï¿½val'                         , '1901'   );
 insert into vik_commune values ( '61063' , '61' , 'Briouze'                        , '1510'   );
 insert into vik_commune values ( '76146' , '76' , 'Buchy'                          , '2820'   );
 insert into vik_commune values ( '14118' , '14' , 'Caen'                           , '107250' );
 insert into vik_commune values ( '50099' , '50' , 'Carentan-les-Marais'            , '10227'  );
-insert into vik_commune values ( '14143' , '14' , 'Caumont-l''Éventé'              , '1346'   );
+insert into vik_commune values ( '14143' , '14' , 'Caumont-l''ï¿½ventï¿½'              , '1346'   );
 insert into vik_commune values ( '50129' , '50' , 'Cherbourg-en-Cotentin'          , '77789'  );
-insert into vik_commune values ( '14174' , '14' , 'Condé-en-Normandie'             , '6296'   );
+insert into vik_commune values ( '14174' , '14' , 'Condï¿½-en-Normandie'             , '6296'   );
 insert into vik_commune values ( '14191' , '14' , 'Courseulles-sur-Mer'            , '4185'   );
 insert into vik_commune values ( '50147' , '50' , 'Coutances'                      , '8380'   );
 insert into vik_commune values ( '14220' , '14' , 'Deauville'                      , '3567'   );
@@ -332,12 +335,12 @@ insert into vik_commune values ( '61700' , '61' , 'Domfront en Poiraie'         
 insert into vik_commune values ( '28134' , '28' , 'Dreux'                          , '30744'  );
 insert into vik_commune values ( '76231' , '76' , 'Elbeuf'                         , '16087'  );
 insert into vik_commune values ( '27218' , '27' , 'Epaignes'                       , '1561'   );
-insert into vik_commune values ( '27229' , '27' , 'Évreux'                         , '46869'  );
+insert into vik_commune values ( '27229' , '27' , 'ï¿½vreux'                         , '46869'  );
 insert into vik_commune values ( '14258' , '14' , 'Falaise'                        , '7849'   );
-insert into vik_commune values ( '76259' , '76' , 'Fécamp'                         , '18054'  );
+insert into vik_commune values ( '76259' , '76' , 'Fï¿½camp'                         , '18054'  );
 insert into vik_commune values ( '50184' , '50' , 'Flamanville'                    , '1767'   );
 insert into vik_commune values ( '61169' , '61' , 'Flers'                          , '14589'  );
-insert into vik_commune values ( '61181' , '61' , 'Gacé'                           , '1796'   );
+insert into vik_commune values ( '61181' , '61' , 'Gacï¿½'                           , '1796'   );
 insert into vik_commune values ( '27275' , '27' , 'Gaillon'                        , '6833'   );
 insert into vik_commune values ( '80373' , '80' , 'Gamaches'                       , '2461'   );
 insert into vik_commune values ( '50196' , '50' , 'Gatteville-le-Phare'            , '483'    );
@@ -348,41 +351,41 @@ insert into vik_commune values ( '50218' , '50' , 'Granville'                   
 insert into vik_commune values ( '14333' , '14' , 'Honfleur'                       , '6742'   );
 insert into vik_commune values ( '61214' , '61' , 'L''Aigle'                       , '7903'   );
 insert into vik_commune values ( '27309' , '27' , 'L''habit'                       , '502'    );
-insert into vik_commune values ( '61168' , '61' , 'La Ferté Macé'                  , '5138'   );
+insert into vik_commune values ( '61168' , '61' , 'La Fertï¿½ Macï¿½'                  , '5138'   );
 insert into vik_commune values ( '50041' , '50' , 'La Hague'                       , '11257'  );
 insert into vik_commune values ( '76351' , '76' , 'Le Havre'                       , '165830' );
 insert into vik_commune values ( '50353' , '50' , 'Le Mont-Saint-Michel'           , '27'     );
-insert into vik_commune values ( '76711' , '76' , 'Le Tréport'                     , '4441'   );
+insert into vik_commune values ( '76711' , '76' , 'Le Trï¿½port'                     , '4441'   );
 insert into vik_commune values ( '14366' , '14' , 'Lisieux'                        , '19755'  );
 insert into vik_commune values ( '14367' , '14' , 'Lison'                          , '437'    );
-insert into vik_commune values ( '76392' , '76' , 'Londinières'                    , '1253'   );
+insert into vik_commune values ( '76392' , '76' , 'Londiniï¿½res'                    , '1253'   );
 insert into vik_commune values ( '27375' , '27' , 'Louviers'                       , '18636'  );
 insert into vik_commune values ( '72180' , '72' , 'Mamers'                         , '5082'   );
 insert into vik_commune values ( '27198' , '27' , 'Mesnils-sur-Iton'               , '6149'   );
-insert into vik_commune values ( '14431' , '14' , 'Mézidon-Canon'                  , '4779'   );
+insert into vik_commune values ( '14431' , '14' , 'Mï¿½zidon-Canon'                  , '4779'   );
 insert into vik_commune values ( '61293' , '61' , 'Mortagne-au-Perche'             , '3758'   );
 insert into vik_commune values ( '14456' , '14' , 'Moult-Chicheboville'            , '3444'   );
-insert into vik_commune values ( '76462' , '76' , 'Neufchâtel-en-Bray'             , '4646'   );
+insert into vik_commune values ( '76462' , '76' , 'Neufchï¿½tel-en-Bray'             , '4646'   );
 insert into vik_commune values ( '28280' , '28' , 'Nogent-le-Rotrou'               , '9433'   );
 insert into vik_commune values ( '14478' , '14' , 'Orbec'                          , '1943'   );
 insert into vik_commune values ( '27448' , '27' , 'Pacy-sur-Eure'                  , '5042'   );
-insert into vik_commune values ( '50394' , '50' , 'Périers'                        , '2244'   );
+insert into vik_commune values ( '50394' , '50' , 'Pï¿½riers'                        , '2244'   );
 insert into vik_commune values ( '76618' , '76' , 'Petit-Caux'                     , '9654'   );
 insert into vik_commune values ( '27467' , '27' , 'Pont-Audemer'                   , '9891'   );
-insert into vik_commune values ( '14514' , '14' , 'Pont-l''Évêque'                 , '4790'   );
+insert into vik_commune values ( '14514' , '14' , 'Pont-l''ï¿½vï¿½que'                 , '4790'   );
 insert into vik_commune values ( '76540' , '76' , 'Rouen'                          , '114187' );
-insert into vik_commune values ( '50502' , '50' , 'Saint-Lô'                       , '19206'  );
+insert into vik_commune values ( '50502' , '50' , 'Saint-Lï¿½'                       , '19206'  );
 insert into vik_commune values ( '14654' , '14' , 'Saint-Pierre-en-Auge'           , '7325'   );
 insert into vik_commune values ( '76655' , '76' , 'Saint-Valery-en-Caux'           , '3906'   );
-insert into vik_commune values ( '61464' , '61' , 'Sées'                           , '4199'   );
+insert into vik_commune values ( '61464' , '61' , 'Sï¿½es'                           , '4199'   );
 insert into vik_commune values ( '50587' , '50' , 'Taillepied'                     , '16'     );
 insert into vik_commune values ( '61486' , '61' , 'Tinchebray-Bocage'              , '4896'   );
-insert into vik_commune values ( '76700' , '76' , 'Tôtes'                          , '1576'   );
+insert into vik_commune values ( '76700' , '76' , 'Tï¿½tes'                          , '1576'   );
 insert into vik_commune values ( '27701' , '27' , 'Val-de-Reuil'                   , '12702'  );
 insert into vik_commune values ( '50615' , '50' , 'Valognes'                       , '6802'   );
 insert into vik_commune values ( '27679' , '27' , 'Verneuil d''Avre et d''Iton'    , '7374'   );
 insert into vik_commune values ( '27681' , '27' , 'Vernon'                         , '24056'  );
-insert into vik_commune values ( '50639' , '50' , 'Villedieu-les-Poêles-Rouffigny' , '3849'   );
+insert into vik_commune values ( '50639' , '50' , 'Villedieu-les-Poï¿½les-Rouffigny' , '3849'   );
 insert into vik_commune values ( '61508' , '61' , 'Vimoutiers'                     , '3096'   );
 insert into vik_commune values ( '14762' , '14' , 'Vire Normandie'                 , '16935'  );
 insert into vik_commune values ( '76758' , '76' , 'Yvetot'                         , '11280'  );
