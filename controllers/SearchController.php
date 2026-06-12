@@ -32,16 +32,18 @@ class SearchController extends Controller
             $this->data['search_time'] = $time;
             
             if ($depart !== $arrivee) {
-                $path = $model->findPath($depart, $arrivee, $criterion);
-                $this->data['path'] = $path;
+                $paths = $model->findPaths($depart, $arrivee, $criterion, $time);
+                $this->data['paths'] = $paths;
                 $this->data['search_depart'] = $depart;
                 $this->data['search_arrivee'] = $arrivee;
                 $this->data['search_criterion'] = $criterion;
                 
-                if ($path) {
+                if (!empty($paths)) {
                     // Pass the selected date to segments for cart adding
-                    foreach ($this->data['path']['segments'] as &$segment) {
-                        $segment['date'] = $date;
+                    foreach ($this->data['paths'] as &$p) {
+                        foreach ($p['segments'] as &$segment) {
+                            $segment['date'] = $date;
+                        }
                     }
                 }
             } else {
