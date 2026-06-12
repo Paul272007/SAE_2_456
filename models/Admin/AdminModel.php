@@ -44,7 +44,7 @@ class AdminModel extends Model
      */
     public function getUsers(bool $onlyInactive = false): array
     {
-        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, cli_date_connec, typ_num
+        $sql = "SELECT cli_num, cli_nom, cli_prenom, cli_courriel, TO_CHAR(cli_date_connec, 'YYYY-MM-DD') as cli_date_connec, typ_num
                 FROM vik_client ";
                 
         // Inactif : pas connecté depuis plus de 6 mois (180 jours)
@@ -64,5 +64,24 @@ class AdminModel extends Model
     {
         $sql = "DELETE FROM vik_client WHERE cli_num = ?";
         $this->runQuery($sql, [$cliNum]);
+    }
+
+    public function updateScheduleTime(string $ligNum, string $codeArret, string $oldHeureHM, string $newHeureHM): int
+    {
+        $sql = "UPDATE vik_noeud 
+                SET noe_heure_passage = TO_DATE(TO_CHAR(noe_heure_passage, 'YYYY-MM-DD') || ' ' || :new_heure, 'YYYY-MM-DD HH24:MI') 
+                WHERE lig_num = :lig_num 
+                AND com_code_insee_arret = :arret 
+                AND TO_CHAR(noe_heure_passage, 'HH24:MI') = :old_heure";
+                
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            'new_heure' => $newHeureHM,
+            'lig_num'   => $ligNum,
+            'arret'     => $codeArret,
+            'old_heure' => $oldHeureHM
+        ]);
+        
+        return $stmt->rowCount(); 
     }
 }

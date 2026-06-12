@@ -10,11 +10,11 @@
     {% if lines is empty %}
         <div class="alert alert-info">Aucune ligne disponible pour le moment.</div>
     {% else %}
-        <div class="accordion-list">
+        <div class="line-accordion-list">
             {% for line in lines %}
-                <div class="accordion-item">
-                    <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
-                        <div class="accordion-header-left">
+                <div class="line-accordion-item">
+                    <div class="line-accordion-header" onclick="this.parentElement.classList.toggle('open')">
+                        <div class="line-accordion-header-left">
                             <span class="line-badge">{{ line.lig_num }}</span>
                             <span>{{ line.commune_depart }} → {{ line.commune_arrivee }}</span>
                         </div>
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     
-                    <div class="accordion-body">
+                    <div class="line-accordion-body">
                         <div class="d-flex justify-content-end mb-3 mt-2">
                             <a href="index.php?route=reservation&lig_num={{ line.lig_num }}" class="btn btn-primary btn-sm">
                                 Réserver sur cette ligne

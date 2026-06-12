@@ -31,6 +31,7 @@ class DashboardController extends Controller
         $this->data['user'] = $user;
         $this->data['reservations'] = $reservations;
         $this->data['username'] = $_SESSION['username'];
+        $this->data['isAdmin'] = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] === 1;
 
         $this->render();
     }
