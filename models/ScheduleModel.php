@@ -46,7 +46,7 @@ class ScheduleModel extends Model
         $tableData= $this->fetchAll($sql, [$ligNum, $ligNum]);
 
         foreach($tableData as $data){
-            echo $data['com_nom'];
+            echo $data['arret_nom'];
             echo "|";
         }
         echo "-----------------------";
