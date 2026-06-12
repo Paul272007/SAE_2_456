@@ -30,13 +30,78 @@ class SearchModel extends Model
      */
     public function findPaths(string $startCode, string $endCode, string $criterion = 'duration', string $time = '00:00'): array
     {
-        $graph = $this->buildGraph($criterion);
         $startNodes = $this->getNodesForCommune($startCode);
         $endNodes = $this->getNodesForCommune($endCode);
 
         if (empty($startNodes) || empty($endNodes)) {
             return []; 
         }
+
+        // Try both criteria to find candidate paths
+        $candidateSegments = [];
+        foreach (['duration', 'distance'] as $crit) {
+            $segs = $this->dijkstraPath($startNodes, $endNodes, $crit);
+            if (!empty($segs)) {
+                $key = $this->segmentsKey($segs);
+                $candidateSegments[$key] = $segs;
+            }
+        }
+
+        if (empty($candidateSegments)) return [];
+
+        // Fetch line data for all segments
+        $lineData = [];
+        foreach ($candidateSegments as $segments) {
+            foreach ($segments as $seg) {
+                if (!isset($lineData[$seg['lig_num']])) {
+                    $sql = "SELECT com_code_insee_arret, com_code_insee_suivant, TO_CHAR(noe_heure_passage, 'HH24:MI') as noe_heure_passage, noe_duree_prochain, noe_distance_prochain 
+                            FROM vik_noeud WHERE TRIM(lig_num) = ?";
+                    $lineData[$seg['lig_num']] = $this->fetchAll($sql, [$seg['lig_num']]);
+                }
+            }
+        }
+
+        // Build up to 3 schedule instances per candidate path
+        $allResults = [];
+        $seenKeys = [];
+        foreach ($candidateSegments as $segments) {
+            $searchTime = $time;
+            for ($i = 0; $i < 3; $i++) {
+                $instance = $this->buildPathInstance($segments, $lineData, $searchTime, $criterion);
+                if (!$instance) break;
+                
+                $instanceKey = $instance['heure_depart'] . '_' . $instance['heure_arrivee'] . '_' . $instance['total_distance'];
+                if (!isset($seenKeys[$instanceKey])) {
+                    $seenKeys[$instanceKey] = true;
+                    $allResults[] = $instance;
+                }
+                $searchTime = $this->addMinutes($instance['segments'][0]['heure_depart'], 1);
+            }
+        }
+
+        // Sort by chosen criterion
+        usort($allResults, function ($a, $b) use ($criterion) {
+            if ($criterion === 'distance') {
+                return $a['total_distance'] <=> $b['total_distance'] ?: $a['total_duration'] <=> $b['total_duration'];
+            }
+            return $a['total_duration'] <=> $b['total_duration'] ?: $a['total_distance'] <=> $b['total_distance'];
+        });
+
+        return array_slice($allResults, 0, 5);
+    }
+
+    private function segmentsKey(array $segments): string
+    {
+        $parts = [];
+        foreach ($segments as $seg) {
+            $parts[] = $seg['lig_num'] . ':' . implode('-', $seg['stops']);
+        }
+        return implode('|', $parts);
+    }
+
+    private function dijkstraPath(array $startNodes, array $endNodes, string $criterion): array
+    {
+        $graph = $this->buildGraph($criterion);
 
         $distances = [];
         $previous = [];
@@ -62,9 +127,7 @@ class SearchModel extends Model
             $distU = $queue[$u];
             unset($queue[$u]);
 
-            if ($distU === INF) {
-                break;
-            }
+            if ($distU === INF) break;
 
             if (in_array($u, $endNodes)) {
                 $current = $u;
@@ -92,6 +155,7 @@ class SearchModel extends Model
 
         if (empty($pathNodeIds)) return [];
 
+        // Group node IDs into segments by line
         $segments = [];
         $currentSegment = null;
 
@@ -112,26 +176,7 @@ class SearchModel extends Model
             $segments[] = $currentSegment;
         }
 
-        $lineData = [];
-        foreach ($segments as $seg) {
-            if (!isset($lineData[$seg['lig_num']])) {
-                $sql = "SELECT com_code_insee_arret, com_code_insee_suivant, TO_CHAR(noe_heure_passage, 'HH24:MI') as noe_heure_passage, noe_duree_prochain, noe_distance_prochain 
-                        FROM vik_noeud WHERE TRIM(lig_num) = ?";
-                $lineData[$seg['lig_num']] = $this->fetchAll($sql, [$seg['lig_num']]);
-            }
-        }
-
-        $results = [];
-        $searchTime = $time;
-        for ($i = 0; $i < 3; $i++) {
-            $instance = $this->buildPathInstance($segments, $lineData, $searchTime, $criterion);
-            if (!$instance) break;
-            
-            $results[] = $instance;
-            $searchTime = $this->addMinutes($instance['segments'][0]['heure_depart'], 1);
-        }
-
-        return $results;
+        return $segments;
     }
 
     private function buildPathInstance(array $segments, array $lineData, string $startTime, string $criterion): ?array
@@ -226,16 +271,19 @@ class SearchModel extends Model
         if (empty($detailedSegments)) return null;
 
         $numTransfers = max(0, count($detailedSegments) - 1);
+        $realDeparture = $detailedSegments[0]['heure_depart'];
+        $realArrival = end($detailedSegments)['heure_arrivee'];
+        $wallClockDuration = $this->diffMinutes($realDeparture, $realArrival);
         
         return [
             'segments' => $detailedSegments,
             'total_distance' => $totalDistance,
-            'total_duration' => $totalDuration, 
+            'total_duration' => $wallClockDuration, 
             'total_price' => array_sum(array_column($detailedSegments, 'prix')),
             'num_transfers' => $numTransfers,
             'criterion' => $criterion,
-            'heure_depart' => $detailedSegments[0]['heure_depart'],
-            'heure_arrivee' => end($detailedSegments)['heure_arrivee']
+            'heure_depart' => $realDeparture,
+            'heure_arrivee' => $realArrival
         ];
     }
 
