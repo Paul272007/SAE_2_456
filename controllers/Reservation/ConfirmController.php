@@ -58,7 +58,7 @@ class ConfirmController extends Controller
 
             $typReduc = (int)($user['typ_reduc'] ?? 100);
             if ($typReduc === 0) $typReduc = 100;
-            
+
             if ($typReduc > 0 && $typReduc < 100) {
                 $gradeDiscountPercent = 100 - $typReduc;
                 $discountedPrice = round($totalPrice * ($typReduc / 100.0));
@@ -69,7 +69,7 @@ class ConfirmController extends Controller
             $bestReduction = null;
             
             foreach ($reductions as $red) {
-                if ($pointsAvailable >= (int)$red['red_nb_points']) {
+                if ($pointsAvailable >= (int)$red['red_nb_points'] && $discountedPrice >= (float)$red['red_valeur']) {
                     $bestReduction = $red;
                     break;
                 }
@@ -78,15 +78,8 @@ class ConfirmController extends Controller
             $this->data['points_available'] = $pointsAvailable;
             
             if ($bestReduction) {
-                $pointsToUse = (int)$bestReduction['red_nb_points'];
-                $discountValue = (float)$bestReduction['red_valeur'];
-                
-                if ($discountValue > $discountedPrice) {
-                    $discountValue = $discountedPrice;
-                }
-                
-                $this->data['points_discount_value'] = $discountValue;
-                $this->data['points_to_use'] = $pointsToUse;
+                $this->data['points_discount_value'] = (float)$bestReduction['red_valeur'];
+                $this->data['points_to_use'] = (int)$bestReduction['red_nb_points'];
             } else {
                 $this->data['points_discount_value'] = 0;
                 $this->data['points_to_use'] = 0;
@@ -143,13 +136,9 @@ class ConfirmController extends Controller
                 $reductions = $model->getReductions();
                 
                 foreach ($reductions as $red) {
-                    if ($pointsAvailable >= (int)$red['red_nb_points']) {
+                    if ($pointsAvailable >= (int)$red['red_nb_points'] && $discountedPrice >= (float)$red['red_valeur']) {
                         $pointsUsed = (int)$red['red_nb_points'];
-                        $discountValue = (float)$red['red_valeur'];
-                        if ($discountValue > $discountedPrice) {
-                            $discountValue = $discountedPrice;
-                        }
-                        $discountedPrice -= $discountValue;
+                        $discountedPrice -= (float)$red['red_valeur'];
                         break;
                     }
                 }

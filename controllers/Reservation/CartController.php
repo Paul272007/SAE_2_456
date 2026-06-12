@@ -9,6 +9,7 @@ namespace Controllers\Reservation;
 use Core\Controller;
 use Core\Privilege;
 use Core\RequirePrivilege;
+use Models\User\UserModel;
 
 #[RequirePrivilege(Privilege::GUEST)]
 class CartController extends Controller
@@ -31,7 +32,7 @@ class CartController extends Controller
 
         if ($this->data['connected']) {
             // Include UserModel logic here, but we need the namespace
-            $userModel = new \Models\User\UserModel();
+            $userModel = new UserModel();
             $user = $userModel->getUserById((int)$_SESSION['userId']);
             $typReduc = (int)($user['typ_reduc'] ?? 100);
             
@@ -66,14 +67,10 @@ class CartController extends Controller
                 $_SESSION['cart'] = array_values($_SESSION['cart']); // Reindex array
                 $_SESSION['flash_success'] = "Trajet retiré du panier.";
             }
-            redirect('index.php?route=reservation/cart');
         } elseif ($action === 'clear') {
             $_SESSION['cart'] = [];
             $_SESSION['flash_success'] = "Panier vidé.";
-            redirect('index.php?route=reservation/cart');
-        } else {
-            // Unexpected action
-            redirect('index.php?route=reservation/cart');
         }
+        redirect('index.php?route=reservation/cart');
     }
 }
