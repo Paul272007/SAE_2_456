@@ -55,8 +55,8 @@
                                 <strong>{{ stop.arret_nom }}</strong>
                             </td>
                             <td>
-                                <input type="hidden" name="old_heure[]" value="{{ stop.noe_heure_passage|slice(-8) }}">
-                                <input type="time" name="new_heure[]" class="form-control" step="1" value="{{ stop.noe_heure_passage|slice(-8) }}" required>
+                                <input type="hidden" name="old_heure[]" value="{{ stop.noe_heure_passage|slice(0, 5) }}">
+                                <input type="time" name="new_heure[]" class="form-control" value="{{ stop.noe_heure_passage|slice(0, 5) }}" required>
                             </td>
                         </tr>
                     {% else %}

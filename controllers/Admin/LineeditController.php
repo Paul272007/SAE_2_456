@@ -31,7 +31,6 @@ class LineeditController extends Controller
         $fullSchedule = $scheduleModel->getSchedule($ligNum);
         $this->data['lig_num'] = $ligNum;
 
-        // Génération du menu déroulant uniquement pour les arrêts
         $uniqueStops = [];
         foreach ($fullSchedule as $stop) {
             $code = $stop['com_code_insee_arret'];
@@ -47,7 +46,6 @@ class LineeditController extends Controller
         $selectedArret = isset($_GET['arret']) ? trim((string)$_GET['arret']) : null;
         $this->data['selected_arret'] = $selectedArret;
 
-        // Filtrage des arrêts
         if ($selectedArret) {
             $filteredSchedule = array_filter($fullSchedule, function($stop) use ($selectedArret) {
                 return $stop['com_code_insee_arret'] === $selectedArret;
@@ -73,25 +71,32 @@ class LineeditController extends Controller
         $selectedArret = $_POST['selected_arret'] ?? '';
 
         $adminModel = new AdminModel();
+        $erreurs = 0;
+        $succes = 0;
 
         for ($i = 0; $i < count($arrets); $i++) {
-            $codeArret = $arrets[$i];
+            $codeArret = trim($arrets[$i]);
             
-            // Extraction stricte des 8 derniers caractères (sécurité si la date est incluse)
-            $oldH = substr(trim($oldHeures[$i]), -8);
-            $newH = trim($newHeures[$i]);
+            $oldH = substr(trim($oldHeures[$i]), 0, 5); 
+            $newH = substr(trim($newHeures[$i]), 0, 5);
 
-            // Ajout des secondes manquantes
-            if (strlen($oldH) === 5) $oldH .= ':00';
-            if (strlen($newH) === 5) $newH .= ':00';
-
-            // Mise à jour de la BDD
-            if ($oldH !== $newH && !empty($newH)) {
-                $adminModel->updateScheduleTime($ligNum, $codeArret, $oldH, $newH);
+            if ($oldH !== $newH && !empty($newH) && preg_match('/^\d{2}:\d{2}$/', $newH)) {
+                $lignesModifiees = $adminModel->updateScheduleTime($ligNum, $codeArret, $oldH, $newH);
+                
+                if ($lignesModifiees === 0) {
+                    $erreurs++;
+                } else {
+                    $succes++;
+                }
             }
         }
 
-        $_SESSION['flash_success'] = "Les horaires ont été mis à jour avec succès.";
+        if ($erreurs > 0) {
+            $_SESSION['warning'] = "$erreurs horaire(s) n'ont pas pu être trouvés en base de données.";
+        }
+        if ($succes > 0) {
+            $_SESSION['flash_success'] = "$succes horaire(s) mis à jour avec succès.";
+        }
         
         $redirectUrl = 'index.php?route=admin/lineedit&id=' . urlencode($ligNum);
         if (!empty($selectedArret)) {
