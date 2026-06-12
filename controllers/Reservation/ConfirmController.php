@@ -163,8 +163,11 @@ class ConfirmController extends Controller
         $discountRatio = $totalPrice > 0 ? $discountedPrice / $totalPrice : 1;
 
         // 2. Création des réservations
+        $firstReservation = true;
         foreach ($cart as $pending) {
             $itemFinalPrice = round((float)$pending['prix_total'] * $discountRatio);
+            $pointsToDeductForThisItem = $firstReservation ? $pointsUsed : 0;
+            
             $resNum = $model->createReservation(
                 $cliNum,
                 (int)$pending['tar_num_tranche'],
@@ -173,6 +176,7 @@ class ConfirmController extends Controller
                 (int)$pointsUsed,
                 $itemFinalPrice
             );
+            $firstReservation = false;
 
             // 3. Création de l'étape (segment réservé)
             $model->createEtape(

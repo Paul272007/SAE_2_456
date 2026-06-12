@@ -44,6 +44,7 @@
                     <select class="form-select" name="criterion" id="criterion">
 
                         <option value="distance" {{ search_criterion == 'distance' ? 'selected' : '' }}>Le plus court (Distance)</option>
+                        <option value="price" {{ search_criterion == 'price' ? 'selected' : '' }}>Le moins cher (Prix)</option>
                     </select>
                 </div>
 
@@ -60,10 +61,14 @@
         </div>
     {% endif %}
 
-    {% if path %}
-        <div class="card shadow-sm border-0 mt-5">
+    {% if paths is not empty %}
+        <h3 class="mt-5 mb-4 text-center">Itinéraires disponibles</h3>
+        {% for path in paths %}
+        <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-dark text-white py-3">
-                <h5 class="mb-0"><i class="bi bi-map"></i> Résultat : Trajet {{ path.criterion == 'duration' ? 'le plus rapide' : 'le plus court' }}</h5>
+                <h5 class="mb-0">
+                    <i class="bi bi-map"></i> Option {{ loop.index }} : Départ à {{ path.heure_depart }} - Arrivée à {{ path.heure_arrivee }}
+                </h5>
             </div>
             <div class="card-body p-0">
                 <div class="row g-0">
@@ -72,14 +77,14 @@
                         <ul class="list-unstyled mb-0">
                             <li class="mb-3 d-flex justify-content-between">
                                 <span><i class="bi bi-calendar-event me-2 text-primary"></i> Date</span>
-                                <strong>{{ search_date|date('d/m/Y') }} à {{ search_time }}</strong>
+                                <strong>{{ search_date|date('d/m/Y') }}</strong>
                             </li>
                             <li class="mb-3 d-flex justify-content-between">
                                 <span><i class="bi bi-signpost-split me-2 text-primary"></i> Distance</span>
                                 <strong>{{ path.total_distance|round(2) }} km</strong>
                             </li>
                             <li class="mb-3 d-flex justify-content-between">
-                                <span><i class="bi bi-clock me-2 text-primary"></i> Durée estimée</span>
+                                <span><i class="bi bi-clock me-2 text-primary"></i> Durée totale</span>
                                 {% set duration_hours = (path.total_duration / 60)|round(0, 'floor') %}
                                 {% set duration_minutes = path.total_duration % 60 %}
                                 <strong>
@@ -112,7 +117,7 @@
                     </div>
 
                     <div class="col-md-8 p-4">
-                        <h6 class="text-muted mb-4">Détail des correspondances</h6>
+                        <h6 class="text-muted mb-4">Détail du parcours</h6>
                         <div class="timeline">
                             {% for segment in path.segments %}
                                 <div class="card mb-3 border-0 shadow-sm">
@@ -121,8 +126,8 @@
                                             <span class="badge bg-primary me-2">Ligne {{ segment.lig_num }}</span>
                                         </h6>
                                         <div class="mt-3">
-                                            <p class="mb-1"><i class="bi bi-geo-alt text-primary"></i> De <strong>{{ segment.nom_depart }}</strong></p>
-                                            <p class="mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> À <strong>{{ segment.nom_arrivee }}</strong></p>
+                                            <p class="mb-1"><i class="bi bi-geo-alt text-primary"></i> <strong>{{ segment.heure_depart }}</strong> - De <strong>{{ segment.nom_depart }}</strong></p>
+                                            <p class="mb-2"><i class="bi bi-geo-alt-fill text-danger"></i> <strong>{{ segment.heure_arrivee }}</strong> - À <strong>{{ segment.nom_arrivee }}</strong></p>
                                         </div>
                                         <div class="text-muted small mt-2">
                                             <span>Distance : {{ segment.distance|round(2) }} km</span> | 
@@ -135,6 +140,11 @@
                     </div>
                 </div>
             </div>
+        </div>
+        {% endfor %}
+    {% elseif search_depart is defined and search_arrivee is defined %}
+        <div class="alert alert-warning mt-5 text-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Aucun trajet disponible pour cette date et cet horaire.
         </div>
     {% endif %}
 </div>
