@@ -194,10 +194,10 @@ class ReservationModel extends Model
         $clientId = $cliNum ?? 0; // Guest ID si null
 
         $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, TO_NUMBER(?, '999999990D99', 'NLS_NUMERIC_CHARACTERS=''.,'''))";
         
-        // Force le format avec un point pour éviter les erreurs Oracle dues à la locale
-        $prixFormatte = number_format($prixTotal, 2, '.', '');
+        // Force le format avec un point
+        $prixFormatte = number_format((float)$prixTotal, 2, '.', '');
         
         $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixFormatte]);
         
