@@ -1,0 +1,96 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <a href="index.php?route=user/dashboard" class="btn btn-outline-secondary me-3">← Retour</a>
+        <h1 class="mb-0">Modifier mon profil</h1>
+    </div>
+
+    <div class="row">
+        <!-- Modifier les infos -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-primary">Mes Informations</h3>
+                    <form action="index.php?route=user/profileEdit" method="POST">
+                        <input type="hidden" name="update_info" value="1">
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="cli_prenom" class="form-label fw-bold">Prénom</label>
+                                <input type="text" id="cli_prenom" name="cli_prenom" class="form-control" value="{{ user.cli_prenom }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cli_nom" class="form-label fw-bold">Nom</label>
+                                <input type="text" id="cli_nom" name="cli_nom" class="form-control" value="{{ user.cli_nom }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="cli_ville" class="form-label fw-bold">Ville</label>
+                            <input type="text" id="cli_ville" name="cli_ville" class="form-control" value="{{ user.cli_ville }}" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="cli_telephone" class="form-label fw-bold">Téléphone</label>
+                            <input type="tel" id="cli_telephone" name="cli_telephone" class="form-control" value="{{ user.cli_telephone }}" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Enregistrer les modifications</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modifier le mot de passe -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body p-4">
+                    <h3 class="mb-4 text-primary">Sécurité</h3>
+                    <form action="index.php?route=user/profileEdit" method="POST">
+                        <input type="hidden" name="update_password" value="1">
+                        
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label fw-bold">Mot de passe actuel</label>
+                            <input type="password" id="current_password" name="current_password" class="form-control" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label fw-bold">Nouveau mot de passe</label>
+                            <input type="password" id="new_password" name="new_password" class="form-control" required minlength="8">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="confirm_password" class="form-label fw-bold">Confirmer le nouveau mot de passe</label>
+                            <input type="password" id="confirm_password" name="confirm_password" class="form-control" required minlength="8">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100">Mettre à jour le mot de passe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zone de danger -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="card border-danger shadow-sm">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div>
+                        <h4 class="mb-1 text-danger fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Zone de danger</h4>
+                        <p class="text-muted mb-0 small">Une fois que vous supprimez votre compte, il n'y a pas de retour en arrière possible. Soyez certain de votre choix.</p>
+                    </div>
+                    <form action="index.php?route=user/profileEdit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.');">
+                        <input type="hidden" name="delete_account" value="1">
+                        <button type="submit" class="btn btn-outline-danger fw-bold">
+                            Supprimer mon compte
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{
+  "db": {
+    "dbname": "harpagon.unicaen.fr:1521/info.harpagon.unicaen.fr",
+    "user": "agile_2",
+    "passwd": "DPASIT",
+    "charset": "AL32UTF8"
+  },
+  "site": {
+    "title": "Viking Transports",
+    "default_language": "fr",
+    "debug": true,
+    "https": false
+  }
+}

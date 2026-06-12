@@ -1,0 +1,85 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<section class="page-section">
+    <div class="page-title text-center mb-5">
+        <h1>Votre Panier</h1>
+        <p class="text-muted">Vérifiez vos trajets avant de procéder au paiement.</p>
+    </div>
+
+    {% if cart is empty %}
+        <div class="alert alert-secondary text-center py-4">
+            <p class="mb-3">Votre panier est vide.</p>
+            <a href="index.php?route=lines" class="btn btn-primary">Voir les lignes</a>
+        </div>
+    {% else %}
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle text-center mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Ligne</th>
+                                <th>Départ</th>
+                                <th>Arrivée</th>
+                                <th>Date & Heure</th>
+                                <th>Prix</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i, item in cart %}
+                                <tr>
+                                    <td><span class="badge bg-primary fs-6">{{ item.ligne_nom }}</span></td>
+                                    <td><strong>{{ item.nom_depart }}</strong></td>
+                                    <td><strong>{{ item.nom_arrivee }}</strong></td>
+                                    <td>{{ item.date|date('d/m/Y') }}{% if item.heure_depart is defined %}<br><small class="text-muted">{{ item.heure_depart }}</small>{% endif %}</td>
+                                    <td class="fw-bold">{{ item.prix_total|number_format(2, ',', ' ') }} €</td>
+                                    <td>
+                                        <form action="index.php?route=reservation/cart" method="POST" class="m-0">
+                                            <input type="hidden" name="action" value="remove">
+                                            <input type="hidden" name="index" value="{{ i }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Retirer</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot class="table-light fw-bold fs-5">
+                            <tr>
+                                <td colspan="4" class="text-end pe-4 text-muted fs-6">Sous-total :</td>
+                                <td class="text-muted fs-6">{{ total_price|number_format(2, ',', ' ') }} €</td>
+                                <td></td>
+                            </tr>
+                            {% if grade_discount_percent > 0 %}
+                            <tr>
+                                <td colspan="4" class="text-end pe-4 text-success fs-6">Réduction Grade ({{ grade_discount_percent }}%) :</td>
+                                <td class="text-success fs-6">- {{ grade_discount_value|number_format(2, ',', ' ') }} €</td>
+                                <td></td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td colspan="4" class="text-end pe-4 pt-3">Total à payer :</td>
+                                <td class="text-danger pt-3 fs-4">{{ final_price|number_format(2, ',', ' ') }} €</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-3">
+            <a href="index.php?route=lines" class="btn btn-outline-secondary">← Ajouter un autre trajet</a>
+            
+            <div class="d-flex gap-2">
+                <form action="index.php?route=reservation/cart" method="POST" class="m-0">
+                    <input type="hidden" name="action" value="clear">
+                    <button type="submit" class="btn btn-danger">Vider le panier</button>
+                </form>
+                <button onclick="window.location.href = 'index.php?route=reservation/confirm'" class="btn btn-primary px-4">Procéder au paiement</button>
+            </div>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

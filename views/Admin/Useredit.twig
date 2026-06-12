@@ -1,0 +1,153 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-gray-800">
+            <i class="bi bi-person-gear text-danger"></i> Édition du Client
+            <span class="text-muted ms-2 fs-4">#{{ user.cli_num }}</span>
+        </h1>
+        <a href="index.php?route=admin/users" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Informations du compte -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2 text-danger"></i>Modifier les informations</h5>
+                </div>
+                <div class="card-body">
+                    <form action="index.php?route=admin/useredit" method="POST">
+                        <input type="hidden" name="action" value="update">
+                        <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="cli_nom" class="form-label fw-bold">Nom</label>
+                                <input type="text" class="form-control" id="cli_nom" name="cli_nom" value="{{ user.cli_nom }}" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="cli_prenom" class="form-label fw-bold">Prénom</label>
+                                <input type="text" class="form-control" id="cli_prenom" name="cli_prenom" value="{{ user.cli_prenom }}" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="cli_ville" class="form-label fw-bold">Ville</label>
+                                <input type="text" class="form-control" id="cli_ville" name="cli_ville" value="{{ user.cli_ville }}" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="cli_telephone" class="form-label fw-bold">Téléphone</label>
+                                <input type="tel" class="form-control" id="cli_telephone" name="cli_telephone" value="{{ user.cli_telephone }}" required>
+                            </div>
+                            
+                            <div class="col-12 mt-4 text-end">
+                                <button type="submit" class="btn btn-danger px-4">
+                                    <i class="bi bi-save me-1"></i> Enregistrer
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Détails et Stats -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 h-100 bg-white">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <div class="bg-secondary bg-opacity-10 text-danger rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                            <span class="fw-bold">{{ user.cli_prenom|first|upper }}{{ user.cli_nom|first|upper }}</span>
+                        </div>
+                        <h4 class="fw-bold mb-1">{{ user.cli_prenom }} {{ user.cli_nom }}</h4>
+                        <p class="text-muted mb-0">{{ user.cli_courriel }}</p>
+                    </div>
+
+                    <hr>
+
+                    <ul class="list-group list-group-flush bg-transparent">
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                            <span class="text-muted"><i class="bi bi-star-fill text-warning me-2"></i>Points en cours</span>
+                            <span class="fw-bold fs-5 text-danger">{{ user.cli_nb_points_ec }}</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                            <span class="text-muted"><i class="bi bi-trophy-fill text-warning me-2"></i>Points totaux</span>
+                            <span class="fw-bold">{{ user.cli_nb_points_tot }}</span>
+                        </li>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                            <span class="text-muted"><i class="bi bi-clock-history me-2"></i>Dernière connexion</span>
+                            <span class="fw-bold">
+                                {% if user.cli_date_connec %}
+                                    {{ user.cli_date_connec|date("d/m/Y") }}
+                                {% else %}
+                                    <span class="text-muted fst-italic">Jamais</span>
+                                {% endif %}
+                            </span>
+                        </li>
+                    </ul>
+
+                    <hr>
+                    <div class="mt-3">
+                        <form action="index.php?route=admin/useredit" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir rendre cet utilisateur administrateur ? Il aura alors accès à toute l\'administration.');">
+                            <input type="hidden" name="action" value="make_admin">
+                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                            <button type="submit" class="btn btn-outline-danger w-100 fw-bold">
+                                <i class="bi bi-shield-lock-fill me-2"></i>Rendre administrateur
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Réservations -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3 d-flex align-items-center">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-ticket-perforated me-2 text-danger"></i>Historique des réservations</h5>
+            <span class="badge bg-secondary ms-auto">{{ reservations|length }}</span>
+        </div>
+        <div class="card-body p-0">
+            {% if reservations is empty %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+                    <p class="mb-0">Ce client n'a effectué aucune réservation.</p>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light text-muted small text-uppercase">
+                            <tr>
+                                <th class="ps-4">N°</th>
+                                <th>Date</th>
+                                <th>Trajet(s)</th>
+                                <th class="text-end pe-4">Prix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for res in reservations %}
+                                <tr>
+                                    <td class="ps-4 fw-bold text-secondary">#{{ res.res_num }}</td>
+                                    <td>{{ res.res_date|date("d/m/Y") }}</td>
+                                    <td>
+                                        <div class="text-truncate" style="max-width: 400px;" title="{{ res.trajets }}">
+                                            {{ res.trajets }}
+                                        </div>
+                                    </td>
+                                    <td class="text-end pe-4 fw-bold text-success">{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

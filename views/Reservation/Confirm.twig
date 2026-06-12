@@ -1,0 +1,142 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4 text-center">Confirmation de réservation</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4 border-0">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="mb-0"><i class="bi bi-card-checklist"></i> Récapitulatif de votre commande</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for item in cart %}
+                            <li class="list-group-item p-3 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge bg-primary me-2 fs-6">{{ item.ligne_nom }}</span>
+                                    <span class="fw-bold">{{ item.nom_depart }}</span> <span class="mx-1 text-muted">→</span> <span class="fw-bold">{{ item.nom_arrivee }}</span>
+                                </div>
+                                <span class="text-muted small"><i class="bi bi-calendar-event"></i> {{ item.date|date('d/m/Y') }}{% if item.heure_depart is defined %} - {{ item.heure_depart }}{% endif %}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+
+                    <div class="p-4 bg-light">
+                        <table class="table table-borderless mb-0">
+                            <tbody>
+                                <tr>
+                                    <td class="text-muted">Distance totale</td>
+                                    <td class="text-end fw-medium">{{ total_distance|round(2) }} km</td>
+                                </tr>
+                                {% if connected %}
+                                <tr>
+                                    <td class="text-muted">Points de fidélité gagnés</td>
+                                    <td class="text-end text-success fw-bold">+ {{ total_points_earned }} points</td>
+                                </tr>
+                                {% endif %}
+                                {% if grade_discount_percent > 0 %}
+                                <tr>
+                                    <td class="text-muted">Réduction ({{ grade_discount_percent }}%)</td>
+                                    <td class="text-end text-success fw-bold">- {{ grade_discount_value|number_format(2, ',', ' ') }} €</td>
+                                </tr>
+                                {% endif %}
+                                <tr class="border-top">
+                                    <td class="pt-3"><strong class="fs-5">Prix total</strong></td>
+                                    <td class="text-end pt-3"><strong class="fs-4">{{ final_price|number_format(2, ',', ' ') }} €</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h3 class="card-title h5 mb-4">Paiement</h3>
+                    
+                    {% if connected %}
+                        <p class="text-muted mb-4">En cliquant sur "Confirmer et payer", vous validez votre réservation.</p>
+
+                        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
+                            {% if points_to_use > 0 %}
+                                <div class="alert alert-light border mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong>Points de fidélité</strong>
+                                        <span class="badge bg-secondary">{{ points_available }} disponibles</span>
+                                    </div>
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" name="use_points" value="yes" id="usePointsCheckbox">
+                                        <label class="form-check-label" for="usePointsCheckbox">
+                                            Utiliser {{ points_to_use }} points pour une réduction supplémentaire de <strong class="text-success">- {{ points_discount_value|number_format(2, ',', ' ') }} €</strong>
+                                        </label>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-light border mb-4 text-muted">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <strong class="text-dark">Points de fidélité</strong>
+                                        <span class="badge bg-secondary">{{ points_available }} disponibles</span>
+                                    </div>
+                                    <p class="mb-0 small">
+                                        Vous n'avez pas assez de points (ou le montant du panier est trop faible) pour appliquer une réduction supplémentaire sur cette commande.
+                                    </p>
+                                </div>
+                            {% endif %}
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg fw-bold py-3" id="btnConfirm">
+                                    Confirmer et payer (<span id="finalPrice">{{ final_price|number_format(2, ',', ' ') }}</span> €)
+                                </button>
+                            </div>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-secondary mb-4 border-0">
+                            <h6 class="alert-heading">Programme de fidélité</h6>
+                            <p class="mb-0 small text-muted">
+                                Ce trajet vous rapporte <strong>{{ total_points_earned }} points</strong>. 
+                                <br>
+                                <a href="index.php?route=login" class="alert-link fw-bold">Connectez-vous</a> ou <a href="index.php?route=register" class="alert-link fw-bold">créez un compte</a> pour les cumuler et profiter de réductions.
+                            </p>
+                        </div>
+
+                        <form action="index.php?route=reservation/confirm" method="POST" id="confirmForm">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg fw-bold py-3" id="btnConfirm">
+                                    Payer en tant qu'invité ({{ final_price|number_format(2, ',', ' ') }} €)
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+
+                    <div class="text-center mt-4">
+                        <a href="index.php?route=reservation/cart" class="text-decoration-none text-muted">← Retour au panier</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if connected and points_available > 0 and points_to_use > 0 %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkbox = document.getElementById('usePointsCheckbox');
+        const priceSpan = document.getElementById('finalPrice');
+        const originalPrice = {{ final_price|number_format(2, '.', '') }};
+        const discount = {{ points_discount_value|number_format(2, '.', '') }};
+
+        if (checkbox && priceSpan) {
+            checkbox.addEventListener('change', function() {
+                let currentPrice = originalPrice;
+                if (this.checked) {
+                    currentPrice -= discount;
+                }
+                priceSpan.textContent = currentPrice.toFixed(2).replace('.', ',');
+            });
+        }
+    });
+</script>
+{% endif %}
+{% endblock %}

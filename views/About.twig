@@ -1,0 +1,53 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<div class="about-page">
+    <h1>À propos de VIK Transport</h1>
+
+    <div class="about-section">
+        <h2>Notre Mission</h2>
+        <p>
+            VIK Transport est un réseau de transport en commun qui connecte les communes
+            de notre territoire. Notre objectif est de fournir un service de mobilité fiable,
+            abordable et respectueux de l'environnement pour tous les citoyens.
+        </p>
+    </div>
+
+    <div class="about-section">
+        <h2>Nos Services</h2>
+        <ul>
+            <li><strong>Lignes régulières</strong> — Des trajets quotidiens reliant les principales communes.</li>
+            <li><strong>Réservation en ligne</strong> — Réservez vos voyages simplement depuis notre site web.</li>
+            <li><strong>Programme de fidélité</strong> — Gagnez des points à chaque trajet et utilisez-les pour obtenir des réductions.</li>
+            <li><strong>Recherche d'itinéraires</strong> — Trouvez le meilleur chemin entre deux communes, même avec correspondances.</li>
+        </ul>
+    </div>
+
+    <div class="about-section">
+        <h2>Programme de Fidélité</h2>
+        <p>
+            Pour chaque trajet effectué, vous cumulez des points de fidélité basés sur la distance parcourue.
+            Ces points peuvent ensuite être utilisés lors de vos prochaines réservations pour réduire le prix
+            de votre billet. <strong>10 points = 1€ de réduction.</strong>
+        </p>
+        {% if not connected %}
+            <p>
+                <a href="index.php?route=register" class="btn btn-primary">Créer un compte</a>
+            pour commencer à accumuler des points dès maintenant !
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="about-section">
+        <h2>Contact</h2>
+        <p>
+            Pour toute question ou réclamation, n'hésitez pas à nous contacter :
+        </p>
+        <ul>
+            <li><strong>Email :</strong> contact@viking-transport.fr</li>
+            <li><strong>Téléphone :</strong> +33 2 31 00 67 28</li>
+            <li><strong>Adresse :</strong> Campus 3, 14123 Ifs, Normandie</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

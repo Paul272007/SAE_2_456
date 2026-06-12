@@ -1,0 +1,98 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+<h1>Réserver un voyage</h1>
+
+<p class="line-subtitle">
+    Ligne {{ lig_num }} :
+    <strong>{{ line.commune_depart }}</strong>
+    <span class="line-arrow">→</span>
+    <strong>{{ line.commune_arrivee }}</strong>
+</p>
+
+<a href="index.php?route=lines" class="btn btn-secondary mb-3">← Retour aux lignes</a>
+
+{% if not connected %}
+    <p class="info-box">
+        Vous pouvez consulter les tarifs sans compte. La finalisation de votre réservation
+        nécessitera de <a href="index.php?route=login">vous connecter</a> ou de
+        <a href="index.php?route=register">créer un compte</a>.
+    </p>
+{% endif %}
+
+{% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if schedules %}
+    <div class="card p-4">
+        <h2>Horaires disponibles</h2>
+        <p>Prix pour ce trajet : <strong>{{ prix|number_format(2, ',', ' ') }} €</strong> <span class="text-muted ms-2">(Distance : {{ distance|round(2) }} km)</span></p>
+        
+        <div class="list-group">
+            {% for schedule in schedules %}
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        Départ : <strong>{{ schedule.heure_depart }}</strong> 
+                        <span class="mx-2">→</span> 
+                        Arrivée : <strong>{{ schedule.heure_arrivee }}</strong>
+                    </div>
+                    <form action="index.php?route=reservation" method="POST" class="m-0">
+                        <input type="hidden" name="lig_num" value="{{ lig_num }}">
+                        <input type="hidden" name="depart" value="{{ post_depart }}">
+                        <input type="hidden" name="arrivee" value="{{ post_arrivee }}">
+                        <input type="hidden" name="date" value="{{ post_date }}">
+                        <input type="hidden" name="heure_depart" value="{{ schedule.heure_depart }}">
+                        <button type="submit" class="btn btn-primary btn-sm">Réserver ce trajet</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4">
+            <a href="index.php?route=reservation&lig_num={{ lig_num }}" class="btn btn-secondary">← Recommencer la recherche</a>
+        </div>
+    </div>
+{% else %}
+    <form action="index.php" method="GET" class="reservation-form">
+        <input type="hidden" name="route" value="reservation">
+        <input type="hidden" name="lig_num" value="{{ lig_num }}">
+
+        <div class="form-group">
+            <label for="depart">Arrêt de départ</label>
+            <select name="depart" id="depart" required>
+                <option value="">-- Choisissez un arrêt --</option>
+                {% for stop in stops %}
+                    <option value="{{ stop.code }}" {{ post_depart == stop.code ? 'selected' : '' }}>
+                        {{ stop.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="arrivee">Arrêt d'arrivée</label>
+            <select name="arrivee" id="arrivee" required>
+                <option value="">-- Choisissez un arrêt --</option>
+                {% for stop in stops %}
+                    <option value="{{ stop.code }}" {{ post_arrivee == stop.code ? 'selected' : '' }}>
+                        {{ stop.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">Date du voyage</label>
+            <input type="date" name="date" id="date" required min="{{ "now"|date("Y-m-d") }}" value="{{ post_date ?? "now"|date("Y-m-d") }}">
+        </div>
+
+        <div class="form-group">
+            <label for="time">À partir de (heure souhaitée)</label>
+            <input type="time" name="time" id="time" required value="{{ post_time ?? "now"|date("H:i") }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Rechercher les horaires</button>
+    </form>
+{% endif %}
+{% endblock %}

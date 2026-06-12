@@ -1,0 +1,64 @@
+{% extends "layout.twig" %}
+
+{% block content %}
+
+{% if lines is empty %}
+    <div class="alert alert-info mt-4">Aucune ligne trouvée.</div>
+{% else %}
+    <div class="line-accordion-list mt-4">
+        {% for line in lines %}
+            <div class="line-accordion-item">
+                <div class="line-accordion-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="line-accordion-header-left">
+                        <span class="line-badge">{{ line.lig_num }}</span>
+                        <span>{{ line.commune_depart }} → {{ line.commune_arrivee }}</span>
+                    </div>
+                    <div>
+                        <span class="text-muted me-3 d-none d-md-inline">{{ line.nb_arrets }} arrêts • {{ line.distance_totale|round(1) }} km</span>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                </div>
+                
+                <div class="line-accordion-body">
+                    <form action="index.php?route=admin/lines" method="POST" class="m-0">
+                        <input type="hidden" name="lig_num" value="{{ line.lig_num }}">
+                        
+                        <div class="table-responsive">
+                            <table class="schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th>Arrêt</th>
+                                        <th>Heure(s) de passage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stop in line.stops %}
+                                        <tr>
+                                            <td><strong>{{ stop.arret_nom }}</strong></td>
+                                            <td>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    {% for h in stop.heures %}
+                                                        <div class="d-inline-block">
+                                                            <input type="hidden" name="arret_code[]" value="{{ stop.code }}">
+                                                            <input type="hidden" name="old_heure[]" value="{{ h.old_heure }}">
+                                                            <input type="time" name="new_heure[]" class="form-control form-control-sm" value="{{ h.value }}" style="width: auto; display: inline-block;">
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
