@@ -55,9 +55,7 @@ class UsereditController extends Controller
         $targetUser = $userModel->getUserById($cliNum);
         
         if ($targetUser && $targetUser['is_admin'] == 1) {
-            $_SESSION['flash_error'] = "Opération interdite sur un compte administrateur.";
-            redirect('index.php?route=admin/users');
-            return;
+            throw new ClientError(ClientErrorCode::IMPOSSIBLE_TO_MODIFY_ADMIN);
         }
 
         if ($action === 'delete') {
@@ -76,10 +74,7 @@ class UsereditController extends Controller
             $cleanPhone = str_replace([' ', '.', '-'], '', $phone);
             
             if (!empty($phone) && !preg_match('/^[0-9]{10}$/', $cleanPhone) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $cleanPhone)) {
-                // Here we might just use flash error because there's no ClientError handling here natively
-                $_SESSION['flash_error'] = "Format de numéro de téléphone invalide.";
-                redirect('index.php?route=admin/useredit&id=' . $cliNum);
-                return;
+                throw new ClientError(ClientErrorCode::INVALID_PHONE);
             }
 
             $data = [

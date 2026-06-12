@@ -40,12 +40,12 @@ class ProfileEditController extends Controller
             $phone = trim($_POST['cli_telephone'] ?? '');
 
             if (empty($name) || empty($firstName) || empty($city) || empty($phone)) {
-                throw new ClientError(ClientErrorCode::BAD_REQUEST);
+                throw new ClientError(ClientErrorCode::EMPTY_FIELD);
             }
 
             $cleanPhone = str_replace([' ', '.', '-'], '', $phone);
             if (!preg_match('/^[0-9]{10}$/', $cleanPhone) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $cleanPhone)) {
-                throw new ClientError(ClientErrorCode::BAD_REQUEST);
+                throw new ClientError(ClientErrorCode::INVALID_PHONE);
             }
 
             $model->updateUser($cliNum, [

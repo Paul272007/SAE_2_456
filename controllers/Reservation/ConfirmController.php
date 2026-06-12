@@ -184,7 +184,7 @@ class ConfirmController extends Controller
                 (string)$pending['code_depart'],
                 (string)$pending['code_arrivee'],
                 (float)$pending['distance'],
-                (string)$pending['date'] . ' 00:00:00'
+                $pending['date'] . ' 00:00:00'
             );
         }
 

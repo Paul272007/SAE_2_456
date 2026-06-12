@@ -55,13 +55,13 @@ class RegisterController extends Controller
             throw new ClientError(ClientErrorCode::SPECIAL_CHARACTERS);
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-            throw new ClientError(ClientErrorCode::BAD_REQUEST);
+            throw new ClientError(ClientErrorCode::INVALID_EMAIL);
 
         // Clean phone number before validation
         $cleanPhone = str_replace([' ', '.', '-'], '', $phoneNumber);
 
         if (!preg_match('/^[0-9]{10}$/', $cleanPhone) && !preg_match('/^\+[0-9]{1,3}[0-9]{9,15}$/', $cleanPhone))
-            throw new ClientError(ClientErrorCode::BAD_REQUEST);
+            throw new ClientError(ClientErrorCode::INVALID_PHONE);
 
         $this->model = new RegisterModel();
 

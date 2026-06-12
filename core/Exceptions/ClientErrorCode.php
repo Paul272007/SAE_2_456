@@ -16,7 +16,7 @@ enum ClientErrorCode: string
     case PASSWORD_ERROR = 'password_error';
     case LOGIN_ERROR = 'login_error';
     case ADMIN_ERROR = 'admin_error';
-    case ROOT_ERROR = 'root_error';
+    case IMPOSSIBLE_TO_MODIFY_ADMIN = 'modify_admin_error';
     case USER_ALREADY_EXISTS = 'user_already_exists';
     case PASSWORD_MISMATCH = 'password_mismatch';
     case PASSWORD_LENGTH = 'password_length';
@@ -25,6 +25,8 @@ enum ClientErrorCode: string
     case REGISTRATION_ERROR = 'registration_error';
     case SETTINGS_ERROR = 'settings_error';
     case BAD_PLACE = 'bad_place';
+    case INVALID_EMAIL = 'invalid_email';
+    case INVALID_PHONE = 'invalid_phone';
 
     public function message() : string
     {
@@ -36,15 +38,17 @@ enum ClientErrorCode: string
             self::PASSWORD_ERROR => 'Mot de passe incorrect',
             self::LOGIN_ERROR => 'Vous devez être connecté',
             self::ADMIN_ERROR => 'Vous devez être administrateur',
-            self::ROOT_ERROR => 'Vous devez être super-administrateur',
+            self::IMPOSSIBLE_TO_MODIFY_ADMIN => 'Opération interdite sur un compte administrateur.',
             self::USER_ALREADY_EXISTS => 'Cet utilisateur existe déjà',
             self::PASSWORD_MISMATCH => 'Les mots de passe ne correspondent pas',
             self::PASSWORD_LENGTH => 'Le mot de passe doit faire entre 8 et 20 caractères',
-            self::NAME_LENGTH => 'Le nom doit contenir entre 1 et 20 caractères',
-            self::SPECIAL_CHARACTERS => 'Les caractères spéciaux ne sont pas autorisés',
+            self::NAME_LENGTH => 'Le nom et le prénom doivent contenir entre 1 et 20 caractères',
+            self::SPECIAL_CHARACTERS => 'Les caractères spéciaux ne sont pas autorisés dans le nom, le prénom ou la ville',
             self::REGISTRATION_ERROR => 'Erreur lors de l\'inscription',
             self::SETTINGS_ERROR => 'Erreur lors de la sauvegarde des paramètres',
             self::BAD_PLACE => 'Vous ne pouvez accéder à cette page en étant connecté',
+            self::INVALID_EMAIL => 'L\'adresse e-mail n\'est pas valide',
+            self::INVALID_PHONE => 'Le numéro de téléphone n\'est pas valide (10 chiffres attendus)',
         };
     }
 }
