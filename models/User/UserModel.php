@@ -32,7 +32,17 @@ class UserModel extends Model
     }
 
     /**
-     * Récupère l'historique des réservations d'un utilisateur.
+     * Récupère le solde de points actuel du client.
+     */
+    public function getClientPoints(int $cliNum): int
+    {
+        $sql = "SELECT cli_nb_points_ec FROM vik_client WHERE cli_num = ?";
+        $result = $this->fetch($sql, [$cliNum]);
+        return $result ? (int)$result['cli_nb_points_ec'] : 0;
+    }
+
+    /**
+     * Récupère l'historique des réservations d'un utilisateur avec les points dépensés.
      */
     public function getUserReservations(int $cliNum): array
     {
@@ -48,7 +58,34 @@ class UserModel extends Model
                 FROM vik_reservation r
                 WHERE r.cli_num = ?
                 ORDER BY r.res_date DESC";
-        return $this->fetchAll($sql, [$cliNum]);
+
+        $rows = $this->fetchAll($sql, [$cliNum]);
+
+        $soldeCourant = $this->getClientPoints($cliNum);
+        $pointsDispo = $soldeCourant;
+
+        for ($i = 0; $i < count($rows); $i++) {
+            $row = &$rows[$i];
+
+            $pointsDepensesA = min(
+                $pointsDispo + $row['res_nb_points'],
+                $row['res_prix_tot'] * 10
+            );
+            $pointsAvantA = $pointsDispo + $pointsDepensesA - $row['res_nb_points'];
+
+            $pointsAvantB = $pointsDispo - $row['res_nb_points'];
+
+            if ($pointsAvantA >= 0) {
+                $row['nb_points_depenser'] = $pointsDepensesA;
+                $pointsDispo = $pointsAvantA;
+            } else {
+                $row['nb_points_depenser'] = 0;
+                $pointsDispo = $pointsAvantB;
+            }
+        }
+        unset($row);
+
+        return $rows;
     }
 
     /**
