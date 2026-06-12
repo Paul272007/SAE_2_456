@@ -1,6 +1,130 @@
 {% extends "layout.twig" %}
 
 {% block content %}
+<link rel="stylesheet" href="styles/Dashboard.css">
+
+{% set isOr = user.typ_nom|lower == 'or' %}
+
+{% if isOr %}
+
+<script>document.body.classList.add('grade-or');</script>
+
+<!-- Bandeau Or -->
+<div class="or-crown-bar">✦ Membre Or — Accès Privilégié ✦</div>
+
+<section class="page-section">
+
+    <!-- Header -->
+    <div class="or-header d-flex justify-content-between align-items-start">
+        <div>
+            <h1>Tableau de bord — <span class="accent">{{ username }}</span></h1>
+            <div class="or-badge">✦ Grade Or</div>
+        </div>
+        <form action="index.php?route=user/logout" method="POST">
+            <button type="submit" class="btn-or-outline">Se déconnecter</button>
+        </form>
+    </div>
+
+    <div class="row mb-4 g-3">
+
+        <!-- Profil -->
+        <div class="col-md-4">
+            <div class="or-card">
+                <h3>Mes informations</h3>
+                <p><strong>Statut :</strong> <span class="or-badge or-badge-sm">✦ Or</span></p>
+                <p><strong>Nom :</strong> {{ user.cli_prenom }} {{ user.cli_nom }}</p>
+                <p><strong>Email :</strong> {{ user.cli_courriel }}</p>
+                <p><strong>Téléphone :</strong> {{ user.cli_telephone }}</p>
+                <p><strong>Ville :</strong> {{ user.cli_ville }}</p>
+                <div class="mt-4">
+                    <a href="index.php?route=user/profileEdit" class="btn-or">Modifier mon profil</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Points fidélité -->
+        <div class="col-md-4">
+            <div class="or-card text-center">
+                <h3>Programme de fidélité</h3>
+                <div class="or-points-big">{{ user.cli_nb_points_ec }}</div>
+                <div class="or-points-label">points disponibles</div>
+                <hr class="or-divider">
+                <p class="or-points-hint">Total gagné depuis l'inscription</p>
+                <p class="or-points-total">{{ user.cli_nb_points_tot }}</p>
+                <p class="or-points-hint">10 pts = 1 € de réduction</p>
+            </div>
+        </div>
+
+        <!-- Avantages Or -->
+        <div class="col-md-4">
+            <div class="or-card">
+                <h3>Vos avantages exclusifs</h3>
+                <div class="or-avantage">
+                    <div class="or-avantage-icon">%</div>
+                    <div class="or-avantage-text">
+                        <strong>Réduction maximale</strong>
+                        Bénéficiez du taux de réduction le plus élevé sur tous vos trajets.
+                    </div>
+                </div>
+                <div class="or-avantage">
+                    <div class="or-avantage-icon">★</div>
+                    <div class="or-avantage-text">
+                        <strong>Points doublés</strong>
+                        Chaque trajet vous rapporte des points bonifiés.
+                    </div>
+                </div>
+                <div class="or-avantage">
+                    <div class="or-avantage-icon">✦</div>
+                    <div class="or-avantage-text">
+                        <strong>Accès prioritaire</strong>
+                        Réservations confirmées en priorité sur les lignes à forte demande.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Réservations -->
+    <div class="or-card">
+        <h3>Mes réservations</h3>
+        {% if reservations is empty %}
+            <div class="text-center py-4">
+                <p class="or-empty">Aucune réservation pour le moment.</p>
+                <a href="index.php?route=lines" class="btn-or">Réserver un trajet</a>
+            </div>
+        {% else %}
+            <div class="table-responsive">
+                <table class="or-table">
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Date</th>
+                            <th>Trajet(s)</th>
+                            <th>Prix</th>
+                            <th>Points gagnés</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for res in reservations %}
+                        <tr>
+                            <td><strong class="or-res-num">#{{ res.res_num }}</strong></td>
+                            <td>{{ res.res_date|date("d/m/Y") }}</td>
+                            <td>{{ res.trajets }}</td>
+                            <td><strong>{{ res.res_prix_tot|number_format(2, ',', ' ') }} €</strong></td>
+                            <td class="or-points-gain">+{{ res.res_nb_points }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+
+</section>
+
+{% else %}
+
 <section class="page-section">
 
     <div class="d-flex justify-content-between align-items-center mb-4 page-title">
@@ -119,4 +243,4 @@
     </div>
 
 </section>
-{% endblock %}
+{% endblock %}{% endif %}
