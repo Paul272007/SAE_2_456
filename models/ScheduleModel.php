@@ -43,7 +43,14 @@ class ScheduleModel extends Model
                 WHERE TRIM(l.lig_num) = TRIM(?)
 
                 ORDER BY noe_heure_passage ASC";
-        return $this->fetchAll($sql, [$ligNum, $ligNum]);
+        $tableData= $this->fetchAll($sql, [$ligNum, $ligNum]);
+
+        foreach($tableData as $data){
+        echo $data['com_nom'];
+        echo "|";
+        }
+        echo "-----------------------";
+        return $tableData
     }
 
     /**
