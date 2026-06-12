@@ -34,13 +34,13 @@ class UserModel extends Model
     /**
      * Récupère l'historique des réservations d'un utilisateur.
      */
-    public function getUserReservations(int $cliNum): array
+  public function getUserReservations(int $cliNum): array
     {
         $sql = "SELECT r.res_num,
-                       TO_CHAR(r.res_date, 'YYYY-MM-DD') as res_date,
-                       r.res_prix_tot,
-                       r.res_nb_points,
-                       (SELECT LISTAGG(c1.com_nom || ' → ' || c2.com_nom, ', ') WITHIN GROUP (ORDER BY e.eta_heure)
+                    TO_CHAR(r.res_date, 'YYYY-MM-DD') as res_date,
+                    r.res_prix_tot,
+                    r.res_nb_points,
+                    (SELECT LISTAGG(c1.com_nom || ' → ' || c2.com_nom, ', ') WITHIN GROUP (ORDER BY e.eta_heure)
                         FROM vik_etape e
                         JOIN vik_commune c1 ON c1.com_code_insee = e.com_code_insee_depart
                         JOIN vik_commune c2 ON c2.com_code_insee = e.com_code_insee_arrivee
@@ -48,9 +48,29 @@ class UserModel extends Model
                 FROM vik_reservation r
                 WHERE r.cli_num = ?
                 ORDER BY r.res_date DESC";
-        return $this->fetchAll($sql, [$cliNum]);
-    }
 
+        $tableData = $this->fetchAll($sql, [$cliNum]);
+
+        // Initialise tous les points dépensés à 0
+        for ($i = 0; $i < count($tableData); $i++) {
+            $tableData[$i]['res_nb_points_dep'] = 0;
+        }
+
+        $user = $this->getUserById($cliNum);
+        $soldeCourant = $user['cli_nb_points_ec'];
+
+        // On commence à 1 car index 0 (la plus récente) est à 0 par défaut
+        for ($i = 1; $i < count($tableData); $i++) {
+            $tableData[$i]['res_nb_points_dep'] = -(
+                $soldeCourant
+                + $tableData[$i - 1]['res_nb_points_dep']
+                - $tableData[$i - 1]['res_nb_points']
+            );
+            $soldeCourant = $tableData[$i]['res_nb_points_dep']; // ← met à jour pour la prochaine itération
+        }
+
+        return $tableData;
+    } 
     /**
      * Met à jour les informations de l'utilisateur.
      */
