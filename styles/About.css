@@ -1,0 +1,99 @@
+.about-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.about-page h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1d1717;
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.about-section {
+    background: #f7f4f4;
+    border: 1px solid #b8b0b0;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.about-section:hover {
+    border-color: #cc0000;
+}
+
+.about-section h2 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #cc0000;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e8e4e4;
+}
+
+.about-section p {
+    color: #4a4242;
+    line-height: 1.7;
+    margin-bottom: 0.8rem;
+}
+
+.about-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.about-section ul li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #e8e4e4;
+    color: #4a4242;
+    line-height: 1.6;
+}
+
+.about-section ul li:last-child {
+    border-bottom: none;
+}
+
+.about-section ul li strong {
+    color: #1d1717;
+}
+
+.realisation-section .realisation-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.calvacode-logo {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    border-radius: 8px;
+    display: block;
+}
+
+.realisation-section p {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .about-page {
+        padding: 2rem 1rem;
+    }
+
+    .about-section {
+        padding: 1.5rem;
+    }
+}
