@@ -39,7 +39,7 @@ function requireNotAuth(): void
 function requireAdmin(): void
 {
     requireAuth();
-    if (!isset($_SESSION["role"]) || $_SESSION["role"] < 2) {
+    if (!isset($_SESSION["is_admin"]) || $_SESSION["is_admin"] !== 1) {
         $_SESSION["flash_error"] = "admin_error";
         redirect("index.php?route=user/dashboard");
     }

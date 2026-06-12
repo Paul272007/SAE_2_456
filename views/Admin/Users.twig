@@ -1,25 +1,98 @@
 {% extends "layout.twig" %}
 
 {% block content %}
+    
+    {% if isAdmin %}
+        <div class="bg-dark py-2 shadow-sm" style="border-bottom: 2px solid #cc0000;">
+            <div class="container d-flex justify-content-center gap-4">
+                <a href="index.php?route=user/dashboard" class="text-decoration-none py-1 {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Dashboard' and controllerFolder == 'User' ? '#cc0000' : 'transparent' }};">Dashboard</a>
+                <a href="index.php?route=admin/users" class="text-decoration-none py-1 {{ controllerName == 'Users' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Users' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Clients</a>
+                <a href="index.php?route=admin/lines" class="text-decoration-none py-1 {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Lines' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Lignes</a>
+                <a href="index.php?route=admin/stats" class="text-decoration-none py-1 {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? 'text-white fw-bold' : 'text-secondary' }}" style="border-bottom: 2px solid {{ controllerName == 'Stats' and controllerFolder == 'Admin' ? '#cc0000' : 'transparent' }};">Statistiques</a>
+            </div>
+        </div>
+    {% endif %}
+    
 <div class="container py-4">
 
-    <!-- Filters -->
-    <div class="mb-4">
-        <a href="index.php?route=admin/users" class="btn {{ filter == 'all' ? 'btn-danger' : 'btn-outline-danger' }}">Tous les clients</a>
-        <a href="index.php?route=admin/users&filter=inactive" class="btn {{ filter == 'inactive' ? 'btn-danger' : 'btn-outline-danger' }} ms-2">Clients inactifs (> 6 mois)</a>
+    <!-- Filters and Actions -->
+    <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <form action="index.php" method="GET" class="d-flex gap-2 m-0 align-items-center">
+                <input type="hidden" name="route" value="admin/users">
+                <input type="hidden" name="sort" value="{{ sort }}">
+                <input type="hidden" name="order" value="{{ order }}">
+
+                <select name="filter" class="form-select" onchange="this.form.submit()" style="width: auto;">
+                    <option value="all" {{ filter == 'all' ? 'selected' : '' }}>Toutes activités</option>
+                    <option value="active" {{ filter == 'active' ? 'selected' : '' }}>Actifs</option>
+                    <option value="inactive" {{ filter == 'inactive' ? 'selected' : '' }}>Inactifs (> 6 mois)</option>
+                </select>
+
+                <select name="niveau" class="form-select" onchange="this.form.submit()" style="width: auto;">
+                    <option value="">Tous les niveaux</option>
+                    {% for level in levels %}
+                        <option value="{{ level.typ_num }}" {{ filterNiveau == level.typ_num ? 'selected' : '' }}>{{ level.typ_nom }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="statut" class="form-select" onchange="this.form.submit()" style="width: auto;">
+                    <option value="">Tous les statuts</option>
+                    <option value="0" {{ filterStatut is same as(0) ? 'selected' : '' }}>Client</option>
+                    <option value="1" {{ filterStatut is same as(1) ? 'selected' : '' }}>Admin</option>
+                </select>
+            </form>
+        </div>
+
+        <form action="index.php?route=admin/users" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement TOUS les utilisateurs inactifs depuis plus de 2 ans ? Cette action est irréversible.');">
+            <input type="hidden" name="action" value="clean_inactive">
+            <button type="submit" class="btn btn-warning fw-bold text-dark">
+                <i class="bi bi-trash-fill me-1"></i> Nettoyer inactifs (> 2 ans)
+            </button>
+        </form>
     </div>
 
     <!-- Table -->
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-bordered table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-3">ID</th>
-                            <th>Nom complet</th>
-                            <th>Email</th>
-                            <th>Dernière connexion</th>
+                            {% set orderUrl = order == 'ASC' ? 'DESC' : 'ASC' %}
+                            {% set filterParams = '&filter=' ~ filter ~ (filterNiveau is not null ? '&niveau=' ~ filterNiveau : '') ~ (filterStatut is not null ? '&statut=' ~ filterStatut : '') %}
+
+                            <th class="ps-3">
+                                <a href="index.php?route=admin/users&sort=cli_num&order={{ sort == 'cli_num' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    ID 
+                                    {% if sort == 'cli_num' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_nom&order={{ sort == 'cli_nom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Nom 
+                                    {% if sort == 'cli_nom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_prenom&order={{ sort == 'cli_prenom' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Prénom 
+                                    {% if sort == 'cli_prenom' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_courriel&order={{ sort == 'cli_courriel' ? orderUrl : 'ASC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Email 
+                                    {% if sort == 'cli_courriel' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>
+                                <a href="index.php?route=admin/users&sort=cli_date_connec&order={{ sort == 'cli_date_connec' ? orderUrl : 'DESC' }}{{ filterParams }}" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                    Dernière connexion 
+                                    {% if sort == 'cli_date_connec' %}<i class="bi bi-caret-{{ order == 'ASC' ? 'up' : 'down' }}-fill"></i>{% else %}<i class="bi bi-arrow-down-up text-muted opacity-50" style="font-size: 0.8rem;"></i>{% endif %}
+                                </a>
+                            </th>
+                            <th>Niveau</th>
                             <th>Statut</th>
                             <th class="text-end pe-3">Actions</th>
                         </tr>
@@ -28,7 +101,8 @@
                         {% for user in users %}
                             <tr>
                                 <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
-                                <td>{{ user.cli_prenom }} {{ user.cli_nom }}</td>
+                                <td>{{ user.cli_nom|upper }}</td>
+                                <td>{{ user.cli_prenom }}</td>
                                 <td>{{ user.cli_courriel }}</td>
                                 <td>
                                     {% if user.cli_date_connec %}
@@ -38,25 +112,32 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if user.typ_num == 1 %}
-                                        <span class="badge bg-secondary">Client</span>
-                                    {% else %}
+                                    <span class="badge bg-secondary">{{ user.typ_nom|default('Inconnu') }}</span>
+                                </td>
+                                <td>
+                                    {% if user.is_admin == 1 %}
                                         <span class="badge bg-danger">Admin</span>
+                                    {% else %}
+                                        <span class="badge bg-light text-dark border">Client</span>
                                     {% endif %}
                                 </td>
                                 <td class="text-end pe-3">
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
-                                            Éditer
-                                        </a>
-                                        <form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                    </div>
+                                    {% if user.is_admin == 0 %}
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <a href="index.php?route=admin/useredit&id={{ user.cli_num }}" class="btn btn-sm btn-dark">
+                                                Éditer
+                                            </a>
+                                            <form action="index.php?route=admin/useredit" method="POST" class="m-0" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce compte ?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="cli_num" value="{{ user.cli_num }}">
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <span class="text-muted fst-italic small">Impossible de modifier</span>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% else %}

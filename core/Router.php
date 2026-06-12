@@ -94,26 +94,18 @@ class Router
         throw new ClientError(ClientErrorCode::METHOD_NOT_ALLOWED);
       }
     } catch (ClientError $e1) { // Client errors redirect to previous page with error message
-      if (isPost()) {
-        // If method is POST then just redirect to the GET version
-        $baseUrl = strtok($_SERVER['REQUEST_URI'], '?');
-      } else {
-        // Redirect to previous page (or homepage if there is no previous page)
-        // !! Some browsers block HTTP_REFERER, so it will redirect the user to the homepage (bad)
-        $referer = $_SERVER['HTTP_REFERER'] ?? '/SAE_2_456/';
+      // Redirect to previous page (or current URI if there is no previous page)
+      $referer = $_SERVER['HTTP_REFERER'] ?? $_SERVER['REQUEST_URI'];
 
-        // If previous page was not on my website redirect to homepage
-        $refererHost = parse_url($referer, PHP_URL_HOST);
-        $myHost = $_SERVER['HTTP_HOST'];
+      // If previous page was not on my website redirect to homepage
+      $refererHost = parse_url($referer, PHP_URL_HOST);
+      $myHost = $_SERVER['HTTP_HOST'];
 
-        if ($refererHost !== null && $refererHost !== $myHost) {
-          $referer = '/';
-        }
-
-        // Delete all parameters from previous request
-        $urlParts = explode('?', $referer);
-        $baseUrl = $urlParts[0];
+      if ($refererHost !== null && $refererHost !== $myHost) {
+        $referer = '/';
       }
+
+      $baseUrl = $referer;
 
       $_SESSION['flash_error'] = $e1->getErrorCode()->value;
       redirect($baseUrl);

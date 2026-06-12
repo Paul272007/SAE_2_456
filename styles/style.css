@@ -76,7 +76,7 @@ body {
 }
 
 .summary-box {
-    background: #e8e4e4;
+    background: #ffffff;
     border-radius: 6px;
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -182,11 +182,6 @@ body {
 .schedule-table td {
     padding: 0.9rem;
     border-bottom: 1px solid #ded6d6;
-    text-align: center;
-}
-
-.schedule-table th:first-child,
-.schedule-table td:first-child {
     text-align: left;
 }
 
@@ -245,6 +240,7 @@ body {
 
 .nav-link {
     color: #cccccc !important;
+    text-decoration: none;
     font-family: 'Oswald', sans-serif;
     font-size: 0.95rem;
     letter-spacing: 0.05em;
@@ -255,6 +251,7 @@ body {
 
 .nav-link:hover {
     color: #cc0000 !important;
+    text-decoration: none;
 }
 
 .nav-connect {

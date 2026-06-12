@@ -84,6 +84,14 @@ class ProfileEditController extends Controller
             $_SESSION['flash_success'] = "Mot de passe mis à jour avec succès.";
         }
 
+        // Account deletion
+        if (isset($_POST['delete_account'])) {
+            $model->deleteUser($cliNum);
+            session_destroy();
+            redirect('index.php?route=home');
+            return;
+        }
+
         redirect('index.php?route=user/dashboard');
     }
 }

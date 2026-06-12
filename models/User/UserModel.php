@@ -15,19 +15,9 @@ class UserModel extends Model
      */
     public function getUserById(int $cliNum): mixed
     {
-        $sql = "SELECT cli_num,
-                       typ_num,
-                       dep_num,
-                       cli_nom,
-                       cli_prenom,
-                       cli_ville,
-                       cli_telephone,
-                       cli_courriel,
-                       cli_nb_points_ec,
-                       cli_nb_points_tot,
-                       cli_date_connec
-                FROM vik_client
-                WHERE cli_num = ?";
+        $sql = "SELECT * FROM vik_client c
+                LEFT JOIN vik_type_client t ON c.typ_num = t.typ_num
+                WHERE c.cli_num = ?";
         return $this->fetch($sql, [$cliNum]);
     }
 
@@ -40,6 +30,7 @@ class UserModel extends Model
                        TO_CHAR(r.res_date, 'YYYY-MM-DD') as res_date,
                        r.res_prix_tot,
                        r.res_nb_points,
+                       r.res_nb_points_dep,
                        (SELECT LISTAGG(c1.com_nom || ' → ' || c2.com_nom, ', ') WITHIN GROUP (ORDER BY e.eta_heure)
                         FROM vik_etape e
                         JOIN vik_commune c1 ON c1.com_code_insee = e.com_code_insee_depart
@@ -80,5 +71,14 @@ class UserModel extends Model
                 SET cli_mdp = ?
                 WHERE cli_num = ?";
         $this->runQuery($sql, [$hashedPassword, $cliNum]);
+    }
+
+    /**
+     * Supprime le compte de l'utilisateur.
+     */
+    public function deleteUser(int $cliNum): void
+    {
+        $sql = "DELETE FROM vik_client WHERE cli_num = ?";
+        $this->runQuery($sql, [$cliNum]);
     }
 }

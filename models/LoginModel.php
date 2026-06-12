@@ -22,7 +22,9 @@ class LoginModel extends Model
                        cli_mdp,
                        cli_nb_points_ec,
                        cli_nb_points_tot,
-                       typ_num
+                       typ_num,
+                       is_admin,
+                       TO_CHAR(cli_date_connec, 'YYYY-MM-DD') AS cli_date_connec
                 FROM vik_client
                 WHERE cli_courriel = ?";
         return $this->fetch($sql, [$email]);
@@ -35,5 +37,14 @@ class LoginModel extends Model
     {
         $sql = "UPDATE vik_client SET cli_date_connec = TO_DATE(?, 'YYYY-MM-DD') WHERE cli_num = ?";
         $this->runQuery($sql, [date('Y-m-d'), $cliNum]);
+    }
+
+    /**
+     * Réinitialise les points en cours du client à 0.
+     */
+    public function resetCurrentPoints(int $cliNum): void
+    {
+        $sql = "UPDATE vik_client SET cli_nb_points_ec = 0 WHERE cli_num = ?";
+        $this->runQuery($sql, [$cliNum]);
     }
 }

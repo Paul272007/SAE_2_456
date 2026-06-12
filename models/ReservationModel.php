@@ -179,6 +179,7 @@ class ReservationModel extends Model
         int $tarNumTranche,
         string $date,
         int $nbPoints,
+        int $nbPointsDep,
         float $prixTotal
     ): int {
         // Obtenir le prochain ID de réservation (si on n'a pas de séquence)
@@ -187,10 +188,10 @@ class ReservationModel extends Model
 
         $clientId = $cliNum ?? 0; // Guest ID si null
 
-        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_prix_tot)
-                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?)";
+        $sql = "INSERT INTO vik_reservation (res_num, cli_num, tar_num_tranche, res_date, res_nb_points, res_nb_points_dep, res_prix_tot)
+                VALUES (?, ?, ?, TO_DATE(?, 'YYYY-MM-DD'), ?, ?, ?)";
         
-        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $prixTotal]);
+        $this->runQuery($sql, [$nextId, $clientId, $tarNumTranche, $date, $nbPoints, $nbPointsDep, $prixTotal]);
         
         return $nextId;
     }
@@ -220,5 +221,23 @@ class ReservationModel extends Model
                 WHERE cli_num = ?";
         
         $this->runQuery($sql, [$pointsEarned, $pointsUsed, $pointsEarned, $cliNum]);
+        $this->updateClientType($cliNum);
+    }
+
+    public function updateClientType(int $cliNum): void
+    {
+        $sql = "UPDATE vik_client
+            SET typ_num = (
+                SELECT typ_num
+                FROM vik_type_client
+                WHERE typ_pt_limite <= (
+                    SELECT cli_nb_points_tot FROM vik_client WHERE cli_num = ?
+                )
+                ORDER BY typ_pt_limite DESC
+                FETCH FIRST 1 ROWS ONLY
+            )
+            WHERE cli_num = ?";
+
+        $this->runQuery($sql, [$cliNum, $cliNum]);
     }
 }

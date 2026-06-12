@@ -91,6 +91,7 @@ class RegisterController extends Controller
             $_SESSION['userId']   = $this->model->getLastClientId();
             $_SESSION['username'] = $name . ' ' . $firstName;
             $_SESSION['role']     = 1;
+            $_SESSION['is_admin'] = 0;
             $_SESSION['email']    = $email;
             $_SESSION['points']   = 0;
                                     redirect('index.php?route=reservation/confirm');
