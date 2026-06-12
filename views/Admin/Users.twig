@@ -17,6 +17,7 @@
                     <option value="all" {{ filter == 'all' ? 'selected' : '' }}>Toutes activités</option>
                     <option value="active" {{ filter == 'active' ? 'selected' : '' }}>Actifs</option>
                     <option value="inactive" {{ filter == 'inactive' ? 'selected' : '' }}>Inactifs (> 6 mois)</option>
+                    <option value="deleted" {{ filter == 'deleted' ? 'selected' : '' }}>Supprimés</option>
                 </select>
 
                 <select name="niveau" class="form-select" onchange="this.form.submit()" style="width: auto;">
@@ -89,7 +90,7 @@
                     </thead>
                     <tbody>
                         {% for user in users %}
-                            <tr>
+                            <tr class="{% if user.is_deleted == 1 %}table-secondary text-muted opacity-75{% endif %}">
                                 <td class="ps-3 fw-bold">#{{ user.cli_num }}</td>
                                 <td>
                                     {{ user.cli_nom|upper }}
@@ -131,7 +132,7 @@
                                             </form>
                                         </div>
                                     {% elseif user.is_deleted == 1 %}
-                                        <span class="text-danger fw-bold small">Compte supprimé</span>
+                                        <span class="text-danger fst-italic small">Compte supprimé</span>
                                     {% else %}
                                         <span class="text-muted fst-italic small">Impossible de modifier</span>
                                     {% endif %}

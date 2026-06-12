@@ -68,9 +68,11 @@ class AdminModel extends Model
         $params = [];
 
         if ($filterActivity === 'inactive') {
-            $sql .= " AND c.cli_date_connec < SYSDATE - 180 ";
+            $sql .= " AND c.cli_date_connec < SYSDATE - 180 AND (c.is_deleted = 0 OR c.is_deleted IS NULL) ";
         } elseif ($filterActivity === 'active') {
-            $sql .= " AND (c.cli_date_connec >= SYSDATE - 180 OR c.cli_date_connec IS NULL) ";
+            $sql .= " AND (c.cli_date_connec >= SYSDATE - 180 OR c.cli_date_connec IS NULL) AND (c.is_deleted = 0 OR c.is_deleted IS NULL) ";
+        } elseif ($filterActivity === 'deleted') {
+            $sql .= " AND c.is_deleted = 1 ";
         }
         
         if ($filterNiveau !== null) {
