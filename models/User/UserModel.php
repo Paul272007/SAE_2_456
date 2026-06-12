@@ -30,6 +30,7 @@ class UserModel extends Model
                        TO_CHAR(r.res_date, 'YYYY-MM-DD') as res_date,
                        r.res_prix_tot,
                        r.res_nb_points,
+                       r.res_nb_points_dep,
                        (SELECT LISTAGG(c1.com_nom || ' → ' || c2.com_nom, ', ') WITHIN GROUP (ORDER BY e.eta_heure)
                         FROM vik_etape e
                         JOIN vik_commune c1 ON c1.com_code_insee = e.com_code_insee_depart
