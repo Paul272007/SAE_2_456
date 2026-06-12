@@ -73,7 +73,7 @@ class RegisterController extends Controller
         $defaultDep = $this->model->getDefaultDepartment();
 
         $this->model->register([
-            1,              // typ_num
+            null,           // typ_num (aucun grade au départ)
             $defaultDep,    // dep_num
             $name,          // cli_nom
             $firstName,     // cli_prenom

@@ -113,7 +113,30 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary">{{ user.typ_nom|default('Inconnu') }}</span>
+                                    {% set badgeColor = '#6c757d' %}
+                                    {% set textColor = 'text-white' %}
+                                    {% if user.typ_nom|lower == 'nouveau' %}
+                                        {% set badgeColor = '#0dcaf0' %}
+                                        {% set textColor = 'text-dark' %}
+                                    {% elseif user.typ_nom|lower == 'bronze' %}
+                                        {% set badgeColor = '#cd7f32' %}
+                                        {% set textColor = 'text-white' %}
+                                    {% elseif user.typ_nom|lower == 'argent' %}
+                                        {% set badgeColor = '#c0c0c0' %}
+                                        {% set textColor = 'text-dark' %}
+                                    {% elseif user.typ_nom|lower == 'or' %}
+                                        {% set badgeColor = '#ffd700' %}
+                                        {% set textColor = 'text-dark' %}
+                                    {% elseif user.typ_nom|lower == 'platine' %}
+                                        {% set badgeColor = '#e5e4e2' %}
+                                        {% set textColor = 'text-dark' %}
+                                    {% endif %}
+                                    
+                                    {% if not user.typ_nom %}
+                                        <span class="badge bg-secondary">Aucun</span>
+                                    {% else %}
+                                        <span class="badge {{ textColor }}" style="background-color: {{ badgeColor }};">{{ user.typ_nom }}</span>
+                                    {% endif %}
                                 </td>
                                 <td>
                                     {% if user.is_admin == 1 %}
