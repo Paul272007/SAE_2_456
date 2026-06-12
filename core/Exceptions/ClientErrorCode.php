@@ -27,6 +27,7 @@ enum ClientErrorCode: string
     case BAD_PLACE = 'bad_place';
     case INVALID_EMAIL = 'invalid_email';
     case INVALID_PHONE = 'invalid_phone';
+    case ACCOUNT_DELETED = 'account_deleted';
 
     public function message() : string
     {
@@ -49,6 +50,7 @@ enum ClientErrorCode: string
             self::BAD_PLACE => 'Vous ne pouvez accéder à cette page en étant connecté',
             self::INVALID_EMAIL => 'L\'adresse e-mail n\'est pas valide',
             self::INVALID_PHONE => 'Le numéro de téléphone n\'est pas valide (10 chiffres attendus)',
+            self::ACCOUNT_DELETED => 'Ce compte a été supprimé',
         };
     }
 }

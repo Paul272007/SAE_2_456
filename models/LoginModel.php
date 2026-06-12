@@ -24,6 +24,7 @@ class LoginModel extends Model
                        cli_nb_points_tot,
                        typ_num,
                        is_admin,
+                       is_deleted,
                        TO_CHAR(cli_date_connec, 'YYYY-MM-DD') AS cli_date_connec
                 FROM vik_client
                 WHERE cli_courriel = ?";

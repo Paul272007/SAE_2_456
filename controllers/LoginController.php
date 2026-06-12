@@ -45,6 +45,10 @@ class LoginController extends Controller
             throw new ClientError(ClientErrorCode::USER_NOT_FOUND);
         }
 
+        if (isset($user['is_deleted']) && (int)$user['is_deleted'] === 1) {
+            throw new ClientError(ClientErrorCode::ACCOUNT_DELETED);
+        }
+
         if (!password_verify($password, $user["cli_mdp"])) {
             throw new ClientError(ClientErrorCode::PASSWORD_ERROR);
         }
